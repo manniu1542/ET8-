@@ -180,6 +180,7 @@ namespace ET
         /// </summary>
         static void EnableUnityClient()
         {
+            
             DisableAsmdef("Assets/Scripts/Model/Generate/Client/Ignore.asmdef");
             EnableAsmdef("Assets/Scripts/Model/Generate/Server/Ignore.asmdef");
             EnableAsmdef("Assets/Scripts/Model/Generate/ClientServer/Ignore.asmdef");
@@ -245,7 +246,7 @@ namespace ET
                 Debug.LogError($"忽略编译配置的原文件不存在, 请检查项目文件完整性:{srcFilePath}");
                 return;
             }
-
+            //检查是否复制过了，如果已经复制过了，则不进行操作（文件存在，且修改时间一致，则为一致）
             if (File.Exists(asmdefFile) && new FileInfo(srcFilePath).LastWriteTime == new FileInfo(asmdefFile).LastWriteTime)
             {
                 return;

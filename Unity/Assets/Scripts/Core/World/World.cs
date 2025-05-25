@@ -19,7 +19,14 @@ namespace ET
 
         private readonly Stack<Type> stack = new();
         private readonly Dictionary<Type, ASingleton> singletons = new();
-        
+
+        public Dictionary<Type, ASingleton> GetSingletons
+        {
+            get
+            {
+                return this.singletons;
+            }
+        }
         private World()
         {
         }
