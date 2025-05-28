@@ -42,7 +42,7 @@ namespace ET.Client
                 {
                     continue;
                 }
-                
+                //超时7秒 ，获取新的路由 ，并更改路由
                 try
                 {
                     long sessionId = session.Id;
@@ -51,7 +51,7 @@ namespace ET.Client
                     
                     
                     Log.Info($"get recvLocalConn start: {root.Id} {realAddress} {localConn} {remoteConn}");
-
+                 
                     (uint recvLocalConn, IPEndPoint routerAddress) = await netComponent.GetRouterAddress(realAddress, localConn, remoteConn);
                     if (recvLocalConn == 0)
                     {

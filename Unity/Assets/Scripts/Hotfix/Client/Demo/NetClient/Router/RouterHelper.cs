@@ -8,6 +8,7 @@ namespace ET.Client
         // 注册router
         public static async ETTask<Session> CreateRouterSession(this NetComponent netComponent, IPEndPoint address, string account, string password)
         {
+            //本地连接的唯一标识 （账号，密码，随机数的二进制 异或）
             uint localConn = (uint)(account.GetLongHashCode() ^ password.GetLongHashCode() ^ RandomGenerator.RandUInt32());
             (uint recvLocalConn, IPEndPoint routerAddress) = await GetRouterAddress(netComponent, address, localConn, 0);
 
@@ -15,46 +16,57 @@ namespace ET.Client
             {
                 throw new Exception($"get router fail: {netComponent.Root().Id} {address}");
             }
-            
+
             Log.Info($"get router: {recvLocalConn} {routerAddress}");
 
             Session routerSession = netComponent.Create(routerAddress, address, recvLocalConn);
+            //检测session连接的心跳包
             routerSession.AddComponent<PingComponent>();
+            //检测路由是否可以用
             routerSession.AddComponent<RouterCheckComponent>();
-            
+
             return routerSession;
         }
-        
-        public static async ETTask<(uint, IPEndPoint)> GetRouterAddress(this NetComponent netComponent, IPEndPoint address, uint localConn, uint remoteConn)
+
+        public static async ETTask<(uint, IPEndPoint)> GetRouterAddress(this NetComponent netComponent, IPEndPoint address, uint localConn,
+        uint remoteConn)
         {
             Log.Info($"start get router address: {netComponent.Root().Id} {address} {localConn} {remoteConn}");
             //return (RandomHelper.RandUInt32(), address);
             RouterAddressComponent routerAddressComponent = netComponent.Root().GetComponent<RouterAddressComponent>();
+            //获取一个随机的路由地址
             IPEndPoint routerInfo = routerAddressComponent.GetAddress();
-            
+            //发送连接请求
             uint recvLocalConn = await netComponent.Connect(routerInfo, address, localConn, remoteConn);
-            
+
             Log.Info($"finish get router address: {netComponent.Root().Id} {address} {localConn} {remoteConn} {recvLocalConn} {routerInfo}");
             return (recvLocalConn, routerInfo);
         }
 
         // 向router申请
-        private static async ETTask<uint> Connect(this NetComponent netComponent, IPEndPoint routerAddress, IPEndPoint realAddress, uint localConn, uint remoteConn)
+        private static async ETTask<uint> Connect(this NetComponent netComponent, IPEndPoint routerAddress, IPEndPoint realAddress, uint localConn,
+        uint remoteConn)
         {
-            uint synFlag = remoteConn == 0? KcpProtocalType.RouterSYN : KcpProtocalType.RouterReconnectSYN;
+            uint synFlag = remoteConn == 0 ? KcpProtocalType.RouterSYN : KcpProtocalType.RouterReconnectSYN;
 
-            // 注意，session也以localConn作为id，所以这里不能用localConn作为id
+            // 注意，session也以localConn作为id，所以这里不能用localConn作为id  ，连接标识
             long id = (long)(((ulong)localConn << 32) | remoteConn);
+            Log.Error("本次路由id:" + id);
             using RouterConnector routerConnector = netComponent.AddChildWithId<RouterConnector>(id);
-            
-            int count = 20;
-            byte[] sendCache = new byte[512];
 
+            int count = 20;
+            byte[] sendCache = new byte[512]; //
+            //占用了13个字节。  
             uint connectId = RandomGenerator.RandUInt32();
+            //是否重连 1
             sendCache.WriteTo(0, synFlag);
+            //本地标识 4
             sendCache.WriteTo(1, localConn);
+            //远端标识 4
             sendCache.WriteTo(5, remoteConn);
+            //连接标识 4 
             sendCache.WriteTo(9, connectId);
+            //负载均衡地址字节
             byte[] addressBytes = realAddress.ToString().ToByteArray();
             Array.Copy(addressBytes, 0, sendCache, 13, addressBytes.Length);
             TimerComponent timerComponent = netComponent.Root().GetComponent<TimerComponent>();
@@ -74,12 +86,13 @@ namespace ET.Client
                     }
 
                     lastSendTimer = timeNow;
-                    // 发送
+                    // 确保只发送 参与传输的字节数  addressBytes.Length + 13 。 
+                    Log.Error($"连接路由标识{synFlag},连接的id{connectId}");
                     routerConnector.Connect(sendCache, 0, addressBytes.Length + 13, routerAddress);
                 }
 
                 await timerComponent.WaitFrameAsync();
-                
+
                 if (routerConnector.Flag == 0)
                 {
                     continue;

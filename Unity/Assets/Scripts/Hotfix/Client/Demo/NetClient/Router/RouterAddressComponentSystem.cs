@@ -18,6 +18,7 @@ namespace ET.Client
         
         public static async ETTask Init(this RouterAddressComponent self)
         {
+            //获取实际ipv4地址
             self.RouterManagerIPAddress = NetworkHelper.GetHostAddress(self.RouterManagerHost);
             await self.GetAllRouter();
         }

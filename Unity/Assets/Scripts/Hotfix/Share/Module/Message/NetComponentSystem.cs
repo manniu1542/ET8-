@@ -101,7 +101,7 @@ namespace ET
             Session session = self.AddChildWithId<Session, AService>(channelId, self.AService);
             session.RemoteAddress = realIPEndPoint;
             if (self.IScene.SceneType != SceneType.BenchmarkClient)
-            {
+            {//如果 session超过20秒没发消息，就自动移除了。组件
                 session.AddComponent<SessionIdleCheckerComponent>();
             }
             self.AService.Create(session.Id, routerIPEndPoint);

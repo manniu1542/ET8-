@@ -76,7 +76,7 @@ namespace ET
 			{
 				return;
 			}
-
+	
 			Log.Info($"channel dispose: {this.Id} {this.RemoteAddress} {this.Error}");
 			
 			long id = this.Id;

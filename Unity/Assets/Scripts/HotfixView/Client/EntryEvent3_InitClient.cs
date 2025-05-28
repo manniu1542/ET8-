@@ -9,7 +9,6 @@ namespace ET.Client
     {
         protected override async ETTask Run(Scene root, EntryEvent3 args)
         {
-
             GlobalComponent globalComponent = root.AddComponent<GlobalComponent>();
             root.AddComponent<UIGlobalComponent>();
             root.AddComponent<UIComponent>();
@@ -31,10 +30,12 @@ namespace ET.Client
         public static void ShowViewSingleton()
         {
             var viewSingleton = new UnityEngine.GameObject("World.Singletons");
-            viewSingleton.transform.SetParent(UnityEngine.GameObject.Find("Global/Wolrd").transform);
+            viewSingleton.transform.SetParent(UnityEngine.GameObject.Find("Global/World").transform);
             foreach (var singleton in World.Instance.GetSingletons)
             {
-                new UnityEngine.GameObject(singleton.ToString()).transform.SetParent(viewSingleton.transform);
+                var go = new UnityEngine.GameObject(singleton.Key.ToString());
+                go.transform.SetParent(viewSingleton.transform);
+                //TODO: 写一个展示单例类的脚本，便于看单例类的属性情况。 go.AddComponent<ComponentView>().Component = 
             }
         }
     }
