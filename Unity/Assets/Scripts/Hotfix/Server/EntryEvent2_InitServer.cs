@@ -16,6 +16,7 @@ namespace ET.Server
                     StartProcessConfig startProcessConfig = StartProcessConfigCategory.Instance.Get(process);
                     if (startProcessConfig.Port != 0)
                     {
+                        //处理服务器同一个进程的消息，非同一个进程则 被NetOuter 消息转发。同一个进程则直接 进程内部消息互传 ，提升网络效率
                         await FiberManager.Instance.Create(SchedulerType.ThreadPool, ConstFiberId.NetInner, 0, SceneType.NetInner, "NetInner");
                     }
 

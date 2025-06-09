@@ -7,6 +7,7 @@ namespace ET.Server
     {
         public static async ETTask TransferAtFrameFinish(Unit unit, ActorId sceneInstanceId, string sceneName)
         {
+            // 等待一帧 防止传送消息比G2C_EnterMap消息先执行
             await unit.Fiber().WaitFrameFinish();
 
             await TransferHelper.Transfer(unit, sceneInstanceId, sceneName);

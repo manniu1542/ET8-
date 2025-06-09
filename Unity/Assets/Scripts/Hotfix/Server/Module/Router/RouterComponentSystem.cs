@@ -34,23 +34,15 @@ namespace ET.Server
         [EntitySystem]
         private static void Update(this RouterComponent self)
         {
-        
-
             self.OuterUdp.Update();
             self.OuterTcp.Update();
             self.InnerSocket.Update();
             long timeNow = TimeInfo.Instance.ClientNow();
             self.RecvOuterUdp(timeNow);
-            if (self.IPEndPoint.ToString() != "0.0.0.0:0")
-            {
-                Log.Error("MESSAGE111:" + self.IPEndPoint);
-            }
+       
             self.RecvOuterTcp(timeNow);
             self.RecvInner(timeNow);
-            if (self.IPEndPoint.ToString() != "0.0.0.0:0")
-            {
-                Log.Error("MESSAGE2222:" + self.IPEndPoint);
-            }
+    
             // 每秒钟检查一次
             if (timeNow - self.LastCheckTime > 1000)
             {
@@ -310,7 +302,7 @@ namespace ET.Server
                     self.Cache.WriteTo(0, KcpProtocalType.RouterACK);
                     self.Cache.WriteTo(1, routerNode.InnerConn);
                     self.Cache.WriteTo(5, routerNode.OuterConn);
-                    Log.Error("连接内网的服务器本次连接id:" + routerNode.ConnectId + "--发送消息给客户端地址：" + routerNode.SyncIpEndPoint);
+                    Log.Error("给客户端发送 路由确认连接上的回复,本次连接id:" + routerNode.ConnectId + "--发送消息给客户端地址：" + routerNode.SyncIpEndPoint);
                     routerNode.KcpTransport.Send(self.Cache, 0, 9, routerNode.SyncIpEndPoint, ChannelType.Accept);
 
                     if (!routerNode.CheckOuterCount(timeNow))
@@ -533,7 +525,7 @@ namespace ET.Server
                     routerNode.InnerConn = innerConn;
 
                     routerNode.LastRecvInnerTime = timeNow;
-                    // 转发出去
+                    // 从目标服务器的消息字节self.Cache（KcpProtocalType.ACK） 转发给 目标客户端 
                     Log.Info($"kcp router ack: {outerConn} {innerConn} {routerNode.OuterIpEndPoint}");
                     routerNode.KcpTransport.Send(self.Cache, 0, messageLength, routerNode.OuterIpEndPoint, ChannelType.Accept);
                     break;

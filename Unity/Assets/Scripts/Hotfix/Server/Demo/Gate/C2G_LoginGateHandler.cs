@@ -20,7 +20,9 @@ namespace ET.Server
             session.RemoveComponent<SessionAcceptTimeoutComponent>();
 
             PlayerComponent playerComponent = root.GetComponent<PlayerComponent>();
+            //这里应该有个数据库查找玩家数据，并根据数据来生成玩家
             Player player = playerComponent.GetByAccount(account);
+            
             if (player == null)
             {
                 player = playerComponent.AddChild<Player, string>(account);
@@ -35,7 +37,7 @@ namespace ET.Server
                 session.AddComponent<SessionPlayerComponent>().Player = player;
                 playerSessionComponent.Session = session;
             }
-            else
+            else //帧同步,重连回来的示例
             {
                 // 判断是否在战斗
                 PlayerRoomComponent playerRoomComponent = player.GetComponent<PlayerRoomComponent>();

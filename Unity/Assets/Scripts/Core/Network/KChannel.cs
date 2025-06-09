@@ -220,6 +220,7 @@ namespace ET
 			
 			try
 			{
+			
 				this.kcp.Update(timeNow, bytes);
 			}
 			catch (Exception e)

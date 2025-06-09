@@ -24,6 +24,9 @@ namespace ET
         {
             this.socket = new Socket(addressFamily, SocketType.Dgram, ProtocolType.Udp);
             NetworkHelper.SetSioUdpConnReset(this.socket);
+            this.socket.Bind(new IPEndPoint(IPAddress.Any, 0));
+            IPEndPoint localEP = this.socket.LocalEndPoint as IPEndPoint;
+            Log.Error($"本地IP: {localEP.Address}, 端口: {localEP.Port}");
         }
 
         public UdpTransport(IPEndPoint ipEndPoint)

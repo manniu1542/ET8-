@@ -39,12 +39,14 @@ namespace ET.Client
 
             if (Input.GetKeyDown(KeyCode.R))
             {
+                //热重载 逻辑
                 CodeLoader.Instance.Reload();
                 return;
             }
 
             if (Input.GetKeyDown(KeyCode.T))
             {
+                //切换地图
                 C2M_TransferMap c2MTransferMap = C2M_TransferMap.Create();
                 self.Root().GetComponent<ClientSenderComponent>().Call(c2MTransferMap).Coroutine();
             }

@@ -8,8 +8,10 @@ namespace ET.Client
         // 注册router
         public static async ETTask<Session> CreateRouterSession(this NetComponent netComponent, IPEndPoint address, string account, string password)
         {
-            //本地连接的唯一标识 （账号，密码，随机数的二进制 异或）
+            //本地连接的唯一标识 （账号，密码，随机数的二进制 异或），
             uint localConn = (uint)(account.GetLongHashCode() ^ password.GetLongHashCode() ^ RandomGenerator.RandUInt32());
+            //发送连接路由（0初次登陆的 连接。非零0就是游戏断线重连的登陆方式），等待路由的消息回复， 随机的路由地址是在路由管理器上存储的。
+            //路由 跟NetComponent 收发消息 ， RouterSYN 客户端发给路由 =》  RouterACK 路由接收并返回给客户端
             (uint recvLocalConn, IPEndPoint routerAddress) = await GetRouterAddress(netComponent, address, localConn, 0);
 
             if (recvLocalConn == 0)
@@ -18,7 +20,7 @@ namespace ET.Client
             }
 
             Log.Info($"get router: {recvLocalConn} {routerAddress}");
-
+             //创建一个session（路由地址，目标服务器地址，连接路由成功的id）
             Session routerSession = netComponent.Create(routerAddress, address, recvLocalConn);
             //检测session连接的心跳包
             routerSession.AddComponent<PingComponent>();
@@ -66,7 +68,7 @@ namespace ET.Client
             sendCache.WriteTo(5, remoteConn);
             //连接标识 4 
             sendCache.WriteTo(9, connectId);
-            //负载均衡地址字节
+            //路由器连接的目标地址字节
             byte[] addressBytes = realAddress.ToString().ToByteArray();
             Array.Copy(addressBytes, 0, sendCache, 13, addressBytes.Length);
             TimerComponent timerComponent = netComponent.Root().GetComponent<TimerComponent>();

@@ -11,13 +11,44 @@ namespace ET
 {
     public static class KcpProtocalType
     {
+        /// <summary>
+        /// 请求建立连接 SYN=Synchronize 同步
+        /// </summary>
         public const byte SYN = 1;
+
+        /// <summary>
+        /// 确认连接请求 ACK=Acknowledge 确认
+        /// </summary>
         public const byte ACK = 2;
+
+        /// <summary>
+        /// 请求关闭连接
+        /// </summary>
         public const byte FIN = 3;
+
+        /// <summary>
+        /// 正常的业务消息包
+        /// </summary>
         public const byte MSG = 4;
+
+        /// <summary>
+        /// Router 请求重新连接
+        /// </summary>
         public const byte RouterReconnectSYN = 5;
+
+        /// <summary>
+        /// Router 确认重新连接请求
+        /// </summary>
         public const byte RouterReconnectACK = 6;
+
+        /// <summary>
+        /// Router 请求连接
+        /// </summary>
         public const byte RouterSYN = 7;
+
+        /// <summary>
+        /// Router 确认连接
+        /// </summary>
         public const byte RouterACK = 8;
     }
 
@@ -182,7 +213,6 @@ namespace ET
 
             while (this.Transport != null && this.Transport.Available() > 0)
             {
-            
                 int messageLength = this.Transport.Recv(this.cache, ref this.ipEndPoint);
                 Log.Error("收到消息:" + this.ipEndPoint);
                 // 长度小于1，不是正常的消息
@@ -305,10 +335,11 @@ namespace ET
                                     break;
                                 }
 
+                                //这是内网中路由的地址 this.ipEndPoint.Clone()
                                 kChannel = new KChannel(localConn, remoteConn, this.ipEndPoint.Clone(), this);
                                 this.waitAcceptChannels.Add(kChannel.RemoteConn, kChannel); // 连接上了或者超时后会删除
                                 this.localConnChannels.Add(kChannel.LocalConn, kChannel);
-
+                                //目标客户端的地址
                                 kChannel.RealAddress = realAddress;
 
                                 IPEndPoint realEndPoint = NetworkHelper.ToIPEndPoint(kChannel.RealAddress);
@@ -334,7 +365,7 @@ namespace ET
                                 buffer.WriteTo(1, kChannel.LocalConn);
                                 buffer.WriteTo(5, kChannel.RemoteConn);
                                 Log.Info($"kservice syn: {kChannel.Id} {remoteConn} {localConn} {kChannel.RemoteAddress}");
-
+                                //转发消息 ACK 给路由 
                                 this.Transport.Send(buffer, 0, 9, kChannel.RemoteAddress, ChannelType.Accept);
                             }
                             catch (Exception e)
@@ -359,6 +390,7 @@ namespace ET
                             {
                                 Log.Info($"kservice ack: {localConn} {remoteConn}");
                                 kChannel.RemoteConn = remoteConn;
+                                //修改连接上的状态。 可以执行 路由绑定完成的 后续消息处理了
                                 kChannel.HandleConnnect();
                             }
 
@@ -391,7 +423,7 @@ namespace ET
                             kChannel.OnError(ErrorCore.ERR_PeerDisconnect);
 
                             break;
-                        case KcpProtocalType.MSG: // 断开
+                        case KcpProtocalType.MSG: //断开
                             // 长度<9，不是Msg消息
                             if (messageLength < 9)
                             {

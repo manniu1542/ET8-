@@ -19,7 +19,7 @@ namespace ET.Client
                 // 切换到map场景
 
                 //await SceneManager.LoadSceneAsync(currentScene.Name);
-
+                //监听玩家操作输入组件
                 currentScene.AddComponent<OperaComponent>();
             }
             catch (Exception e)

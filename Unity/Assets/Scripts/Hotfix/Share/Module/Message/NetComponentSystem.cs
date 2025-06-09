@@ -99,11 +99,13 @@ namespace ET
         {
             long channelId = localConn;
             Session session = self.AddChildWithId<Session, AService>(channelId, self.AService);
+            //目标服务器消息连接地址
             session.RemoteAddress = realIPEndPoint;
             if (self.IScene.SceneType != SceneType.BenchmarkClient)
             {//如果 session超过20秒没发消息，就自动移除了。组件
                 session.AddComponent<SessionIdleCheckerComponent>();
             }
+            //初次给路由服务器发送SYN包的请求
             self.AService.Create(session.Id, routerIPEndPoint);
             return session;
         }

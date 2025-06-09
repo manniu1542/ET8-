@@ -28,7 +28,7 @@ namespace ET.Client
             // (账号/密码/随机数)标识初始化构建 路由连接器, 连接路由， 路由再给=》  负载均衡服务器进行连接 ，成功后 创建session， 
             using (Session session = await netComponent.CreateRouterSession(realmAddress, account, password))
             {
-                C2R_Login c2RLogin = C2R_Login.Create();
+                C2R_Login c2RLogin = C2R_Login.Create();  
                 c2RLogin.Account = account;
                 c2RLogin.Password = password;
                 //C2R_LoginHander 服务器会在返回消息完成后断开这个session
