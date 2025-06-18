@@ -24,6 +24,9 @@ namespace ET
         }
     }
 
+    /// <summary>
+    /// 帧同步的世界
+    /// </summary>
     [EnableMethod]
     [ChildOf]
     [MemoryPackable]
@@ -66,7 +69,13 @@ namespace ET
 
         public void Update()
         {
+            //输入更新
             this.updater.Update();
+            //TODO: 注册物理驱动  （如果有些效果需要 瞬移，物理世界不能满足，则不需要注册物理驱动）
+            //TODO: 物理世界更新  
+            //TODO: 将物理世界更新的 位置信息等 ，应用于 LSEntity 物体
+            //TODO: 取消物理驱动
+            
             ++this.Frame;
         }
 

@@ -22,6 +22,8 @@ namespace ET.Client
 
             await EventSystem.Instance.PublishAsync(root, new AppStartInitFinish());
             ShowViewSingleton();
+
+
         }
 
         /// <summary>

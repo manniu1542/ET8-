@@ -12,6 +12,7 @@ namespace ET.Server
             
             Room room = root.GetComponent<Room>();
             FrameBuffer frameBuffer = room.FrameBuffer;
+            //1000毫秒，也就是1秒钟 调整下帧间隔 
             if (message.Frame % (1000 / LSConstValue.UpdateInterval) == 0)
             {
                 long nowFrameTime = room.FixedTimeCounter.FrameTime(message.Frame);
@@ -22,12 +23,13 @@ namespace ET.Server
                 room.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession).Send(message.PlayerId, room2CAdjustUpdateTime);
             }
 
+            //客户端发送的帧消息比服务器的确定帧 ，消息晚了就不要了
             if (message.Frame < room.AuthorityFrame)  // 小于AuthorityFrame，丢弃
             {
                 Log.Warning($"FrameMessage < AuthorityFrame discard: {message}");
                 return;
             }
-
+           //过快的帧消息 也丢弃
             if (message.Frame > room.AuthorityFrame + 10)  // 大于AuthorityFrame + 10，丢弃
             {
                 Log.Warning($"FrameMessage > AuthorityFrame + 10 discard: {message}");

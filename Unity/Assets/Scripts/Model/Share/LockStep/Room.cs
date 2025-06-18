@@ -20,10 +20,10 @@ namespace ET
         // 玩家id列表
         public List<long> PlayerIds { get; } = new(LSConstValue.MatchCount);
         
-        // 预测帧
+        // 预测帧（都是客户端运行跑的比服务端快的帧消息，因为客户端跟服务端之间有消息回传的间隔，所以客户端提前记录的帧消息）
         public int PredictionFrame { get; set; } = -1;
 
-        // 权威帧
+        // 权威帧（确定帧）
         public int AuthorityFrame { get; set; } = -1;
 
         // 存档

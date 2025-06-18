@@ -38,11 +38,13 @@ namespace ET
         
         public static implicit operator EntityRef<T>(T t)
         {
+   
             return new EntityRef<T>(t);
         }
 
         public static implicit operator T(EntityRef<T> v)
         {
+      
             return v.UnWrap;
         }
     }

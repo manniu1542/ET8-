@@ -13,7 +13,6 @@ namespace ET.Client
             
             // 创建loading界面
             
-            
             // 创建房间UI
             await UIHelper.Create(args.Room, UIType.UILSRoom, UILayer.Low);
             

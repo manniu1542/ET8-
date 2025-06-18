@@ -61,6 +61,7 @@ namespace ET.Client
             {
                 return;
             }
+            //该帧的操作的哈希值,跟服务器的确定帧哈希值进行对比
             long hash = self.FrameBuffer.GetHash(frame);
             C2Room_CheckHash c2RoomCheckHash = C2Room_CheckHash.Create();
             c2RoomCheckHash.Frame = frame;

@@ -19,7 +19,7 @@ namespace ET.Server
             Room room = self.GetParent<Room>();
             long timeNow = TimeInfo.Instance.ServerFrameTime();
 
-
+            //判断当前的服务器时间 到没有到下一帧的时间。到了就发送下一帧的帧消息
             int frame = room.AuthorityFrame + 1;
             if (timeNow < room.FixedTimeCounter.FrameTime(frame))
             {
@@ -31,7 +31,7 @@ namespace ET.Server
 
             OneFrameInputs sendInput = OneFrameInputs.Create();
             oneFrameInputs.CopyTo(sendInput);
-
+            //广播确定帧消息
             RoomMessageHelper.BroadCast(room, sendInput);
 
             room.Update(oneFrameInputs);

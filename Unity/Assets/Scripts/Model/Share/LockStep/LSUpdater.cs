@@ -31,6 +31,7 @@ namespace ET
                     continue;
                 }
                 this.newUpdateIds.Add(id);
+                //更新所有继承LSEntity 的类
                 LSEntitySystemSingleton.Instance.LSUpdate(entity);
             }
             this.updateIds.Clear();

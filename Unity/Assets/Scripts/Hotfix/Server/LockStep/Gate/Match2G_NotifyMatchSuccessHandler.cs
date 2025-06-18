@@ -9,7 +9,7 @@ namespace ET.Server
 		protected override async ETTask Run(Player player, Match2G_NotifyMatchSuccess message)
 		{
 			player.AddComponent<PlayerRoomComponent>().RoomActorId = message.ActorId;
-			
+			//直接把Match2G_NotifyMatchSuccess这个消息发送给客户端
 			player.GetComponent<PlayerSessionComponent>().Session.Send(message);
 			await ETTask.CompletedTask;
 		}
