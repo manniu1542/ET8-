@@ -13,15 +13,15 @@ namespace ET.Client
 
             // 等待表现层订阅的事件完成
             await EventSystem.Instance.PublishAsync(root, new LSSceneChangeStart() {Room = room});
-            //切换场景的消息
+
             root.GetComponent<ClientSenderComponent>().Send(C2Room_ChangeSceneFinish.Create());
             
             // 等待Room2C_EnterMap消息
             WaitType.Wait_Room2C_Start waitRoom2CStart = await root.GetComponent<ObjectWait>().Wait<WaitType.Wait_Room2C_Start>();
-            //添加并初始化帧同步世界
+
             room.LSWorld = new LSWorld(SceneType.LockStepClient);
             room.Init(waitRoom2CStart.Message.UnitInfo, waitRoom2CStart.Message.StartTime);
-            //添加客户端的帧同步驱动
+            
             room.AddComponent<LSClientUpdater>();
 
             // 这个事件中可以订阅取消loading

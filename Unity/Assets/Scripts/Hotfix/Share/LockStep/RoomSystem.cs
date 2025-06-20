@@ -34,7 +34,7 @@ namespace ET
         public static void Update(this Room self, OneFrameInputs oneFrameInputs)
         {
             LSWorld lsWorld = self.LSWorld;
-            // 映射输入到每个LSUnit身上
+            // 设置输入到每个LSUnit身上
             LSUnitComponent unitComponent = lsWorld.GetComponent<LSUnitComponent>();
             foreach (var kv in oneFrameInputs.Inputs)
             {

@@ -65,7 +65,6 @@
     <type fullname="ET.AInvokeHandler`1" preserve="all" />
     <type fullname="ET.AInvokeHandler`2" preserve="all" />
     <type fullname="ET.AService" preserve="all" />
-    <type fullname="ET.ASingleton" preserve="all" />
     <type fullname="ET.ATimer`1" preserve="all" />
     <type fullname="ET.ActorId" preserve="all" />
     <type fullname="ET.Address" preserve="all" />
@@ -291,11 +290,8 @@
     <type fullname="System.Console" preserve="all" />
     <type fullname="System.Diagnostics.DebuggableAttribute" preserve="all" />
     <type fullname="System.Diagnostics.DebuggableAttribute/DebuggingModes" preserve="all" />
-    <type fullname="System.Diagnostics.DebuggerBrowsableAttribute" preserve="all" />
-    <type fullname="System.Diagnostics.DebuggerBrowsableState" preserve="all" />
     <type fullname="System.Diagnostics.DebuggerDisplayAttribute" preserve="all" />
     <type fullname="System.Diagnostics.DebuggerHiddenAttribute" preserve="all" />
-    <type fullname="System.Diagnostics.DebuggerStepThroughAttribute" preserve="all" />
     <type fullname="System.Enum" preserve="all" />
     <type fullname="System.Exception" preserve="all" />
     <type fullname="System.Func`1" preserve="all" />

@@ -7,17 +7,8 @@ namespace ET
     public class FrameBuffer: Object
     {
         public int MaxFrame { get; private set; }
-        /// <summary>
-        /// 帧的输入
-        /// </summary>
         private readonly List<OneFrameInputs> frameInputs;
-        /// <summary>
-        /// 帧快照
-        /// </summary>
         private readonly List<MemoryBuffer> snapshots;
-        /// <summary>
-        /// 帧的哈希值
-        /// </summary>
         private readonly List<long> hashs;
 
         public FrameBuffer(int frame = 0, int capacity = LSConstValue.FrameCountPerSecond * 60)

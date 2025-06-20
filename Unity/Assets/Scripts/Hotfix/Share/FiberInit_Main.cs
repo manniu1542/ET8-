@@ -17,11 +17,6 @@
             await EventSystem.Instance.PublishAsync(root, new EntryEvent1());
             await EventSystem.Instance.PublishAsync(root, new EntryEvent2());
             await EventSystem.Instance.PublishAsync(root, new EntryEvent3());
-            
-            
-            
-            
-            
         }
     }
 }

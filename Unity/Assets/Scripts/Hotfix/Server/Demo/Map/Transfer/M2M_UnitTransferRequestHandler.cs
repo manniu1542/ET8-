@@ -37,7 +37,7 @@ namespace ET.Server
             m2CCreateUnits.Unit = UnitHelper.CreateUnitInfo(unit);
             MapMessageHelper.SendToClient(unit, m2CCreateUnits);
 
-            // 加入aoi  （加入当前所见到的所有玩家）
+            // 加入aoi
             unit.AddComponent<AOIEntity, int, float3>(9 * 1000, unit.Position);
 
             // 解锁location，可以接收发给Unit的消息

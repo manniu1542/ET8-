@@ -2,7 +2,6 @@ using System.Collections.Generic;
 
 namespace ET.Server
 {
-    //房间业务 初始化
     [MessageHandler(SceneType.RoomRoot)]
     public class RoomManager2Room_InitHandler: MessageHandler<Scene, RoomManager2Room_Init, Room2RoomManager_Init>
     {
