@@ -5,7 +5,7 @@ namespace ET.Server
 {
     [EntitySystemOf(typeof(AOIEntity))]
     [FriendOf(typeof(AOIEntity))]
-    public static partial class AOIEntitySystem2
+    public static partial class AOIEntitySystem
     {
         [EntitySystem]
         private static void Awake(this AOIEntity self, int distance, float3 pos)

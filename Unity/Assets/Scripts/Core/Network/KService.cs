@@ -214,7 +214,7 @@ namespace ET
             while (this.Transport != null && this.Transport.Available() > 0)
             {
                 int messageLength = this.Transport.Recv(this.cache, ref this.ipEndPoint);
-                Log.Error("收到消息:" + this.ipEndPoint);
+                // Log.Error("收到消息:" + this.ipEndPoint);
                 // 长度小于1，不是正常的消息
                 if (messageLength < 1)
                 {

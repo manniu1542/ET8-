@@ -35,7 +35,7 @@ namespace ET
         [Option("LogLevel", Required = false, Default = 0)]
         public int LogLevel { get; set; }
         
-        [Option("Console", Required = false, Default = 0)]
+        [Option("Console", Required = false, Default = 1)]//Default=1，启动机器人
         public int Console { get; set; }
     }
 }
