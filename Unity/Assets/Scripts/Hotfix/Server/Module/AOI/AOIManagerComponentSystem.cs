@@ -7,16 +7,24 @@ namespace ET.Server
     [FriendOf(typeof(Cell))]
     public static partial class AOIManagerComponentSystem
     {
+        /// <summary>
+        /// 添加AreaOfInterest实体到 AOI管理组件
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="aoiEntity"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public static void Add(this AOIManagerComponent self, AOIEntity aoiEntity, float x, float y)
-        {
+        {  
+            //浮点数运算可能会导致误差累积,尤其是 CellSize 自身如果不乘上1000，且是个小数的时候，小数/小数 ，浮点数运算出误差大
             int cellX = (int)(x * 1000) / AOIManagerComponent.CellSize;
             int cellY = (int)(y * 1000) / AOIManagerComponent.CellSize;
-
+            //最小的可视范围
             if (aoiEntity.ViewDistance == 0)
             {
                 aoiEntity.ViewDistance = 1;
             }
-
+            //给当前的aoi进行初始化，他当前可视区域的cell的id
             AOIHelper.CalcEnterAndLeaveCell(aoiEntity, cellX, cellY, aoiEntity.SubEnterCells, aoiEntity.SubLeaveCells);
 
             // 遍历EnterCell
