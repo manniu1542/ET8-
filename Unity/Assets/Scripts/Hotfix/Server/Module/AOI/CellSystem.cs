@@ -22,7 +22,11 @@ namespace ET.Server
 
             self.SubsLeaveEntities.Clear();
         }
-
+        /// <summary>
+        /// 当前的cell位置所有的unit单位添加他的aoi实体到字典里
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="aoiEntity"></param>
         public static void Add(this Cell self, AOIEntity aoiEntity)
         {
             self.AOIUnits.Add(aoiEntity.Id, aoiEntity);
