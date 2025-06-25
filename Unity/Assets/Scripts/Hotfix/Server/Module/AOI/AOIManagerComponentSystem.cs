@@ -31,6 +31,7 @@ namespace ET.Server
             foreach (long cellId in aoiEntity.SubEnterCells)
             {
                 Cell cell = self.GetCell(cellId);
+                //添加进Cell的SeeUnits中，这个cell的每一个 Unit 都进行 互相订阅  ，通知自己，别的aoi进入了
                 aoiEntity.SubEnter(cell);
             }
 
@@ -45,7 +46,7 @@ namespace ET.Server
             Cell selfCell = self.GetCell(AOIHelper.CreateCellId(cellX, cellY));
             aoiEntity.Cell = selfCell;
             selfCell.Add(aoiEntity);
-            // 通知订阅该Cell Enter的Unit
+            // 通知订阅该Cell ，当前自己的Aoi进入了
             foreach (KeyValuePair<long, EntityRef<AOIEntity>> kv in selfCell.SubsEnterEntities)
             {
                 AOIEntity e = kv.Value;

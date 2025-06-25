@@ -37,12 +37,21 @@ namespace ET.Server
             self.AOIUnits.Remove(aoiEntity.Id);
         }
 
+        /// <summary>
+        /// 将64位的单元格ID转换为字符串表示的形式。
+        /// </summary>
+        /// <param name="cellId">64位的单元格ID。</param>
+        /// <returns>格式为"x:y"的字符串，其中x和y分别是单元格ID的高32位和低32位部分。</returns>
         public static string CellIdToString(this long cellId)
         {
+            // 提取cellId的低32位作为y坐标    16   
             int y = (int)(cellId & 0xffffffff);
+            // 提取cellId的高32位作为x坐标
             int x = (int)((ulong)cellId >> 32);
+            // 返回格式化的坐标字符串
             return $"{x}:{y}";
         }
+
 
         public static string CellIdToString(this HashSet<long> cellIds)
         {

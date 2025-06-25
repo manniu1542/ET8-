@@ -13,7 +13,7 @@ namespace ET.Server
             self.ViewDistance = distance;
             self.Scene().GetComponent<AOIManagerComponent>().Add(self, pos.x, pos.z);
         }
-        
+
         [EntitySystem]
         private static void Destroy(this AOIEntity self)
         {
@@ -27,7 +27,7 @@ namespace ET.Server
             self.SubLeaveCells.Clear();
         }
     }
-    
+
     [FriendOf(typeof(AOIEntity))]
     [FriendOf(typeof(Cell))]
     public static partial class AOIEntitySystem
@@ -92,48 +92,55 @@ namespace ET.Server
         // enter进入self视野
         public static void EnterSight(this AOIEntity self, AOIEntity enter)
         {
-            // 有可能之前在Enter，后来出了Enter还在LeaveCell，这样仍然没有删除，继续进来Enter，这种情况不需要处理
+            // 检查self是否已经看到enter，避免重复处理
             if (self.SeeUnits.ContainsKey(enter.Id))
             {
                 return;
             }
-            
+
+            // 检查self和enter是否满足可见性条件
             if (!AOISeeCheckHelper.IsCanSee(self, enter))
             {
                 return;
             }
 
+            // 根据self和enter的类型，更新它们的可见单位列表
             if (self.Unit.Type() == UnitType.Player)
             {
                 if (enter.Unit.Type() == UnitType.Player)
                 {
+                    // 玩家之间互相可见，更新双方的SeeUnits和SeePlayers列表
                     self.SeeUnits.Add(enter.Id, enter);
                     enter.BeSeeUnits.Add(self.Id, self);
                     self.SeePlayers.Add(enter.Id, enter);
                     enter.BeSeePlayers.Add(self.Id, self);
-                    
                 }
                 else
                 {
+                    // 玩家可见非玩家单位，更新双方的SeeUnits列表，并更新非玩家单位的BeSeePlayers列表
                     self.SeeUnits.Add(enter.Id, enter);
                     enter.BeSeeUnits.Add(self.Id, self);
                     enter.BeSeePlayers.Add(self.Id, self);
                 }
             }
-            else
+            else // 非玩家单位 的视野看到
             {
                 if (enter.Unit.Type() == UnitType.Player)
                 {
+                    // 非玩家单位可见玩家，更新双方的SeeUnits列表，并更新非玩家单位的SeePlayers列表
                     self.SeeUnits.Add(enter.Id, enter);
                     enter.BeSeeUnits.Add(self.Id, self);
                     self.SeePlayers.Add(enter.Id, enter);
                 }
                 else
                 {
+                    // 非玩家单位之间互相可见，仅更新双方的SeeUnits列表
                     self.SeeUnits.Add(enter.Id, enter);
                     enter.BeSeeUnits.Add(self.Id, self);
                 }
             }
+
+            // 发布事件通知，self看到了enter
             EventSystem.Instance.Publish(self.Scene(), new UnitEnterSightRange() { A = self, B = enter });
         }
 

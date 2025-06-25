@@ -12,7 +12,7 @@
             {
                 return;
             }
-
+            //A看到B进入了,A的视野了
             Unit ua = a.GetParent<Unit>();
             if (ua.Type() != UnitType.Player)
             {
