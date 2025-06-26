@@ -76,6 +76,7 @@ namespace ET.Server
         // cell中的unit离开self的视野
         public static void UnSubLeave(this AOIEntity self, Cell cell)
         {
+            //这些刚好离开的Cell检查下，他 下面的Unit的AOI是否有可看到自己的。如果有就通知自己走了。
             foreach (KeyValuePair<long, EntityRef<AOIEntity>> kv in cell.AOIUnits)
             {
                 if (kv.Key == self.Id)
@@ -140,35 +141,49 @@ namespace ET.Server
                 }
             }
 
-            // 发布事件通知，self看到了enter
+            // 发布事件通知，self看到了enter，广播消息给指定unit客户端
             EventSystem.Instance.Publish(self.Scene(), new UnitEnterSightRange() { A = self, B = enter });
         }
 
-        // leave离开self视野
+      
+        /// <summary>
+        ///  leave离开self视野,当一个实体离开另一个实体的视野时调用此方法处理相关的逻辑。
+        /// </summary>
+        /// <param name="self">视野主体实体。</param>
+        /// <param name="leave">离开视野的实体。</param>
         public static void LeaveSight(this AOIEntity self, AOIEntity leave)
         {
+            // 检查两个实体的ID是否相同，相同则不执行离开视野的逻辑
             if (self.Id == leave.Id)
             {
                 return;
             }
-
+        
+            // 检查视野主体实体是否能看到即将离开视野的实体，看不到则直接返回
             if (!self.SeeUnits.ContainsKey(leave.Id))
             {
                 return;
             }
-
+        
+            // 从视野主体实体的可见单位字典中移除离开视野的实体
             self.SeeUnits.Remove(leave.Id);
+        
+            // 如果离开视野的实体是玩家类型，则从视野主体实体的可见玩家字典中移除该玩家
             if (leave.Unit.Type() == UnitType.Player)
             {
                 self.SeePlayers.Remove(leave.Id);
             }
-
+        
+            // 从离开视野的实体的被观察单位字典中移除视野主体实体
             leave.BeSeeUnits.Remove(self.Id);
+        
+            // 如果视野主体实体是玩家类型，则从离开视野的实体的被观察玩家字典中移除该玩家
             if (self.Unit.Type() == UnitType.Player)
             {
                 leave.BeSeePlayers.Remove(self.Id);
             }
-
+        
+            // 发布事件通知场景中有一个实体离开了另一个实体的视野范围，广播消息给指定unit客户端
             EventSystem.Instance.Publish(self.Scene(), new UnitLeaveSightRange { A = self, B = leave });
         }
 

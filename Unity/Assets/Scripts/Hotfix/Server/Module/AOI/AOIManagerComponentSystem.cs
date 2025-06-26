@@ -15,7 +15,7 @@ namespace ET.Server
         /// <param name="x"></param>
         /// <param name="y"></param>
         public static void Add(this AOIManagerComponent self, AOIEntity aoiEntity, float x, float y)
-        {  
+        {
             //浮点数运算可能会导致误差累积,尤其是 CellSize 自身如果不乘上1000，且是个小数的时候，小数/小数 ，浮点数运算出误差大
             int cellX = (int)(x * 1000) / AOIManagerComponent.CellSize;
             int cellY = (int)(y * 1000) / AOIManagerComponent.CellSize;
@@ -24,6 +24,7 @@ namespace ET.Server
             {
                 aoiEntity.ViewDistance = 1;
             }
+
             //给当前的aoi进行初始化，他当前可视区域的cell的id
             AOIHelper.CalcEnterAndLeaveCell(aoiEntity, cellX, cellY, aoiEntity.SubEnterCells, aoiEntity.SubLeaveCells);
 
@@ -42,11 +43,11 @@ namespace ET.Server
                 aoiEntity.SubLeave(cell);
             }
 
-            // 自己加入的Cell
+            //管理器 更新当前 自己加入的Cell ，添加该Unit的AOI，
             Cell selfCell = self.GetCell(AOIHelper.CreateCellId(cellX, cellY));
             aoiEntity.Cell = selfCell;
             selfCell.Add(aoiEntity);
-            // 通知订阅该Cell ，当前自己的Aoi进入了
+            // 通知订阅该Cell的,那些可以看到该Cell的AOI,广播给他消息，有新的Unit进入了
             foreach (KeyValuePair<long, EntityRef<AOIEntity>> kv in selfCell.SubsEnterEntities)
             {
                 AOIEntity e = kv.Value;
@@ -54,8 +55,14 @@ namespace ET.Server
             }
         }
 
+        /// <summary>
+        /// 从AOI管理组件中移除一个AOI实体。
+        /// </summary>
+        /// <param name="self">AOI管理组件，作为扩展方法的实例。</param>
+        /// <param name="aoiEntity">要移除的AOI实体。</param>
         public static void Remove(this AOIManagerComponent self, AOIEntity aoiEntity)
         {
+            // 如果实体未分配到任何Cell，则直接返回，无需执行移除操作
             if (aoiEntity.Cell == null)
             {
                 return;
@@ -63,25 +70,26 @@ namespace ET.Server
 
             // 通知订阅该Cell Leave的Unit
             aoiEntity.Cell.Remove(aoiEntity);
+            //通知这个cell，刚好离开 这个cell 订阅者。有新的Unit的AOI离开了
             foreach (KeyValuePair<long, EntityRef<AOIEntity>> kv in aoiEntity.Cell.SubsLeaveEntities)
             {
                 AOIEntity e = kv.Value;
                 e?.LeaveSight(aoiEntity);
             }
 
-            // 通知自己订阅的Enter Cell，清理自己
+            //自己看到的cell,告诉这些cell，cell就移除 他被那些AOI所能看到
             foreach (long cellId in aoiEntity.SubEnterCells)
             {
                 Cell cell = self.GetCell(cellId);
                 aoiEntity.UnSubEnter(cell);
             }
-
+            //自己看到的cell,告诉这些cell，cell就移除 他刚好被那些AOI离开
             foreach (long cellId in aoiEntity.SubLeaveCells)
             {
                 Cell cell = self.GetCell(cellId);
                 aoiEntity.UnSubLeave(cell);
             }
-    
+
             // 检查
             if (aoiEntity.SeeUnits.Count > 1)
             {
@@ -118,6 +126,7 @@ namespace ET.Server
                 {
                     continue;
                 }
+
                 e.EnterSight(aoiEntity);
             }
 

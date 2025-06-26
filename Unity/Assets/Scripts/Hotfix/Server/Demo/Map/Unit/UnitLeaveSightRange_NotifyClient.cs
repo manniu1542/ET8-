@@ -9,6 +9,7 @@
             await ETTask.CompletedTask;
             AOIEntity a = args.A;
             AOIEntity b = args.B;
+            //如果被通知的一方不是玩家实体,也就无需广播了
             if (a.Unit.Type() != UnitType.Player)
             {
                 return;
