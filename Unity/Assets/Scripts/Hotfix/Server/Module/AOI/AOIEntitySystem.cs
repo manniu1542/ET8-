@@ -47,8 +47,8 @@ namespace ET.Server
         {
             return self.SeePlayers;
         }
-
-        // cell中的unit进入self的视野
+        
+        // cell中的unit进入self的视野   150 - 130
         public static void SubEnter(this AOIEntity self, Cell cell)
         {
             cell.SubsEnterEntities.Add(self.Id, self);
