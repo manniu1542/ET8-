@@ -11,9 +11,9 @@
         /// <returns></returns>
         public static long GetACIdByAOIPos(int x, int y)
         {
-            //如果int是负数，也没有关系，uint会把负数转成正数，-1就是 uint.MaxValue最大值，从高到底排序。也可能重复，但可能性较低
-            //先转成uint，这样x还是32位的。在转成ulong此时，x变为64位了里面存储的还是低位32位，左移 32位，得到64位id
-            long idX = ((long)((uint)x)) << 32;
+            //高32位保留x，及时x是负数。也是高32位的负数。他左移后。地位32 始终是 0，影响不了y的值。
+            long idX = (long)x << 32;
+            //y必须是uint,否则 在进行 位于运算的|时候。 y会默认转成long。y是负数。那么 高位就被 影响了。
             return (idX | (uint)y);
         }
 
@@ -25,7 +25,7 @@
         /// <param name="y"></param>
         public static void GetACMiddlePosByACId(long acID, out int x, out int y)
         {
-            x = (int)((ulong)acID >> 32);
+            x = (int)(acID >> 32);
             y = (int)(acID & 0xffffffff);
         }
     }
