@@ -283,7 +283,7 @@ namespace ET
             }
         }
 
-        public T GetParent<T>() where T : Entity
+        public T GetParent<T>()
         {
             return this.Parent as T;
         }

@@ -93,6 +93,7 @@ namespace ET.Server
         // enter进入self视野
         public static void EnterSight(this AOIEntity self, AOIEntity enter)
         {
+         
             // 检查self是否已经看到enter，避免重复处理
             if (self.SeeUnits.ContainsKey(enter.Id))
             {

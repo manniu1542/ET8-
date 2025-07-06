@@ -3,6 +3,9 @@ using Unity.Mathematics;
 
 namespace ET.Server
 {
+    
+    
+    
     //感兴趣的区域
     [ComponentOf(typeof(Unit))]
     public class AreaOfInterestEntity : Entity, IAwake<int, float3>, IDestroy
@@ -54,14 +57,14 @@ namespace ET.Server
         public Dictionary<long, EntityRef<AreaOfInterestEntity>> dicVisibleAOIPlayers = new Dictionary<long, EntityRef<AreaOfInterestEntity>>();
         
         /// <summary>
-        /// 当前自己不可视的其他 AOI单位 字典
+        /// 当前自己被其他 AOI单位看到的 字典（那些可以看到自己的aoi 存储的字典）
         /// </summary>
-        public Dictionary<long, EntityRef<AreaOfInterestEntity>> dicInvisibleAOIUnits = new Dictionary<long, EntityRef<AreaOfInterestEntity>>();
+        public Dictionary<long, EntityRef<AreaOfInterestEntity>> dicOtherAOIUnitsVisibleSelf = new Dictionary<long, EntityRef<AreaOfInterestEntity>>();
         
         /// <summary>
-        /// 当前自己不可视的其他 AOI玩家单位 字典
+        /// 当前自己被其他 AOI的玩家单位看到的 字典（那些可以看到自己的AOI的玩家 存储的字典）
         /// </summary>
-        public Dictionary<long, EntityRef<AreaOfInterestEntity>> dicInvisibleAOIPlayers = new Dictionary<long, EntityRef<AreaOfInterestEntity>>();
+        public Dictionary<long, EntityRef<AreaOfInterestEntity>> dicOtherPlayersVisibleSelf = new Dictionary<long, EntityRef<AreaOfInterestEntity>>();
 
         
         

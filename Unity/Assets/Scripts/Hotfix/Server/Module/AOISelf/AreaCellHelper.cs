@@ -1,6 +1,7 @@
 ﻿namespace ET.Server
 {
     [FriendOf(typeof(AreaCell))]
+    [FriendOfAttribute(typeof(ET.Server.AreaOfInterestEntity))]
     public static class AreaCellHelper
     {
         /// <summary>
@@ -27,6 +28,12 @@
         {
             x = (int)(acID >> 32);
             y = (int)(acID & 0xffffffff);
+        }
+
+    
+
+        public static void AOIRemoveAreaCell(AreaOfInterestEntity aoi, AreaCell cell)
+        {
         }
     }
 }

@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 
 namespace ET.Server
 {
     [EntitySystemOf(typeof(AreaCellMgrComponent))]
     [FriendOf(typeof(AreaCellMgrComponent))]
+    [FriendOfAttribute(typeof(ET.Server.AreaOfInterestEntity))]
+    [FriendOfAttribute(typeof(ET.Server.AreaCell))]
     public static partial class AreaCellMgrComponentSystem
     {
         [EntitySystem]
@@ -42,10 +45,36 @@ namespace ET.Server
         {
             int acX = (int)(x * AreaCellMgrComponent.FloatToIntConversionFactor) / AreaCellMgrComponent.AreaCellSize;
             int acY = (int)(y * AreaCellMgrComponent.FloatToIntConversionFactor) / AreaCellMgrComponent.AreaCellSize;
-            
 
-     
-            
+            aoi.ResetVisibleAndInVisibleAreaCells(acX, acY);
+            AreaCell ac = null;
+            //AOI设置可视区域
+            foreach (var cellId in aoi.hsVisibleAreaCells)
+            {
+                ac = self.GetOrCreateAreaCell(cellId);
+                aoi.AddVisibleAreaCell(ac);
+            }
+
+            //AOI设置不可视区域
+            foreach (var cellId in aoi.hsInvisibleAreaCells)
+            {
+                ac = self.GetOrCreateAreaCell(cellId);
+                aoi.AddInVisibleAreaCell(ac);
+            }
+
+            //绑定aoi跟ac关联
+            ac = self.GetOrCreateAreaCell(AreaCellHelper.GetACIdByAOIPos(acX, acY));
+            ac.dicAOIUnits.Add(aoi.Id, aoi);
+            aoi.Cell = ac;
+
+            //通知订阅该Cell的,那些可以看到该Cell的AOI,广播给他消息，其他的AOI也设置看到了该aoi的广播，相互关联上
+            AreaOfInterestEntity otherAoi = null;
+            foreach (var kv in ac.dicAOIUnitsVisibleSelf)
+            {
+                otherAoi = kv.Value;
+                if (otherAoi.Id != aoi.Id)
+                    otherAoi.AddVisibleOtherAOI(aoi);
+            }
         }
 
         /// <summary>
@@ -55,6 +84,15 @@ namespace ET.Server
         /// <param name="areaCell"></param>
         public static void UnBindAOIFormAreaCell(this AreaCellMgrComponent self, AreaOfInterestEntity aoi)
         {
+            //通知能够看到自己的aoi，现在都看不到自己
+            // AreaOfInterestEntity otherAoi = null;
+            // var list = aoi.dicOtherAOIUnitsVisibleSelf.Values.ToList();
+            // for (int i = list.Count - 1; i >= 0; i--)
+            // {
+            //     otherAoi = list[i];
+            //     
+            //     list[i].Value.RemoveVisibleOtherAOI(aoi);
+            // }
         }
     }
 }
