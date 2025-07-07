@@ -24,14 +24,14 @@ namespace ET.Server
             self.dicOtherAOIUnitsVisibleSelf.Clear();
             self.dicVisibleAOIPlayers.Clear();
             self.dicVisibleAOIUnits.Clear();
-            self.hsInvisibleAreaCells.Clear();
+            self.hsLeaveNeedCheckAreaCells.Clear();
             self.hsVisibleAreaCells.Clear();
 
             self.dicOtherPlayersVisibleSelf = null;
             self.dicOtherAOIUnitsVisibleSelf = null;
             self.dicVisibleAOIPlayers = null;
             self.dicVisibleAOIUnits = null;
-            self.hsInvisibleAreaCells = null;
+            self.hsLeaveNeedCheckAreaCells = null;
             self.hsVisibleAreaCells = null;
         }
 
@@ -49,16 +49,18 @@ namespace ET.Server
         public static void ResetVisibleAndInVisibleAreaCells(this AreaOfInterestEntity self, int selfCellX, int selfCellY)
         {
             self.hsVisibleAreaCells.Clear();
-            self.hsInvisibleAreaCells.Clear();
+            self.hsLeaveNeedCheckAreaCells.Clear();
 
             if (self.ViewDistance <= 0)
                 self.ViewDistance = 1;
-            //看到格子大小的尺寸 限制 （至少是1,取值总是取ceil向上取整了）
-            int viewCellSizeLimit = (self.ViewDistance - 1) / AreaCellMgrComponent.FloatToIntConversionFactor + 1;
+            //看到格子大小的尺寸  （至少是1,取值总是取ceil向上取整了）
+            int viewCellSize = (self.ViewDistance - 1) / AreaCellMgrComponent.FloatToIntConversionFactor + 1;
 
+            //检测超出视野范围的大小
+            int checkOverViewSize = viewCellSize;
             //玩家可见格子尺寸,增加1 避免频繁增删（增加客户端渲染压力）。
             if (self.IsPlayer())
-                viewCellSizeLimit += 1;
+                checkOverViewSize += 1;
 
             /*
              *  □ □ □ □ □
@@ -66,26 +68,26 @@ namespace ET.Server
              *  □ ● ■ ● □  // ■=当前实体, ●=hsVisibleAreaCells, □=hsInvisibleAreaCells
              *  □ ● ● ● □
              *  □ □ □ □ □     */
-            int minX = selfCellX - viewCellSizeLimit;
-            int maxX = selfCellX + viewCellSizeLimit;
-            int minY = selfCellY - viewCellSizeLimit;
-            int maxY = selfCellY + viewCellSizeLimit;
+            int minX = selfCellX - checkOverViewSize;
+            int maxX = selfCellX + checkOverViewSize;
+            int minY = selfCellY - checkOverViewSize;
+            int maxY = selfCellY + checkOverViewSize;
             long areaCellId = 0;
             for (int x = minX; x <= maxX; x++)
             {
                 for (int y = minY; y <= maxY; y++)
                 {
                     areaCellId = AreaCellHelper.GetACIdByAOIPos(x, y);
+                    
+                    self.hsLeaveNeedCheckAreaCells.Add(areaCellId);
+                    //超出视野范围的大小 都不加入
+                    if (x < selfCellX - viewCellSize || x < selfCellX + viewCellSize 
+                        || y < selfCellY - viewCellSize || y < selfCellY + viewCellSize)
+                    {
+                        continue;
+                    }
 
-                    //处于边界的格子区域，统统加入不可看的格子 TODO:为什么他写的是这里面所有格子都要加入不可看到的区域呢？
-                    if (x >= minX || x <= maxX || y >= minY || y <= maxY)
-                    {
-                        self.hsInvisibleAreaCells.Add(areaCellId);
-                    }
-                    else
-                    {
-                        self.hsVisibleAreaCells.Add(areaCellId);
-                    }
+                    self.hsVisibleAreaCells.Add(areaCellId);
                 }
             }
         }
@@ -129,6 +131,7 @@ namespace ET.Server
                 other.dicOtherPlayersVisibleSelf.Add(self.Id, self);
             EventSystem.Instance.PublishAsync(self.Scene(), new UnitAOIAVisibleBEvent() { A = self, B = other }).Coroutine();
         }
+
         /// <summary>
         /// 添加不可视区域
         /// </summary>
@@ -138,9 +141,8 @@ namespace ET.Server
         {
             //给这个区域AreaCell进行赋值添加
             cell.dicAOIUnitsInvisibleSelf.Add(self.Id, self);
-            
         }
-        
+
         /// <summary>
         /// 移除可视野看到的aoi单位
         /// </summary>
@@ -167,6 +169,5 @@ namespace ET.Server
                 other.dicOtherPlayersVisibleSelf.Remove(self.Id);
             EventSystem.Instance.PublishAsync(self.Scene(), new UnitAOIAInVisibleBEvent() { A = self, B = other }).Coroutine();
         }
-        
     }
 }

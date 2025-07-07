@@ -40,9 +40,9 @@ namespace ET.Server
         public HashSet<long> hsVisibleAreaCells = new HashSet<long>();
         
         /// <summary>
-        /// 不可看到的 区域 列表 (区域的Id，x是前32位，y是后32位)
+        ///  自己离开需要检测的 区域 列表 (区域的Id，x是前32位，y是后32位)
         /// </summary>
-        public HashSet<long> hsInvisibleAreaCells = new HashSet<long>();
+        public HashSet<long> hsLeaveNeedCheckAreaCells = new HashSet<long>();
         
         
         

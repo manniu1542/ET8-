@@ -56,7 +56,7 @@ namespace ET.Server
             }
 
             //AOI设置不可视区域
-            foreach (var cellId in aoi.hsInvisibleAreaCells)
+            foreach (var cellId in aoi.hsLeaveNeedCheckAreaCells)
             {
                 ac = self.GetOrCreateAreaCell(cellId);
                 aoi.AddInVisibleAreaCell(ac);
@@ -85,7 +85,8 @@ namespace ET.Server
         public static void UnBindAOIFormAreaCell(this AreaCellMgrComponent self, AreaOfInterestEntity aoi)
         {
             //通知能够看到自己的aoi，现在都看不到自己
-            // AreaOfInterestEntity otherAoi = null;
+            AreaOfInterestEntity otherAoi = null;
+            aoi.Cell.dicAOIUnitsVisibleSelf
             // var list = aoi.dicOtherAOIUnitsVisibleSelf.Values.ToList();
             // for (int i = list.Count - 1; i >= 0; i--)
             // {
