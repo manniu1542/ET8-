@@ -58,7 +58,7 @@ namespace ET.Server
 
             //检测超出视野范围的大小
             int checkOverViewSize = viewCellSize;
-            //玩家可见格子尺寸,增加1 避免频繁增删（增加客户端渲染压力）。
+            //玩家检查的格子，多增加1，避免因为玩家在边界边缘的时候，刚好错过移除检查
             if (self.IsPlayer())
                 checkOverViewSize += 1;
 
@@ -93,11 +93,11 @@ namespace ET.Server
         }
 
         /// <summary>
-        /// 添加可视区域
+        /// AOI关联这个可视区域
         /// </summary>
         /// <param name="aoi"></param>
         /// <param name="cell"></param>
-        public static void AddVisibleAreaCell(this AreaOfInterestEntity self, AreaCell cell)
+        public static void LinkToVisibleAreaCell(this AreaOfInterestEntity self, AreaCell cell)
         {
             //给这个区域AreaCell进行赋值添加
             cell.dicAOIUnitsVisibleSelf.Add(self.Id, self);
@@ -133,14 +133,14 @@ namespace ET.Server
         }
 
         /// <summary>
-        /// 添加不可视区域
+        /// 连接离开的时候需要检查的格子
         /// </summary>
         /// <param name="self"></param>
         /// <param name="cell"></param>
-        public static void AddInVisibleAreaCell(this AreaOfInterestEntity self, AreaCell cell)
+        public static void LinkToLeaveNeedCheckAreaCell(this AreaOfInterestEntity self, AreaCell cell)
         {
             //给这个区域AreaCell进行赋值添加
-            cell.dicAOIUnitsInvisibleSelf.Add(self.Id, self);
+            cell.dicAOILeaveNeedCheckSelf.Add(self.Id, self);
         }
 
         /// <summary>

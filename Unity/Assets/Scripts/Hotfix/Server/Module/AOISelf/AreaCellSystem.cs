@@ -10,18 +10,20 @@ namespace ET.Server
         [EntitySystem]
         private static void Awake(this AreaCell self)
         {
-
-
         }
+
         [EntitySystem]
         private static void Destroy(this AreaCell self)
         {
-
         }
-        
-        
-        
 
-
+        public static void AddAOI(this AreaCell self, AreaOfInterestEntity aoi)
+        {
+            self.dicAOIUnits.Add(aoi.Id, aoi);
+        }
+        public static void RemoveAOI(this AreaCell self, AreaOfInterestEntity aoi)
+        {
+            self.dicAOIUnits.Remove(aoi.Id);
+        }
     }
 }

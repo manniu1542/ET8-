@@ -52,19 +52,19 @@ namespace ET.Server
             foreach (var cellId in aoi.hsVisibleAreaCells)
             {
                 ac = self.GetOrCreateAreaCell(cellId);
-                aoi.AddVisibleAreaCell(ac);
+                aoi.LinkToVisibleAreaCell(ac);
             }
 
-            //AOI设置不可视区域
+            //AOI设置自己离开时候可能需要检查的
             foreach (var cellId in aoi.hsLeaveNeedCheckAreaCells)
             {
                 ac = self.GetOrCreateAreaCell(cellId);
-                aoi.AddInVisibleAreaCell(ac);
+                aoi.LinkToLeaveNeedCheckAreaCell(ac);
             }
 
             //绑定aoi跟ac关联
             ac = self.GetOrCreateAreaCell(AreaCellHelper.GetACIdByAOIPos(acX, acY));
-            ac.dicAOIUnits.Add(aoi.Id, aoi);
+            ac.AddAOI(aoi);
             aoi.Cell = ac;
 
             //通知订阅该Cell的,那些可以看到该Cell的AOI,广播给他消息，其他的AOI也设置看到了该aoi的广播，相互关联上
@@ -86,14 +86,17 @@ namespace ET.Server
         {
             //通知能够看到自己的aoi，现在都看不到自己
             AreaOfInterestEntity otherAoi = null;
-            aoi.Cell.dicAOIUnitsVisibleSelf
-            // var list = aoi.dicOtherAOIUnitsVisibleSelf.Values.ToList();
-            // for (int i = list.Count - 1; i >= 0; i--)
-            // {
-            //     otherAoi = list[i];
-            //     
-            //     list[i].Value.RemoveVisibleOtherAOI(aoi);
-            // }
+            AreaCell ac = null;
+            //取消关联aoi与ac
+            aoi.Cell.RemoveAOI(aoi);
+            aoi.Cell = null;
+            foreach (long cellId in aoi.hsLeaveNeedCheckAreaCells)
+            {
+                ac = self.GetOrCreateAreaCell(cellId);
+                ac.dicAOILeaveNeedCheckSelf
+                
+            }
+       
         }
     }
 }

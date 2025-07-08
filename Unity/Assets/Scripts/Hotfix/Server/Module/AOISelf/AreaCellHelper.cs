@@ -32,8 +32,6 @@
 
     
 
-        public static void AOIRemoveAreaCell(AreaOfInterestEntity aoi, AreaCell cell)
-        {
-        }
+    
     }
 }

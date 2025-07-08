@@ -40,7 +40,7 @@ namespace ET.Server
         public HashSet<long> hsVisibleAreaCells = new HashSet<long>();
         
         /// <summary>
-        ///  自己离开需要检测的 区域 列表 (区域的Id，x是前32位，y是后32位)
+        ///  自己离开 需要检测的 区域 列表  （玩家检查的格子 比看到的区域列表，多向横纵轴增加1格，避免因为玩家在边界边缘的时候，刚好错过移除）
         /// </summary>
         public HashSet<long> hsLeaveNeedCheckAreaCells = new HashSet<long>();
         

@@ -11,11 +11,11 @@ namespace ET.Server
         // 当前区域所包含的AOI单位 ，EntityRef<AreaOfInterestEntity>安全的引用类型，他会对比instance是否发生变化了
         public Dictionary<long, EntityRef<AreaOfInterestEntity>> dicAOIUnits = new Dictionary<long, EntityRef<AreaOfInterestEntity>>();
         
-        // 那些AOI单位 可视 当前区域
+        //  哪些AOI单位 看到 当前区域，（当前区域 的aoi有变动 ，都需要通知这里面存储的aoi）
         public Dictionary<long, EntityRef<AreaOfInterestEntity>> dicAOIUnitsVisibleSelf = new Dictionary<long, EntityRef<AreaOfInterestEntity>>();
         
-        // 那些AOI单位不可视当前区域了
-        public Dictionary<long, EntityRef<AreaOfInterestEntity>> dicAOIUnitsInvisibleSelf = new Dictionary<long, EntityRef<AreaOfInterestEntity>>();
+        // 哪些AOI单位的离开需要检测通知存储在里面的aoi
+        public Dictionary<long, EntityRef<AreaOfInterestEntity>> dicAOILeaveNeedCheckSelf = new Dictionary<long, EntityRef<AreaOfInterestEntity>>();
         
     }
 
