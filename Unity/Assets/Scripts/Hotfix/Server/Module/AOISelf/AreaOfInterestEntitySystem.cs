@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DotRecast.Core;
 using Unity.Mathematics;
 
 namespace ET.Server
@@ -78,10 +79,10 @@ namespace ET.Server
                 for (int y = minY; y <= maxY; y++)
                 {
                     areaCellId = AreaCellHelper.GetACIdByAOIPos(x, y);
-                    
+
                     self.hsLeaveNeedCheckAreaCells.Add(areaCellId);
                     //超出视野范围的大小 都不加入
-                    if (x < selfCellX - viewCellSize || x < selfCellX + viewCellSize 
+                    if (x < selfCellX - viewCellSize || x < selfCellX + viewCellSize
                         || y < selfCellY - viewCellSize || y < selfCellY + viewCellSize)
                     {
                         continue;
@@ -109,7 +110,15 @@ namespace ET.Server
                     self.AddVisibleOtherAOI(acAOI);
             }
         }
-
+        /// <summary>
+        ///  AOI取消关联这个可视区域
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="cell"></param>
+        public static void UnLinkToVisibleAreaCell(this AreaOfInterestEntity self, AreaCell cell)
+        {
+            cell.dicAOIUnitsVisibleSelf.Remove(self.Id);
+        }
         public static void AddVisibleOtherAOI(this AreaOfInterestEntity self, AreaOfInterestEntity other)
         {
             //检测otherAoi已经被销毁了
@@ -141,6 +150,27 @@ namespace ET.Server
         {
             //给这个区域AreaCell进行赋值添加
             cell.dicAOILeaveNeedCheckSelf.Add(self.Id, self);
+        }
+        
+  
+        
+        
+        /// <summary>
+        /// 取消链接离开的时候需要检查的格子
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="cell"></param>
+        public static void UnLinkToLeaveNeedCheckAreaCell(this AreaOfInterestEntity self, AreaCell cell)
+        {
+            AreaOfInterestEntity otherAoi = null;
+            //遍历这些自己能够看到的格子，遍历他的aoi，并给客户端的自己下发通知自己能看到的aoi 需要被移除掉了。（因为自己的离开的关系，他们在自己中看不到了）
+            foreach (var aoi in cell.dicAOIUnits.Values)
+            {
+                otherAoi = aoi;
+                if (otherAoi.Id != self.Id)
+                    self.RemoveVisibleOtherAOI(otherAoi);
+            }
+            cell.dicAOILeaveNeedCheckSelf.Remove(self.Id);
         }
 
         /// <summary>
