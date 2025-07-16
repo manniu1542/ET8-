@@ -160,27 +160,61 @@ namespace ET.Server
             //所在的格子 没有发生改变
             if (nweAreaCellId == oldCell.Id) return;
 
-            //为别人移除/添加 这个aoi，根据新旧格子
+            
+            //从aoi本身角度 来管理 他存储的其他aoi 对比 所需要 通知的 aoi
+            self.UpdateAOIForAOISelfChange(aoi, acX, acY);
+            
+            
             AreaCell newCell = self.GetOrCreateAreaCell(nweAreaCellId);
-            self.UpdateNeighborAOIForCellChange(aoi, newCell, oldCell);
-            //为自己添加/移除 新的aoi，根据新旧格子
+            //因为当前aoi所在的格子放生变化了。 从格子角度 来管理 新/旧 格子对他们的aoi产生的变化通知 
             self.UpdateAOIForCellChange(aoi, newCell, oldCell);
+
+      
+
         }
 
         /// <summary>
-        ///   更新相近的aoi, 因为这个aoi的所在格子的更换导致相近aoi的增删
-        /// </summary>
+        /// 从aoi本身角度 来管理 他存储的其他aoi 对比 所需要 通知的 aoi
         /// <param name="self"></param>
         /// <param name="aoi"></param>
         /// <param name="newCell"></param>
         /// <param name="oldCell"></param>
-        public static void UpdateNeighborAOIForCellChange(this AreaCellMgrComponent self, AreaOfInterestEntity aoi, AreaCell newCell,
-        AreaCell oldCell)
+        public static void UpdateAOIForAOISelfChange(this AreaCellMgrComponent self, AreaOfInterestEntity aoi,int CellX,int CellY)
         {
+            aoi.ResetTmpVisibleAndLeveCheckAreaCells(CellX, CellY);
+            AreaCell acTmp = null;
+            
+            //更新离开需要检测的格子
+            
+            
+            
+            
+            
+            
+            
+            
+            ObjectHelper.Swap(ref aoi.hsLeaveNeedCheckAreaCells, ref aoi.hsTmpLeaveNeedCheckAreaCells);
+            //对比 之前能看到 现在依然能看到的不管， 之前能看到现在看不到的 通知， 最后交换 临时的容器到 能看到的容器里面。
+
+          
+            //之前能看到，本次看不到的格子，需要取消可视关联
+            foreach (long acID in aoi.hsVisibleAreaCells)
+            {
+                if (aoi.hsTmpVisibleAreaCells.Contains(acID))
+                {
+                    continue;
+                }
+                acTmp = self.GetOrCreateAreaCell(acID);
+                aoi.UnLinkToVisibleAreaCell(acTmp);
+            }
+            
+            
+            ObjectHelper.Swap(ref aoi.hsVisibleAreaCells, ref aoi.hsTmpVisibleAreaCells);
+            
         }
 
         /// <summary>
-        ///   更新相近的aoi, 因为这个aoi的所在格子的更换导致相近aoi的增删
+        ///   更新相近的aoi, 因为这个aoi的所在格子的更换  ,导致跟新/旧关联的 格子中aoi的增删
         /// </summary>
         /// <param name="self"></param>
         /// <param name="aoi"></param>
@@ -189,6 +223,20 @@ namespace ET.Server
         public static void UpdateAOIForCellChange(this AreaCellMgrComponent self, AreaOfInterestEntity aoi, AreaCell newCell,
         AreaCell oldCell)
         {
+            aoi.Cell = newCell;
+            oldCell.RemoveAOI(aoi);
+            newCell.AddAOI(aoi);
+            //这个格子 有变动 离开的时候 需要通知的 aoi
+            foreach (AreaOfInterestEntity aoiLeveCheck in oldCell.dicAOILeaveNeedCheckSelf.Values)
+            {
+                aoiLeveCheck.RemoveVisibleOtherAOI(aoi);
+            }
+            //这个格子 有变动 新增的 需要通知的 aoi
+            foreach (AreaOfInterestEntity aoiVisible in newCell.dicAOIUnitsVisibleSelf.Values)
+            {
+                aoiVisible.AddVisibleOtherAOI(aoi);
+            }
+            
         }
     }
 }

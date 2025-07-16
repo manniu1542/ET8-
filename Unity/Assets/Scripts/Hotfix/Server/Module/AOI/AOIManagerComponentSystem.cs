@@ -123,7 +123,7 @@ namespace ET.Server
             {
                 AOIEntity e = kv.Value;
                 if (e.SubEnterCells.Contains(preCell.Id))
-                {
+                {   
                     continue;
                 }
 

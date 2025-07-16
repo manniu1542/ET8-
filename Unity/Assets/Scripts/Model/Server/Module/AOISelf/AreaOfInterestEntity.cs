@@ -47,6 +47,18 @@ namespace ET.Server
         
         
         /// <summary>
+        /// 可以看到的 区域列表  （移动到新的格子 跟之前的做对比使用的容器）
+        /// </summary>
+        public HashSet<long> hsTmpVisibleAreaCells = new HashSet<long>();
+        
+        /// <summary>
+        ///  自己离开 需要检测的 区域 列表   （移动到新的格子 跟之前的做对比使用的容器）
+        /// </summary>
+        public HashSet<long> hsTmpLeaveNeedCheckAreaCells = new HashSet<long>();
+
+        
+        
+        /// <summary>
         /// 当前自己看到的其他 AOI单位 字典
         /// </summary>
         public Dictionary<long, EntityRef<AreaOfInterestEntity>> dicVisibleAOIUnits = new Dictionary<long, EntityRef<AreaOfInterestEntity>>();

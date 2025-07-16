@@ -40,17 +40,16 @@ namespace ET.Server
         {
             return self.GetParent<Unit>().Type() == UnitType.Player;
         }
-
         /// <summary>
         ///  重置当前可视与不可视的区域格子
         /// </summary>
         /// <param name="self"></param>
         /// <param name="selfCellX"></param>
         /// <param name="selfCellY"></param>
-        public static void ResetVisibleAndInVisibleAreaCells(this AreaOfInterestEntity self, int selfCellX, int selfCellY)
+        private static void _ResetVisibleAndLeveCheckAreaCells(this AreaOfInterestEntity self, int selfCellX, int selfCellY,ref HashSet<long> hsVisible,ref HashSet<long> hsLeaveNeedCheck)
         {
-            self.hsVisibleAreaCells.Clear();
-            self.hsLeaveNeedCheckAreaCells.Clear();
+            hsVisible.Clear();
+            hsLeaveNeedCheck.Clear();
 
             if (self.ViewDistance <= 0)
                 self.ViewDistance = 1;
@@ -80,7 +79,7 @@ namespace ET.Server
                 {
                     areaCellId = AreaCellHelper.GetACIdByAOIPos(x, y);
 
-                    self.hsLeaveNeedCheckAreaCells.Add(areaCellId);
+                    hsLeaveNeedCheck.Add(areaCellId);
                     //超出视野范围的大小 都不加入
                     if (x < selfCellX - viewCellSize || x < selfCellX + viewCellSize
                         || y < selfCellY - viewCellSize || y < selfCellY + viewCellSize)
@@ -88,11 +87,30 @@ namespace ET.Server
                         continue;
                     }
 
-                    self.hsVisibleAreaCells.Add(areaCellId);
+                    hsVisible.Add(areaCellId);
                 }
             }
         }
-
+        /// <summary>
+        ///  重置当前可视与不可视的区域格子
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="selfCellX"></param>
+        /// <param name="selfCellY"></param>
+        public static void ResetVisibleAndLeveCheckAreaCells(this AreaOfInterestEntity self, int selfCellX, int selfCellY)
+        {
+            self._ResetVisibleAndLeveCheckAreaCells(selfCellX, selfCellY, ref self.hsVisibleAreaCells, ref self.hsLeaveNeedCheckAreaCells);
+        }
+        /// <summary>
+        ///  重置临时当前可视与不可视的区域格子（给临时容器，做对比使用的）
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="selfCellX"></param>
+        /// <param name="selfCellY"></param>
+        public static void ResetTmpVisibleAndLeveCheckAreaCells(this AreaOfInterestEntity self, int selfCellX, int selfCellY)
+        {
+            self._ResetVisibleAndLeveCheckAreaCells(selfCellX, selfCellY, ref self.hsTmpVisibleAreaCells, ref self.hsTmpLeaveNeedCheckAreaCells);
+        }
         /// <summary>
         /// AOI关联这个可视区域
         /// </summary>
