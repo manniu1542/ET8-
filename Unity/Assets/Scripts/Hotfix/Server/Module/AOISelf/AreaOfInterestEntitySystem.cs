@@ -65,7 +65,7 @@ namespace ET.Server
             /*
              *  □ □ □ □ □
              *  □ ● ● ● □
-             *  □ ● ■ ● □  // ■=当前实体, ●=hsVisibleAreaCells, □=hsInvisibleAreaCells
+             *  □ ● ■ ● □  // ■=当前实体, ●=hsVisibleAreaCells, □=hsLeaveNeedCheck
              *  □ ● ● ● □
              *  □ □ □ □ □     */
             int minX = selfCellX - checkOverViewSize;

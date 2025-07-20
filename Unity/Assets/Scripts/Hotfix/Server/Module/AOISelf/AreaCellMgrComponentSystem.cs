@@ -46,7 +46,7 @@ namespace ET.Server
             int acX = (int)(x * AreaCellMgrComponent.FloatToIntConversionFactor) / AreaCellMgrComponent.AreaCellSize;
             int acY = (int)(y * AreaCellMgrComponent.FloatToIntConversionFactor) / AreaCellMgrComponent.AreaCellSize;
 
-            aoi.ResetVisibleAndInVisibleAreaCells(acX, acY);
+            aoi.ResetVisibleAndLeveCheckAreaCells(acX, acY);
             AreaCell ac = null;
             //AOI设置可视区域
             foreach (var cellId in aoi.hsVisibleAreaCells)
@@ -183,33 +183,83 @@ namespace ET.Server
         {
             aoi.ResetTmpVisibleAndLeveCheckAreaCells(CellX, CellY);
             AreaCell acTmp = null;
-            
-            //更新离开需要检测的格子
-            
-            
-            
-            
-            
-            
-            
-            
-            ObjectHelper.Swap(ref aoi.hsLeaveNeedCheckAreaCells, ref aoi.hsTmpLeaveNeedCheckAreaCells);
-            //对比 之前能看到 现在依然能看到的不管， 之前能看到现在看不到的 通知， 最后交换 临时的容器到 能看到的容器里面。
+            // ⊕=需要通知取消关联的  ■=当前实体, ●=hsVisibleAreaCells, □=hsLeaveNeedCheck
+            /*  例如向右移动一格
+             *  □ □ □ □ □
+             *  □ ● ● ● □
+             *  □ ● ■ ● □ 
+             *  □ ● ● ● □
+             *  □ □ □ □ □
+             *
+             *  ⊕ □ □ □ □ □ 
+             *  ⊕ □ ● ● ● □
+             *  ⊕ □ ● ■ ● □               
+             *  ⊕ □ ● ● ● □
+             *  ⊕ □ □ □ □ □
+             * */
 
-          
-            //之前能看到，本次看不到的格子，需要取消可视关联
-            foreach (long acID in aoi.hsVisibleAreaCells)
+            #region hsLeaveNeedCheckAreaCells  更新
+
+            //更新 关联下新增的 需要 检测的格子
+            foreach (long acID in aoi.hsTmpLeaveNeedCheckAreaCells)
             {
-                if (aoi.hsTmpVisibleAreaCells.Contains(acID))
+                if (aoi.hsLeaveNeedCheckAreaCells.Contains(acID))
                 {
                     continue;
                 }
                 acTmp = self.GetOrCreateAreaCell(acID);
+                //格子需要检查下 该aoi离开以后 ，格子里面的aoi检查下
+                aoi.LinkToLeaveNeedCheckAreaCell(acTmp);
+            }
+            
+            //在与hsLeaveNeedCheckAreaCells容器中 ，移除hsTmpLeaveNeedCheckAreaCells 与hsLeaveNeedCheckAreaCells 相同的元素。
+            aoi.hsLeaveNeedCheckAreaCells.ExceptWith(aoi.hsTmpLeaveNeedCheckAreaCells);
+
+            //更新离开需要检测的格子
+            foreach (long acID in aoi.hsLeaveNeedCheckAreaCells)
+            {
+                acTmp = self.GetOrCreateAreaCell(acID);
+                //格子需要检查下 该aoi离开以后 ，格子里面的aoi检查下
+                aoi.UnLinkToLeaveNeedCheckAreaCell(acTmp);
+            }
+            
+          
+            ObjectHelper.Swap(ref aoi.hsLeaveNeedCheckAreaCells, ref aoi.hsTmpLeaveNeedCheckAreaCells);
+
+
+            #endregion
+
+            #region hsVisibleAreaCells 更新
+
+            //更新 关联下新增的 需要 检测的格子
+            foreach (long acID in aoi.hsTmpVisibleAreaCells)
+            {
+                if (aoi.hsVisibleAreaCells.Contains(acID))
+                {
+                    continue;
+                }
+                acTmp = self.GetOrCreateAreaCell(acID);
+                aoi.LinkToVisibleAreaCell(acTmp);
+            }
+            
+            //在与hsLeaveNeedCheckAreaCells容器中 ，移除hsTmpLeaveNeedCheckAreaCells 与hsLeaveNeedCheckAreaCells 相同的元素。
+            aoi.hsVisibleAreaCells.ExceptWith(aoi.hsTmpVisibleAreaCells);
+            
+            foreach (long acID in aoi.hsVisibleAreaCells)
+            {
+            
+                acTmp = self.GetOrCreateAreaCell(acID);
                 aoi.UnLinkToVisibleAreaCell(acTmp);
             }
             
-            
+          
             ObjectHelper.Swap(ref aoi.hsVisibleAreaCells, ref aoi.hsTmpVisibleAreaCells);
+
+
+            #endregion
+            
+
+            
             
         }
 
