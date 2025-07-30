@@ -35,7 +35,10 @@ namespace ET.Server
             self.hsLeaveNeedCheckAreaCells = null;
             self.hsVisibleAreaCells = null;
         }
-
+        public static Dictionary<long, EntityRef<AreaOfInterestEntity>> GetOtherPlayersVisibleSelf(this AreaOfInterestEntity self)
+        {
+            return self.dicOtherPlayersVisibleSelf;
+        }
         public static bool IsPlayer(this AreaOfInterestEntity self)
         {
             return self.GetParent<Unit>().Type() == UnitType.Player;

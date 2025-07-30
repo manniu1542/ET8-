@@ -44,15 +44,31 @@ namespace ET.Server
         {
             // 设置消息的来源池标识为false
             (message as MessageObject).IsFromPool = false;
-            // 获取所有能看到指定单位的玩家字典
-            Dictionary<long, EntityRef<AOIEntity>> dict = unit.GetBeSeePlayers();
-            // 网络底层做了优化，同一个消息不会多次序列化
-            MessageLocationSenderOneType oneTypeMessageLocationType =
-                    unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession);
-            // 遍历字典，向所有能看到单位的玩家发送消息
-            foreach (AOIEntity u in dict.Values)
+            if (ConstValue.IsUseSelfAOI)
             {
-                oneTypeMessageLocationType.Send(u.Unit.Id, message);
+                // 获取所有能看到指定单位的玩家字典
+                Dictionary<long, EntityRef<AreaOfInterestEntity>> dict = unit.GetOtherAOIPlayersVisibleSelf();
+                // 网络底层做了优化，同一个消息不会多次序列化
+                MessageLocationSenderOneType oneTypeMessageLocationType =
+                        unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession);
+                // 遍历字典，向所有能看到单位的玩家发送消息
+                foreach (AreaOfInterestEntity u in dict.Values)
+                {
+                    oneTypeMessageLocationType.Send(u.Unit.Id, message);
+                }
+            }
+            else
+            {
+                // 获取所有能看到指定单位的玩家字典
+                Dictionary<long, EntityRef<AOIEntity>> dict = unit.GetBeSeePlayers();
+                // 网络底层做了优化，同一个消息不会多次序列化
+                MessageLocationSenderOneType oneTypeMessageLocationType =
+                        unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession);
+                // 遍历字典，向所有能看到单位的玩家发送消息
+                foreach (AOIEntity u in dict.Values)
+                {
+                    oneTypeMessageLocationType.Send(u.Unit.Id, message);
+                }
             }
         }
 
@@ -63,7 +79,6 @@ namespace ET.Server
         /// <param name="message">要发送的消息</param>
         public static void SendToClient(Unit unit, IMessage message)
         {
-
             unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession).Send(unit.Id, message);
         }
 

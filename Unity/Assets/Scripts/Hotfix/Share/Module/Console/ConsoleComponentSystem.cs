@@ -16,7 +16,6 @@ namespace ET
             self.Start().Coroutine();
         }
 
-        
         private static async ETTask Start(this ConsoleComponent self)
         {
             self.CancellationTokenSource = new CancellationTokenSource();
@@ -31,7 +30,11 @@ namespace ET
                         Console.Write($"{modeContex?.Mode ?? ""}> ");
                         return Console.In.ReadLine();
                     }, self.CancellationTokenSource.Token);
-                    
+                 
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        continue;
+                    }
                     line = line.Trim();
 
                     switch (line)
@@ -44,7 +47,7 @@ namespace ET
                         default:
                         {
                             string[] lines = line.Split(" ");
-                            string mode = modeContex == null? lines[0] : modeContex.Mode;
+                            string mode = modeContex == null ? lines[0] : modeContex.Mode;
 
                             IConsoleHandler iConsoleHandler = ConsoleDispatcher.Instance.Get(mode);
                             if (modeContex == null)
@@ -52,12 +55,11 @@ namespace ET
                                 modeContex = self.AddComponent<ModeContex>();
                                 modeContex.Mode = mode;
                             }
+
                             await iConsoleHandler.Run(self.Fiber(), modeContex, line);
                             break;
                         }
                     }
-
-
                 }
                 catch (Exception e)
                 {

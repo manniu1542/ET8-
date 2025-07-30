@@ -45,5 +45,11 @@ namespace ET.Server
         {
             return self.GetComponent<AOIEntity>().GetBeSeePlayers();
         }
+        
+        // 获取都谁能看见该unit的AOI，主要用于广播
+        public static Dictionary<long, EntityRef<AreaOfInterestEntity>> GetOtherAOIPlayersVisibleSelf(this Unit self)
+        {
+            return self.GetComponent<AreaOfInterestEntity>().GetOtherPlayersVisibleSelf();
+        }
     }
 }

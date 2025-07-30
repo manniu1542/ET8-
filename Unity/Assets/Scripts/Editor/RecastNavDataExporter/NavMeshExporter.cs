@@ -14,9 +14,9 @@ namespace ETEditor
 {
     /// <summary>
     /// 从Unity的NavMesh组件里导出地图数据，供服务器来使用
-    /// https://blog.csdn.net/huutu/article/details/52672505
+    /// https://blog.csdn.net/huutu/article/details/52672505  
     /// </summary>
-    public class NavMeshExporter: Editor
+    public class NavMeshExporter : Editor
     {
         public const byte VERSION = 1;
 
@@ -71,6 +71,7 @@ namespace ETEditor
         private static string outputServerFolder = "../Config/RecastNavData/ExportedObj/";
 
         #region 菜单主函数
+
         [MenuItem("ET/NavMesh/ExportSceneObj", false, ETMenuItemPriority.NavMesh)]
         public static void ExportScene()
         {
@@ -91,14 +92,14 @@ namespace ETEditor
             InputVertices(triangulation.vertices);
             InputTriangles(triangulation.indices, triangulation.areas);
             IndexVertsAndFaces();
-            //WriteFile();
+            WriteFile();
 
             // 导出*_internal.Obj，仅供Unity编辑器自己查看
-            //WriteUnityObjFile();
+            WriteUnityObjFile();
             // 导出Recast可用的*.Obj文件
             WriteRecastObjFile();
             // 拷贝Obj和Bytes文件到服务器目录下 TODO 暂不需要
-            //CopyObjFiles();
+            // CopyObjFiles();
 
             Debug.Log($"NavMesh Output Info - Vertices:[{vertList.Count}] - Faces:[{faceList.Count}]");
         }
@@ -112,9 +113,9 @@ namespace ETEditor
             for (int i = 0, n = vertices.Length - 1; i <= n; i++)
             {
                 var point = vertices[i];
-                var x = (float) Math.Round(point.x, 2);
-                var y = (float) Math.Round(point.y, 2);
-                var z = (float) Math.Round(point.z, 2);
+                var x = (float)Math.Round(point.x, 2);
+                var y = (float)Math.Round(point.y, 2);
+                var z = (float)Math.Round(point.z, 2);
                 if (!pointVertDict.ContainsKey(x))
                 {
                     pointVertDict.Add(x, new Dictionary<float, Vert>());
@@ -161,7 +162,7 @@ namespace ETEditor
                 }
 
                 var newFace = true;
-                var area = areas[i] >= 3? areas[i] - 2 : 0;
+                var area = areas[i] >= 3 ? areas[i] - 2 : 0;
                 if (face != null && face.area == area)
                 {
                     for (var j = 0; j < 3; j++)
@@ -234,7 +235,7 @@ namespace ETEditor
 
         private static float GetDistance(float deltaX, float deltaZ)
         {
-            return (float) Math.Round(Math.Sqrt((double) deltaX * (double) deltaX + (double) deltaZ * (double) deltaZ), 2);
+            return (float)Math.Round(Math.Sqrt((double)deltaX * (double)deltaX + (double)deltaZ * (double)deltaZ), 2);
         }
 
         private static void InitFace(Face face)
@@ -257,14 +258,14 @@ namespace ETEditor
             face.centerZ /= vertCount;
             if (face.normalB != 0)
             {
-                face.normalX = (float) Math.Round(face.normalA / face.normalB, 6);
-                face.normalZ = (float) Math.Round(face.normalC / face.normalB, 6);
+                face.normalX = (float)Math.Round(face.normalA / face.normalB, 6);
+                face.normalZ = (float)Math.Round(face.normalC / face.normalB, 6);
             }
 
             for (int i = 0, n = vertCount - 1; i <= n; i++)
             {
                 var firstVert = face.verts[i];
-                var secondVert = face.verts[i == n? 0 : i + 1];
+                var secondVert = face.verts[i == n ? 0 : i + 1];
                 if (!vertPairDict.ContainsKey(firstVert))
                 {
                     vertPairDict.Add(firstVert, new Dictionary<Vert, Pair>());
@@ -329,8 +330,8 @@ namespace ETEditor
             var hilbertZ = 65535f / (maxZ - minZ);
             foreach (var face in faceList)
             {
-                var X = (uint) Math.Round((face.centerX - minX) * hilbertX);
-                var Z = (uint) Math.Round((face.centerZ - minZ) * hilbertZ);
+                var X = (uint)Math.Round((face.centerX - minX) * hilbertX);
+                var Z = (uint)Math.Round((face.centerZ - minZ) * hilbertZ);
                 var a = X ^ Z;
                 var b = 0xFFFF ^ a;
                 var c = 0xFFFF ^ (X | Z);
@@ -517,7 +518,7 @@ namespace ETEditor
                 sw.Write("mtllib ./" + filename + ".mtl\n");
                 string strMes = MeshToString(mf, materialList);
                 sw.Write(strMes);
-                EditorUtility.DisplayProgressBar("Exporting objects...", mf.name, count++ / (float) meshes.Count);
+                EditorUtility.DisplayProgressBar("Exporting objects...", mf.name, count++ / (float)meshes.Count);
             }
 
             sw.Flush();
@@ -735,6 +736,7 @@ namespace ETEditor
                 {
                     System.IO.Directory.CreateDirectory(outputServerFolder);
                 }
+
                 foreach (string file in files)
                 {
                     string name = System.IO.Path.GetFileName(file);
