@@ -40,6 +40,7 @@ namespace ET.Server
 
         public static Dictionary<long, EntityRef<AOIEntity>> GetBeSeePlayers(this AOIEntity self)
         {
+            Log.Error("MESSAGE:" + self.BeSeePlayers.Count);
             return self.BeSeePlayers;
         }
 

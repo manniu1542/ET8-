@@ -23,5 +23,6 @@ namespace ET.Client
 				this.uiGlobalComponent = value;
 			}
 		}
+
 	}
 }

@@ -56,6 +56,8 @@ namespace ET.Server
                 {
                     oneTypeMessageLocationType.Send(u.Unit.Id, message);
                 }
+                // 以及自己单位发送消息
+                oneTypeMessageLocationType.Send(unit.Id, message);
             }
             else
             {

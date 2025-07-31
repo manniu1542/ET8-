@@ -5,6 +5,7 @@ using System.IO;
 namespace ET.Client
 {
     [Event(SceneType.Main)]
+    [FriendOfAttribute(typeof(ET.Client.UIComponent))]
     public class EntryEvent3_InitClient : AEvent<Scene, EntryEvent3>
     {
         protected override async ETTask Run(Scene root, EntryEvent3 args)
@@ -22,6 +23,7 @@ namespace ET.Client
 
             await EventSystem.Instance.PublishAsync(root, new AppStartInitFinish());
             ShowViewSingleton();
+
         }
 
         /// <summary>

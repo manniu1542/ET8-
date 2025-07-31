@@ -13,6 +13,10 @@
             //如果被通知的一方不是玩家实体,也就无需广播了
             if (!a.IsPlayer()) return;
             MapMessageHelper.NoticeUnitRemove(a.GetParent<Unit>(), b.GetParent<Unit>());
+            
+            Log.Error($"a {a.GetParent<Unit>().Id} remove b{b.GetParent<Unit>().Id}:");
+   
+            
         }
     }
 }

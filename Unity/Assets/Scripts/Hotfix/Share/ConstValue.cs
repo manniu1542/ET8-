@@ -9,7 +9,7 @@ namespace ET
         /// <summary>
         /// 使用自己写的AOI 组件，来管理玩家的 可视范围。在状态同步的时候
         /// </summary>
-        public const bool IsUseSelfAOI = false;
+        public const bool IsUseSelfAOI = true;
 
     }
 }

@@ -19,6 +19,7 @@ namespace ET.Server
         [EntitySystem]
         private static void Destroy(this AreaOfInterestEntity self)
         {
+            //此时的self ，在外部已经销毁了，所以有EntityRef<AreaOfInterestEntity>使用他的。目前统统是null
             self.Scene().GetComponent<AreaCellMgrComponent>().UnBindAOIFormAreaCell(self);
             self.ViewDistance = 0;
             self.dicOtherPlayersVisibleSelf.Clear();
@@ -35,21 +36,25 @@ namespace ET.Server
             self.hsLeaveNeedCheckAreaCells = null;
             self.hsVisibleAreaCells = null;
         }
+
         public static Dictionary<long, EntityRef<AreaOfInterestEntity>> GetOtherPlayersVisibleSelf(this AreaOfInterestEntity self)
         {
             return self.dicOtherPlayersVisibleSelf;
         }
+
         public static bool IsPlayer(this AreaOfInterestEntity self)
         {
             return self.GetParent<Unit>().Type() == UnitType.Player;
         }
+
         /// <summary>
         ///  重置当前可视与不可视的区域格子
         /// </summary>
         /// <param name="self"></param>
         /// <param name="selfCellX"></param>
         /// <param name="selfCellY"></param>
-        private static void _ResetVisibleAndLeveCheckAreaCells(this AreaOfInterestEntity self, int selfCellX, int selfCellY,ref HashSet<long> hsVisible,ref HashSet<long> hsLeaveNeedCheck)
+        private static void _ResetVisibleAndLeveCheckAreaCells(this AreaOfInterestEntity self, int selfCellX, int selfCellY,
+        ref HashSet<long> hsVisible, ref HashSet<long> hsLeaveNeedCheck)
         {
             hsVisible.Clear();
             hsLeaveNeedCheck.Clear();
@@ -57,7 +62,7 @@ namespace ET.Server
             if (self.ViewDistance <= 0)
                 self.ViewDistance = 1;
             //看到格子大小的尺寸  （至少是1,取值总是取ceil向上取整了）
-            int viewCellSize = (self.ViewDistance - 1) / AreaCellMgrComponent.FloatToIntConversionFactor + 1;
+            int viewCellSize = (self.ViewDistance - 1) / AreaCellMgrComponent.AreaCellSize + 1;
 
             //检测超出视野范围的大小
             int checkOverViewSize = viewCellSize;
@@ -84,8 +89,8 @@ namespace ET.Server
 
                     hsLeaveNeedCheck.Add(areaCellId);
                     //超出视野范围的大小 都不加入
-                    if (x < selfCellX - viewCellSize || x < selfCellX + viewCellSize
-                        || y < selfCellY - viewCellSize || y < selfCellY + viewCellSize)
+                    if (x < selfCellX - viewCellSize || x > selfCellX + viewCellSize
+                        || y < selfCellY - viewCellSize || y > selfCellY + viewCellSize)
                     {
                         continue;
                     }
@@ -94,6 +99,7 @@ namespace ET.Server
                 }
             }
         }
+
         /// <summary>
         ///  重置当前可视与不可视的区域格子
         /// </summary>
@@ -104,6 +110,7 @@ namespace ET.Server
         {
             self._ResetVisibleAndLeveCheckAreaCells(selfCellX, selfCellY, ref self.hsVisibleAreaCells, ref self.hsLeaveNeedCheckAreaCells);
         }
+
         /// <summary>
         ///  重置临时当前可视与不可视的区域格子（给临时容器，做对比使用的）
         /// </summary>
@@ -114,6 +121,7 @@ namespace ET.Server
         {
             self._ResetVisibleAndLeveCheckAreaCells(selfCellX, selfCellY, ref self.hsTmpVisibleAreaCells, ref self.hsTmpLeaveNeedCheckAreaCells);
         }
+
         /// <summary>
         /// AOI关联这个可视区域
         /// </summary>
@@ -131,6 +139,7 @@ namespace ET.Server
                     self.AddVisibleOtherAOI(acAOI);
             }
         }
+
         /// <summary>
         ///  AOI取消关联这个可视区域
         /// </summary>
@@ -140,10 +149,11 @@ namespace ET.Server
         {
             cell.dicAOIUnitsVisibleSelf.Remove(self.Id);
         }
+
         public static void AddVisibleOtherAOI(this AreaOfInterestEntity self, AreaOfInterestEntity other)
         {
-            //检测otherAoi已经被销毁了
-            if (other == null) return;
+            //检测otherAoi已经被销毁了 (添加自己)
+            if (self == null || other == null || self.Id == other.Id) return;
             //可视区域已经添加过这个aoi
             if (self.dicVisibleAOIUnits.ContainsKey(other.Id))
                 return;
@@ -172,10 +182,7 @@ namespace ET.Server
             //给这个区域AreaCell进行赋值添加
             cell.dicAOILeaveNeedCheckSelf.Add(self.Id, self);
         }
-        
-  
-        
-        
+
         /// <summary>
         /// 取消链接离开的时候需要检查的格子
         /// </summary>
@@ -185,12 +192,15 @@ namespace ET.Server
         {
             AreaOfInterestEntity otherAoi = null;
             //遍历这些自己能够看到的格子，遍历他的aoi，并给客户端的自己下发通知自己能看到的aoi 需要被移除掉了。（因为自己的离开的关系，他们在自己中看不到了）
-            foreach (var aoi in cell.dicAOIUnits.Values)
+            foreach (var kv_aoi in cell.dicAOIUnits)
             {
-                otherAoi = aoi;
-                if (otherAoi.Id != self.Id)
+                if (kv_aoi.Key != self.Id)
+                {
+                    otherAoi = kv_aoi.Value;
                     self.RemoveVisibleOtherAOI(otherAoi);
+                }
             }
+
             cell.dicAOILeaveNeedCheckSelf.Remove(self.Id);
         }
 
@@ -201,8 +211,8 @@ namespace ET.Server
         /// <param name="other"></param>
         public static void RemoveVisibleOtherAOI(this AreaOfInterestEntity self, AreaOfInterestEntity other)
         {
-            //检测otherAoi已经被销毁了
-            if (other == null) return;
+            //检测otherAoi已经被销毁了  ,self==null 避免再destory时候 其他关联AreaOfInterestEntity 调用自己。此时self已经是null了。注意id==0，以及执行detroy的顺序
+            if (self == null || other == null || self.Id == other.Id) return;
             //可视区域已经添加过这个aoi
             if (self.dicVisibleAOIUnits.ContainsKey(other.Id))
                 return;

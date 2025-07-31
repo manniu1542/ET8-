@@ -15,6 +15,10 @@ namespace ET.Server
         [EntitySystem]
         private static void Destroy(this AreaCell self)
         {
+            self.dicAOIUnits.Clear();
+            self.dicAOIUnitsVisibleSelf.Clear();
+            self.dicAOILeaveNeedCheckSelf.Clear();
+            
         }
 
         public static void AddAOI(this AreaCell self, AreaOfInterestEntity aoi)

@@ -112,7 +112,7 @@ namespace ET
             
             long timeNow = TimeInfo.Instance.ClientNow();
             long moveTime = timeNow - self.StartTime;
-
+   
             while (true)
             {
                 if (moveTime <= 0)
@@ -171,7 +171,7 @@ namespace ET
                     self.MoveFinish(ret);
                     return;
                 }
-
+  
                 self.SetNextTarget();
             }
         }

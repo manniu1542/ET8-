@@ -14,6 +14,7 @@
             
             Unit ua = a.GetParent<Unit>();
             Unit ub = b.GetParent<Unit>();
+            Log.Error($"a {ua.Id} add b{ub.Id}:");
             MapMessageHelper.NoticeUnitAdd(ua, ub);
 
             await ETTask.CompletedTask;

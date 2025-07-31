@@ -53,6 +53,8 @@ namespace ET.Server
                 AOIEntity e = kv.Value;
                 e.EnterSight(aoiEntity);
             }
+
+            Log.Error("MESSAGE:" + aoiEntity.BeSeePlayers.Count);
         }
 
         /// <summary>
@@ -83,6 +85,7 @@ namespace ET.Server
                 Cell cell = self.GetCell(cellId);
                 aoiEntity.UnSubEnter(cell);
             }
+
             //自己看到的cell,告诉这些cell，cell就移除 他刚好被那些AOI离开
             foreach (long cellId in aoiEntity.SubLeaveCells)
             {
@@ -123,7 +126,7 @@ namespace ET.Server
             {
                 AOIEntity e = kv.Value;
                 if (e.SubEnterCells.Contains(preCell.Id))
-                {   
+                {
                     continue;
                 }
 

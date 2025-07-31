@@ -3,6 +3,7 @@ using MongoDB.Bson;
 
 namespace ET.Server
 {
+    [FriendOfAttribute(typeof(ET.Server.AreaCell))]
     public static partial class TransferHelper
     {
         public static async ETTask TransferAtFrameFinish(Unit unit, ActorId sceneInstanceId, string sceneName)
@@ -12,15 +13,14 @@ namespace ET.Server
 
             await TransferHelper.Transfer(unit, sceneInstanceId, sceneName);
         }
-        
 
         public static async ETTask Transfer(Unit unit, ActorId sceneInstanceId, string sceneName)
         {
             Scene root = unit.Root();
-            
+
             // location加锁
             long unitId = unit.Id;
-            
+
             M2M_UnitTransferRequest request = M2M_UnitTransferRequest.Create();
             request.OldActorId = unit.GetActorId();
             request.Unit = unit.ToBson();
@@ -31,8 +31,9 @@ namespace ET.Server
                     request.Entitys.Add(entity.ToBson());
                 }
             }
-            unit.Dispose();
             
+            unit.Dispose();
+
             await root.GetComponent<LocationProxyComponent>().Lock(LocationType.Unit, unitId, request.OldActorId);
             await root.GetComponent<MessageSender>().Call(sceneInstanceId, request);
         }

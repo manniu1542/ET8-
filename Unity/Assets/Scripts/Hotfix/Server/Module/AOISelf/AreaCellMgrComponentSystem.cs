@@ -67,13 +67,12 @@ namespace ET.Server
             ac.AddAOI(aoi);
             aoi.Cell = ac;
 
-            //通知订阅该Cell的,那些可以看到该Cell的AOI,广播给他消息，其他的AOI也设置看到了该aoi的广播，相互关联上
+            //通知订阅该Cell的,那些可以看到该Cell的AOI,广播给他消息，其他的AOI也设置看到了该aoi的广播，
             AreaOfInterestEntity otherAoi = null;
             foreach (var kv in ac.dicAOIUnitsVisibleSelf)
             {
                 otherAoi = kv.Value;
-                if (otherAoi.Id != aoi.Id)
-                    otherAoi.AddVisibleOtherAOI(aoi);
+                otherAoi.AddVisibleOtherAOI(aoi);
             }
         }
 
@@ -151,26 +150,20 @@ namespace ET.Server
         /// 需要检测当前的移动 距离 不能大于 1格的一半，要检测。这个移动过大了，可能需要调整1格的大小，或者他的可视范围的大小了。
         /// </summary>
         /// <param name="self"></param>
-        public static void Move(this AreaCellMgrComponent self, AreaOfInterestEntity aoi, float x, float y)
+        public static void Move(this AreaCellMgrComponent self, AreaOfInterestEntity aoi, int newCellX, int newCellY)
         {
-            int acX = (int)(x * AreaCellMgrComponent.FloatToIntConversionFactor) / AreaCellMgrComponent.AreaCellSize;
-            int acY = (int)(y * AreaCellMgrComponent.FloatToIntConversionFactor) / AreaCellMgrComponent.AreaCellSize;
+           
             AreaCell oldCell = aoi.Cell;
-            long nweAreaCellId = AreaCellHelper.GetACIdByAOIPos(acX, acY);
+            long nweAreaCellId = AreaCellHelper.GetACIdByAOIPos(newCellX, newCellY);
             //所在的格子 没有发生改变
             if (nweAreaCellId == oldCell.Id) return;
 
-            
             //从aoi本身角度 来管理 他存储的其他aoi 对比 所需要 通知的 aoi
-            self.UpdateAOIForAOISelfChange(aoi, acX, acY);
-            
-            
+            self.UpdateAOIForAOISelfChange(aoi, newCellX, newCellY);
+
             AreaCell newCell = self.GetOrCreateAreaCell(nweAreaCellId);
             //因为当前aoi所在的格子放生变化了。 从格子角度 来管理 新/旧 格子对他们的aoi产生的变化通知 
             self.UpdateAOIForCellChange(aoi, newCell, oldCell);
-
-      
-
         }
 
         /// <summary>
@@ -179,7 +172,7 @@ namespace ET.Server
         /// <param name="aoi"></param>
         /// <param name="newCell"></param>
         /// <param name="oldCell"></param>
-        public static void UpdateAOIForAOISelfChange(this AreaCellMgrComponent self, AreaOfInterestEntity aoi,int CellX,int CellY)
+        public static void UpdateAOIForAOISelfChange(this AreaCellMgrComponent self, AreaOfInterestEntity aoi, int CellX, int CellY)
         {
             aoi.ResetTmpVisibleAndLeveCheckAreaCells(CellX, CellY);
             AreaCell acTmp = null;
@@ -187,13 +180,13 @@ namespace ET.Server
             /*  例如向右移动一格
              *  □ □ □ □ □
              *  □ ● ● ● □
-             *  □ ● ■ ● □ 
+             *  □ ● ■ ● □
              *  □ ● ● ● □1
              *  □ □ □ □ □
              *
-             *  ⊕ □ □ □ □ □ 
+             *  ⊕ □ □ □ □ □
              *  ⊕ □ ● ● ● □
-             *  ⊕ □ ● ■ ● □               
+             *  ⊕ □ ● ■ ● □
              *  ⊕ □ ● ● ● □
              *  ⊕ □ □ □ □ □
              * */
@@ -207,11 +200,12 @@ namespace ET.Server
                 {
                     continue;
                 }
+
                 acTmp = self.GetOrCreateAreaCell(acID);
                 //格子需要检查下 该aoi离开以后 ，格子里面的aoi检查下
                 aoi.LinkToLeaveNeedCheckAreaCell(acTmp);
             }
-            
+
             //在与hsLeaveNeedCheckAreaCells容器中 ，移除hsTmpLeaveNeedCheckAreaCells 与hsLeaveNeedCheckAreaCells 相同的元素。
             aoi.hsLeaveNeedCheckAreaCells.ExceptWith(aoi.hsTmpLeaveNeedCheckAreaCells);
 
@@ -222,10 +216,8 @@ namespace ET.Server
                 //格子需要检查下 该aoi离开以后 ，格子里面的aoi检查下
                 aoi.UnLinkToLeaveNeedCheckAreaCell(acTmp);
             }
-            
-          
-            ObjectHelper.Swap(ref aoi.hsLeaveNeedCheckAreaCells, ref aoi.hsTmpLeaveNeedCheckAreaCells);
 
+            ObjectHelper.Swap(ref aoi.hsLeaveNeedCheckAreaCells, ref aoi.hsTmpLeaveNeedCheckAreaCells);
 
             #endregion
 
@@ -238,29 +230,23 @@ namespace ET.Server
                 {
                     continue;
                 }
+
                 acTmp = self.GetOrCreateAreaCell(acID);
                 aoi.LinkToVisibleAreaCell(acTmp);
             }
-            
+
             //在与hsLeaveNeedCheckAreaCells容器中 ，移除hsTmpLeaveNeedCheckAreaCells 与hsLeaveNeedCheckAreaCells 相同的元素。
             aoi.hsVisibleAreaCells.ExceptWith(aoi.hsTmpVisibleAreaCells);
-            
+
             foreach (long acID in aoi.hsVisibleAreaCells)
             {
-            
                 acTmp = self.GetOrCreateAreaCell(acID);
                 aoi.UnLinkToVisibleAreaCell(acTmp);
             }
-            
-          
+
             ObjectHelper.Swap(ref aoi.hsVisibleAreaCells, ref aoi.hsTmpVisibleAreaCells);
 
-
             #endregion
-            
-
-            
-            
         }
 
         /// <summary>
@@ -281,12 +267,12 @@ namespace ET.Server
             {
                 aoiLeveCheck.RemoveVisibleOtherAOI(aoi);
             }
+
             //这个格子 有变动 新增的 需要通知的 aoi
             foreach (AreaOfInterestEntity aoiVisible in newCell.dicAOIUnitsVisibleSelf.Values)
             {
                 aoiVisible.AddVisibleOtherAOI(aoi);
             }
-            
         }
     }
 }
