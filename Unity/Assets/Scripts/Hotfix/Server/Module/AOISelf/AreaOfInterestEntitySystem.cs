@@ -150,16 +150,16 @@ namespace ET.Server
             cell.dicAOIUnitsVisibleSelf.Remove(self.Id);
         }
 
-        public static void AddVisibleOtherAOI(this AreaOfInterestEntity self, AreaOfInterestEntity other)
+        public static bool AddVisibleOtherAOI(this AreaOfInterestEntity self, AreaOfInterestEntity other)
         {
             //检测otherAoi已经被销毁了 (添加自己)
-            if (self == null || other == null || self.Id == other.Id) return;
+            if (self == null || other == null || self.Id == other.Id) return false;
             //可视区域已经添加过这个aoi
             if (self.dicVisibleAOIUnits.ContainsKey(other.Id))
-                return;
+                return false;
 
             //tips:可加入两个AOI之间的可视野检测，other可不可以被这个self看到 ，不可被看到的return
-
+            if(!self.AAoiVisibleBAoiRules(other))return false;
             //当前的aoi 可是unit加入这个aoi
             self.dicVisibleAOIUnits.Add(other.Id, other);
             if (other.IsPlayer())
@@ -170,6 +170,7 @@ namespace ET.Server
             if (self.IsPlayer())
                 other.dicOtherPlayersVisibleSelf.Add(self.Id, self);
             EventSystem.Instance.PublishAsync(self.Scene(), new UnitAOIAVisibleBEvent() { A = self, B = other }).Coroutine();
+            return true;
         }
 
         /// <summary>
@@ -209,13 +210,13 @@ namespace ET.Server
         /// </summary>
         /// <param name="self"></param>
         /// <param name="other"></param>
-        public static void RemoveVisibleOtherAOI(this AreaOfInterestEntity self, AreaOfInterestEntity other)
+        public static bool RemoveVisibleOtherAOI(this AreaOfInterestEntity self, AreaOfInterestEntity other)
         {
             //检测otherAoi已经被销毁了  ,self==null 避免再destory时候 其他关联AreaOfInterestEntity 调用自己。此时self已经是null了。注意id==0，以及执行detroy的顺序
-            if (self == null || other == null || self.Id == other.Id) return;
+            if (self == null || other == null || self.Id == other.Id) return false;
             //可视区域已经添加过这个aoi
-            if (self.dicVisibleAOIUnits.ContainsKey(other.Id))
-                return;
+            if (!self.dicVisibleAOIUnits.ContainsKey(other.Id))
+                return false;
 
             //tips:可加入两个AOI之间的可视野检测，other可不可以被这个self看到 ，不可被看到的return
 
@@ -229,6 +230,21 @@ namespace ET.Server
             if (self.IsPlayer())
                 other.dicOtherPlayersVisibleSelf.Remove(self.Id);
             EventSystem.Instance.PublishAsync(self.Scene(), new UnitAOIAInVisibleBEvent() { A = self, B = other }).Coroutine();
+            return true;
+        }
+        
+        
+        /// <summary>
+        /// a可视b的规则,true
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static bool AAoiVisibleBAoiRules(this AreaOfInterestEntity self, AreaOfInterestEntity other)
+        {
+            //例如 a 是玩家 。b是npc。 a可视b，b不可视 a ，就可以加入规则
+            return true;
+
         }
     }
 }

@@ -54,7 +54,7 @@ namespace ET.Server
                 e.EnterSight(aoiEntity);
             }
 
-            Log.Error("MESSAGE:" + aoiEntity.BeSeePlayers.Count);
+      
         }
 
         /// <summary>

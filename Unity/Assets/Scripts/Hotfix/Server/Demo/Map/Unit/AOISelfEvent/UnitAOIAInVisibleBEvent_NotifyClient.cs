@@ -6,7 +6,7 @@
     {
         protected override async ETTask Run(Scene scene, UnitAOIAInVisibleBEvent args)
         {
-            await ETTask.CompletedTask;
+        
             AreaOfInterestEntity a = args.A;
             AreaOfInterestEntity b = args.B;
             
@@ -15,7 +15,7 @@
             MapMessageHelper.NoticeUnitRemove(a.GetParent<Unit>(), b.GetParent<Unit>());
             
             Log.Error($"a {a.GetParent<Unit>().Id} remove b{b.GetParent<Unit>().Id}:");
-   
+            await ETTask.CompletedTask;
             
         }
     }

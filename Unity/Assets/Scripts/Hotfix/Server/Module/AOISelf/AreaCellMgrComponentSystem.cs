@@ -152,18 +152,22 @@ namespace ET.Server
         /// <param name="self"></param>
         public static void Move(this AreaCellMgrComponent self, AreaOfInterestEntity aoi, int newCellX, int newCellY)
         {
-           
             AreaCell oldCell = aoi.Cell;
             long nweAreaCellId = AreaCellHelper.GetACIdByAOIPos(newCellX, newCellY);
             //所在的格子 没有发生改变
             if (nweAreaCellId == oldCell.Id) return;
+            if (self.isDebugLog)
+            {
+                AreaCellHelper.GetACMiddlePosByACId(aoi.Cell.Id, out int x, out int y);
+                Log.Info($"当前 ({x},{y}) => 移动到:({newCellX},{newCellY})");
+            }
 
-            //从aoi本身角度 来管理 他存储的其他aoi 对比 所需要 通知的 aoi
-            self.UpdateAOIForAOISelfChange(aoi, newCellX, newCellY);
-
+            //因为当前aoi所在的格子放生变化了。 从格子角度 来管理 新/旧 格子对他们的aoi产生的变化通知 (也就是通知其他aoi对当前aoi的变化通知)
             AreaCell newCell = self.GetOrCreateAreaCell(nweAreaCellId);
-            //因为当前aoi所在的格子放生变化了。 从格子角度 来管理 新/旧 格子对他们的aoi产生的变化通知 
             self.UpdateAOIForCellChange(aoi, newCell, oldCell);
+
+            //从aoi本身角度 来管理 他存储的其他aoi    所需要 当前aoi所需要的增删 ， 以及 跟新当前aoi的最新所存储的（可视/移除检测）的格子
+            self.UpdateAOIForAOISelfChange(aoi, newCellX, newCellY);
         }
 
         /// <summary>
@@ -176,12 +180,12 @@ namespace ET.Server
         {
             aoi.ResetTmpVisibleAndLeveCheckAreaCells(CellX, CellY);
             AreaCell acTmp = null;
-            // ⊕=需要通知取消关联的  ■=当前实体, ●=hsVisibleAreaCells, □=hsLeaveNeedCheck
+            // ⊕=需要通知取消关联的  ■=当前实体, ●=hsVisibleAreaCells, □=hsLeaveNeedCheckAreaCells
             /*  例如向右移动一格
              *  □ □ □ □ □
              *  □ ● ● ● □
              *  □ ● ■ ● □
-             *  □ ● ● ● □1
+             *  □ ● ● ● □
              *  □ □ □ □ □
              *
              *  ⊕ □ □ □ □ □
@@ -201,6 +205,12 @@ namespace ET.Server
                     continue;
                 }
 
+                if (self.isDebugLog)
+                {
+                    AreaCellHelper.GetACMiddlePosByACId(acID, out int x, out int y);
+                    Log.Info($"UpdateAOIForAOISelfChange_离开需要检查的格子新增：({x},{y})");
+                }
+
                 acTmp = self.GetOrCreateAreaCell(acID);
                 //格子需要检查下 该aoi离开以后 ，格子里面的aoi检查下
                 aoi.LinkToLeaveNeedCheckAreaCell(acTmp);
@@ -212,6 +222,12 @@ namespace ET.Server
             //更新离开需要检测的格子
             foreach (long acID in aoi.hsLeaveNeedCheckAreaCells)
             {
+                if (self.isDebugLog)
+                {
+                    AreaCellHelper.GetACMiddlePosByACId(acID, out int x, out int y);
+                    Log.Info($"UpdateAOIForAOISelfChange_离开需要检查：({x},{y})");
+                }
+
                 acTmp = self.GetOrCreateAreaCell(acID);
                 //格子需要检查下 该aoi离开以后 ，格子里面的aoi检查下
                 aoi.UnLinkToLeaveNeedCheckAreaCell(acTmp);
@@ -223,12 +239,18 @@ namespace ET.Server
 
             #region hsVisibleAreaCells 更新
 
-            //更新 关联下新增的 需要 检测的格子
+            //更新 关联下新增的 可以看到的格子
             foreach (long acID in aoi.hsTmpVisibleAreaCells)
             {
                 if (aoi.hsVisibleAreaCells.Contains(acID))
                 {
                     continue;
+                }
+
+                if (self.isDebugLog)
+                {
+                    AreaCellHelper.GetACMiddlePosByACId(acID, out int x, out int y);
+                    Log.Info($"UpdateAOIForAOISelfChange_新增的 可以看到的格子：({x},{y})");
                 }
 
                 acTmp = self.GetOrCreateAreaCell(acID);
@@ -240,6 +262,12 @@ namespace ET.Server
 
             foreach (long acID in aoi.hsVisibleAreaCells)
             {
+                if (self.isDebugLog)
+                {
+                    AreaCellHelper.GetACMiddlePosByACId(acID, out int x, out int y);
+                    Log.Info($"UpdateAOIForAOISelfChange_移除的 可以看到的格子：({x},{y})");
+                }
+
                 acTmp = self.GetOrCreateAreaCell(acID);
                 aoi.UnLinkToVisibleAreaCell(acTmp);
             }
@@ -262,16 +290,39 @@ namespace ET.Server
             aoi.Cell = newCell;
             oldCell.RemoveAOI(aoi);
             newCell.AddAOI(aoi);
-            //这个格子 有变动 离开的时候 需要通知的 aoi
-            foreach (AreaOfInterestEntity aoiLeveCheck in oldCell.dicAOILeaveNeedCheckSelf.Values)
-            {
-                aoiLeveCheck.RemoveVisibleOtherAOI(aoi);
-            }
 
-            //这个格子 有变动 新增的 需要通知的 aoi
+            //新格子 有（当前aoi进入的）变动，需要通知 可以看到新格子的aoi
             foreach (AreaOfInterestEntity aoiVisible in newCell.dicAOIUnitsVisibleSelf.Values)
             {
-                aoiVisible.AddVisibleOtherAOI(aoi);
+                //其他的aoi可视aoi中包含老格子的（其实这个aoiVisible已经可视了当前aoi了 return）
+                if (aoiVisible.hsVisibleAreaCells.Contains(oldCell.Id))
+                {
+                    continue;
+                }
+
+                //通知其aoi有aoi进入了新格子
+                bool isAdd = aoiVisible.AddVisibleOtherAOI(aoi);
+                if (self.isDebugLog && isAdd)
+                {
+                    Log.Info($"UpdateAOIForCellChange_格子 新增的 需要通知的 aoi：{aoiVisible.Id} 看到了:{aoi.Id}");
+                }
+            }
+
+            //旧格子 有（当前aoi离开的）变动，需要通知旧格子中关注旧格子离开的aoi通知某些需要检车离开当前aoi时需要检测的格子
+            foreach (AreaOfInterestEntity aoiLeveCheck in oldCell.dicAOILeaveNeedCheckSelf.Values)
+            {
+                //其他aoi离开需要检查的格子中包含新格子（暂时不通知了,在该aoi离开的监听中return）
+                if (aoiLeveCheck.hsLeaveNeedCheckAreaCells.Contains(newCell.Id))
+                {
+                    continue;
+                }
+
+                //通知其当前aoi离开了旧格子
+                bool isRemove = aoiLeveCheck.RemoveVisibleOtherAOI(aoi);
+                if (self.isDebugLog && isRemove)
+                {
+                    Log.Info($"UpdateAOIForCellChange_格子 有变动 离开的时候 需要通知的 aoi：{aoiLeveCheck.Id} 移除可视 {aoi.Id}");
+                }
             }
         }
     }

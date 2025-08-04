@@ -91,8 +91,8 @@ namespace ET
             self.TurnTime = turnTime;
             self.Speed = speed;
             self.tcs = ETTask<bool>.Create(true);
-
-            EventSystem.Instance.Publish(self.Scene(), new MoveStart() {Unit = self.GetParent<Unit>()});
+       
+            EventSystem.Instance.PublishAsync(self.Scene(), new MoveStart() {Unit = self.GetParent<Unit>()}).Coroutine();
             
             self.StartMove();
             
