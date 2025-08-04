@@ -62,9 +62,8 @@ namespace ET.Client
 
             try
             {
-                self.Animator.SetFloat("Run", self.MontionSpeed);
-
-                self.Animator.SetTrigger(self.MotionType.ToString());
+                self.SetFloatValue(MotionType.Run.ToString(), self.MontionSpeed);
+                // self.SetTrigger(self.MotionType.ToString());
 
                 self.MontionSpeed = 1;
                 self.MotionType = MotionType.None;
@@ -105,7 +104,7 @@ namespace ET.Client
             {
                 return;
             }
-            
+
             self.MotionType = motionType;
             self.MontionSpeed = motionSpeed;
         }

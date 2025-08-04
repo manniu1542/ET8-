@@ -30,8 +30,22 @@
             y = (int)(acID & 0xffffffff);
         }
 
-    
-
-    
+        /// <summary>
+        /// GridSizeCalculation
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="???"></param>
+        public static int GridSizeCalculation(float value)
+        {
+            int size = (int)(value * AreaCellMgrComponent.FloatToIntConversionFactor) / AreaCellMgrComponent.AreaCellSize;
+            //避免 在临界值 例如 格子大小为10的时候， x/y正负6都属于0 格子，这个时候的可视范围不准确，改成只要是负数，格子都补充-1
+            if (value < 0)
+            {
+                size -= 1;
+            }
+            return size;
+        }
+        
+        
     }
 }

@@ -13,10 +13,10 @@ namespace ET.Server
 
             if (ConstValue.IsUseSelfAOI)
             {
-                oldCellX = (int)(oldPos.x * AreaCellMgrComponent.FloatToIntConversionFactor) / AreaCellMgrComponent.AreaCellSize;
-                oldCellY = (int)(oldPos.z * AreaCellMgrComponent.FloatToIntConversionFactor) / AreaCellMgrComponent.AreaCellSize;
-                newCellX = (int)(unit.Position.x * AreaCellMgrComponent.FloatToIntConversionFactor) / AreaCellMgrComponent.AreaCellSize;
-                newCellY = (int)(unit.Position.z * AreaCellMgrComponent.FloatToIntConversionFactor) / AreaCellMgrComponent.AreaCellSize;
+                oldCellX = AreaCellHelper.GridSizeCalculation(oldPos.x);
+                oldCellY = AreaCellHelper.GridSizeCalculation(oldPos.z);
+                newCellX = AreaCellHelper.GridSizeCalculation(unit.Position.x);
+                newCellY = AreaCellHelper.GridSizeCalculation(unit.Position.z);
                 if (oldCellX == newCellX && oldCellY == newCellY)
                 {
                     return;
@@ -50,7 +50,6 @@ namespace ET.Server
                 unit.Scene().GetComponent<AOIManagerComponent>().Move(aoiEntity, newCellX, newCellY);
             }
 
-          
             await ETTask.CompletedTask;
         }
     }

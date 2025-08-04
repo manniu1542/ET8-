@@ -43,9 +43,9 @@ namespace ET.Server
         /// <param name="areaCell"></param>
         public static void BindAOIToAreaCell(this AreaCellMgrComponent self, AreaOfInterestEntity aoi, float x, float y)
         {
-            int acX = (int)(x * AreaCellMgrComponent.FloatToIntConversionFactor) / AreaCellMgrComponent.AreaCellSize;
-            int acY = (int)(y * AreaCellMgrComponent.FloatToIntConversionFactor) / AreaCellMgrComponent.AreaCellSize;
-
+           
+            int acX =  AreaCellHelper.GridSizeCalculation(x);
+            int acY =  AreaCellHelper.GridSizeCalculation(y);
             aoi.ResetVisibleAndLeveCheckAreaCells(acX, acY);
             AreaCell ac = null;
             //AOI设置可视区域
