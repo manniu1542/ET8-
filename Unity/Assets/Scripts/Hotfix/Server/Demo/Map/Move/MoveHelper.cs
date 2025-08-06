@@ -15,7 +15,7 @@ namespace ET.Server
                 unit.SendStop(2);
                 return;
             }
-         
+            //获取到这次寻路信息
             M2C_PathfindingResult m2CPathfindingResult = M2C_PathfindingResult.Create();
             unit.GetComponent<PathfindingComponent>().Find(unit.Position, target, m2CPathfindingResult.Points);
 
@@ -28,7 +28,8 @@ namespace ET.Server
             // 广播寻路路径
             m2CPathfindingResult.Id = unit.Id;
             MapMessageHelper.Broadcast(unit, m2CPathfindingResult);
-
+             
+            //
             MoveComponent moveComponent = unit.GetComponent<MoveComponent>();
             bool ret = await moveComponent.MoveToAsync(m2CPathfindingResult.Points, speed);
             if (ret) // 如果返回false，说明被其它移动取消了，这时候不需要通知客户端stop
@@ -36,7 +37,7 @@ namespace ET.Server
                 unit.SendStop(0);
             }
         }
-
+        //停止寻路
         public static void Stop(this Unit unit, int error)
         {
             unit.GetComponent<MoveComponent>().Stop(error == 0);

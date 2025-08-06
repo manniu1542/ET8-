@@ -23,6 +23,6 @@ namespace ET.Server
         public const int TmpNoramlPlayerVisableDistance = 9 * FloatToIntConversionFactor;
 
         
-        public bool isDebugLog = true;
+        public bool isDebugLog = false;
     }
 }
