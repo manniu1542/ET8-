@@ -8,7 +8,7 @@ namespace ET.Server
         // 可以多次调用，多次调用的话会取消上一次的协程
         public static async ETTask FindPathMoveToAsync(this Unit unit, float3 target)
         {
-      
+            //速度太小，不需要移动
             float speed = unit.GetComponent<NumericComponent>().GetAsFloat(NumericType.Speed);
             if (speed < 0.01)
             {
@@ -19,17 +19,18 @@ namespace ET.Server
             M2C_PathfindingResult m2CPathfindingResult = M2C_PathfindingResult.Create();
             unit.GetComponent<PathfindingComponent>().Find(unit.Position, target, m2CPathfindingResult.Points);
 
+            //寻路的信息不全。不用移动
             if (m2CPathfindingResult.Points.Count < 2)
             {
                 unit.SendStop(3);
                 return;
             }
        
-            // 广播寻路路径
+            // 广播寻路路径，这些点位信息驱动玩家移动
             m2CPathfindingResult.Id = unit.Id;
             MapMessageHelper.Broadcast(unit, m2CPathfindingResult);
              
-            //
+            //服务端的MoveComponent模拟移动。
             MoveComponent moveComponent = unit.GetComponent<MoveComponent>();
             bool ret = await moveComponent.MoveToAsync(m2CPathfindingResult.Points, speed);
             if (ret) // 如果返回false，说明被其它移动取消了，这时候不需要通知客户端stop
@@ -44,7 +45,7 @@ namespace ET.Server
             unit.SendStop(error);
         }
 
-        // error: 0表示协程走完正常停止
+        // error: 0表示协程走完正常停止，1客户端发送的停止移动, 2表示没有速度移动。3表示没有路径，
         public static void SendStop(this Unit unit, int error)
         {
             M2C_Stop m2CStop = M2C_Stop.Create();

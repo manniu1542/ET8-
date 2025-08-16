@@ -11,6 +11,7 @@ namespace ET.Client
         {
             try
             {
+              
                 args.Unit.GetComponent<AnimatorComponent>().Play(MotionType.Run,5f);
             }
             catch (Exception e)

@@ -16,8 +16,10 @@ namespace ET
         private static void Awake(this PathfindingComponent self, string name)
         {
             self.Name = name;
+            //获得的烘焙地图的数据
             byte[] buffer = NavmeshComponent.Instance.Get(name);
             
+            //使用Recast寻路插件读取这个地图数据。
             DtMeshSetReader reader = new();
             using MemoryStream ms = new(buffer);
             using BinaryReader br = new(ms);
@@ -38,7 +40,14 @@ namespace ET
             self.Name = string.Empty;
             self.navMesh = null;
         }
-        
+        /// <summary>
+        /// 调用寻路库DotRecast 的 获得烘焙地图的路径
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="start">开始点</param>
+        /// <param name="target">目标点</param>
+        /// <param name="result">路径点</param>
+        /// <exception cref="Exception"></exception>
         public static void Find(this PathfindingComponent self, float3 start, float3 target, List<float3> result)
         {
             if (self.navMesh == null)

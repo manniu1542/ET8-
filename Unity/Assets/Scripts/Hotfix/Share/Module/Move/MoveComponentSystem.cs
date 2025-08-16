@@ -4,10 +4,16 @@ using Unity.Mathematics;
 
 namespace ET
 {
-    [EntitySystemOf(typeof(MoveComponent))]
-    [FriendOf(typeof(MoveComponent))]
+    /// <summary>
+    /// MoveComponent 的扩展系统类，包含所有移动相关的逻辑
+    /// </summary>
+    [EntitySystemOf(typeof(MoveComponent))] // 关联到 MoveComponent
+    [FriendOf(typeof(MoveComponent))]      // 声明为 MoveComponent 的友元
     public static partial class MoveComponentSystem
     {
+        /// <summary>
+        /// 移动定时器，驱动每帧移动更新
+        /// </summary>
         [Invoke(TimerInvokeType.MoveTimer)]
         public class MoveTimer: ATimer<MoveComponent>
         {
@@ -15,6 +21,7 @@ namespace ET
             {
                 try
                 {
+                    // 每帧调用 MoveForward 更新位置
                     self.MoveForward(true);
                 }
                 catch (Exception e)
@@ -24,13 +31,18 @@ namespace ET
             }
         }
     
-        
+        /// <summary>
+        /// 销毁时清理移动状态
+        /// </summary>
         [EntitySystem]
         private static void Destroy(this MoveComponent self)
         {
             self.MoveFinish(false);
         }
         
+        /// <summary>
+        /// 初始化移动组件
+        /// </summary>
         [EntitySystem]
         private static void Awake(this MoveComponent self)
         {
@@ -45,11 +57,18 @@ namespace ET
             self.TurnTime = 0;
         }
         
+        /// <summary>
+        /// 检查是否已到达所有目标点
+        /// </summary>
         public static bool IsArrived(this MoveComponent self)
         {
             return self.Targets.Count == 0;
         }
 
+        /// <summary>
+        /// 动态改变移动速度
+        /// </summary>
+        /// <returns>是否成功改变速度</returns>
         public static bool ChangeSpeed(this MoveComponent self, float speed)
         {
             if (self.IsArrived())
@@ -64,40 +83,58 @@ namespace ET
             
             Unit unit = self.GetParent<Unit>();
 
+            // 使用对象池创建临时路径
             using ListComponent<float3> path = ListComponent<float3>.Create();
             
+            // 先完成当前移动段
             self.MoveForward(false);
                 
-            path.Add(unit.Position); // 第一个是Unit的pos
+            // 重新构建路径：当前位置 + 剩余目标点
+            path.Add(unit.Position);
             for (int i = self.N; i < self.Targets.Count; ++i)
             {
                 path.Add(self.Targets[i]);
             }
+            
+            // 以新速度重新开始移动
             self.MoveToAsync(path, speed).Coroutine();
             return true;
         }
 
-        // 该方法不需要用cancelToken的方式取消，因为即使不传入cancelToken，多次调用该方法也要取消之前的移动协程,上层可以stop取消
+        /// <summary>
+        /// 异步移动到目标路径
+        /// </summary>
+        /// <param name="target">目标路径点列表</param>
+        /// <param name="speed">移动速度</param>
+        /// <param name="turnTime">转向时间(ms)</param>
+        /// <returns>是否成功完成移动</returns>
         public static async ETTask<bool> MoveToAsync(this MoveComponent self, List<float3> target, float speed, int turnTime = 100)
         {
+            // 停止当前移动
             self.Stop(false);
 
+            // 设置新路径
             foreach (float3 v in target)
             {
                 self.Targets.Add(v);
             }
 
+            // 配置移动参数
             self.IsTurnHorizontal = true;
             self.TurnTime = turnTime;
             self.Speed = speed;
             self.tcs = ETTask<bool>.Create(true);
        
+            // 发布移动开始事件 
             EventSystem.Instance.PublishAsync(self.Scene(), new MoveStart() {Unit = self.GetParent<Unit>()}).Coroutine();
             
+            // 开始移动
             self.StartMove();
             
+            // 等待移动完成  如果moveRet 是true 表示正常移动完成
             bool moveRet = await self.tcs;
 
+            // 如果正常完成，发布移动停止事件
             if (moveRet)
             {
                 EventSystem.Instance.Publish(self.Scene(), new MoveStop() {Unit = self.GetParent<Unit>()});
@@ -105,22 +142,28 @@ namespace ET
             return moveRet;
         }
 
-        // ret: 停止的时候，移动协程的返回值
+        /// <summary>
+        /// 移动核心逻辑， 当前的时间玩家应该移动到的位置以及状态  计算插值位置和旋转 ,
+        /// </summary>
+        /// <param name="ret">是否正常完成移动</param>
         private static void MoveForward(this MoveComponent self, bool ret)
         {
             Unit unit = self.GetParent<Unit>();
             
+            // 计算从开始移动到现在的时间
             long timeNow = TimeInfo.Instance.ClientNow();
+            //到下个点位的所需要的移动时间
             long moveTime = timeNow - self.StartTime;
    
             while (true)
             {
+                //还没开始移动
                 if (moveTime <= 0)
                 {
                     return;
                 }
                 
-                // 计算位置插值
+                // 如果已经超过本段移动时间，直接到达目标点
                 if (moveTime >= self.NeedTime)
                 {
                     unit.Position = self.NextTarget;
@@ -129,9 +172,9 @@ namespace ET
                         unit.Rotation = self.To;
                     }
                 }
-                else
+                else // 否则计算插值  （位置更新。服务端来更新新的aoi，客户端来驱动模型移动， 旋转，客户端驱动模型旋转）
                 {
-                    // 计算位置插值
+                    // 位置插值
                     float amount = moveTime * 1f / self.NeedTime;
                     if (amount > 0)
                     {
@@ -139,7 +182,7 @@ namespace ET
                         unit.Position = newPos;
                     }
                     
-                    // 计算方向插值
+                    // 旋转插值
                     if (self.TurnTime > 0)
                     {
                         amount = moveTime * 1f / self.TurnTime;
@@ -152,17 +195,16 @@ namespace ET
                     }
                 }
 
+                // 扣除已计算的时间
                 moveTime -= self.NeedTime;
 
-                // 表示这个点还没走完，等下一帧再来
+                // 如果还有剩余时间，还没有移动这一段 移动完。继续移动
                 if (moveTime < 0)
                 {
                     return;
                 }
                 
-                // 到这里说明这个点已经走完
-                
-                // 如果是最后一个点
+                // 检查是否是最后一个点
                 if (self.N >= self.Targets.Count - 1)
                 {
                     unit.Position = self.NextTarget;
@@ -172,40 +214,49 @@ namespace ET
                     return;
                 }
   
+                // 切换到下一个目标点
                 self.SetNextTarget();
             }
         }
 
+        /// <summary>
+        /// 开始移动，初始化计时器和参数
+        /// </summary>
         private static void StartMove(this MoveComponent self)
         {
             self.BeginTime = TimeInfo.Instance.ClientNow();
             self.StartTime = self.BeginTime;
             self.SetNextTarget();
 
+            // 注册帧定时器
             self.MoveTimer = self.Root().GetComponent<TimerComponent>().NewFrameTimer(TimerInvokeType.MoveTimer, self);
         }
 
+        /// <summary>
+        /// 设置下一个目标点并计算相关参数  ,设置 当前点位，下个点位，到下个点位需要的旋转，朝向。移动到下个点位所需要的时间
+        /// </summary>
         private static void SetNextTarget(this MoveComponent self)
         {
-
             Unit unit = self.GetParent<Unit>();
 
-            ++self.N;
+            ++self.N; // 增加路径点索引
 
-            // 时间计算用服务端的位置, 但是移动要用客户端的位置来插值
+            // 计算方向向量和距离
             float3 v = self.GetFaceV();
             float distance = math.length(v);
             
-            // 插值的起始点要以unit的真实位置来算
+            // 更新起始位置为当前位置
             self.StartPos = unit.Position;
 
+            // 累加开始时间
             self.StartTime += self.NeedTime;
             
-            self.NeedTime = (long) (distance / self.Speed * 1000);
+            // 计算到下一个点需要的时间
+            self.NeedTime = (long)(distance / self.Speed * 1000);
             
+            // 处理转向逻辑
             if (self.TurnTime > 0)
             {
-                // 要用unit的位置
                 float3 faceV = self.GetFaceV();
                 if (math.lengthsq(faceV) < 0.0001f)
                 {
@@ -222,11 +273,8 @@ namespace ET
                 {
                     self.To = quaternion.LookRotation(faceV, math.up());
                 }
-
-                return;
             }
-            
-            if (self.TurnTime == 0) // turn time == 0 立即转向
+            else if (self.TurnTime == 0) // 立即转向
             {
                 float3 faceV = self.GetFaceV();
                 if (self.IsTurnHorizontal)
@@ -242,11 +290,17 @@ namespace ET
             }
         }
 
+        /// <summary>
+        /// 获取当前面向方向向量
+        /// </summary>
         private static float3 GetFaceV(this MoveComponent self)
         {
             return self.NextTarget - self.PreTarget;
         }
 
+        /// <summary>
+        /// 瞬间移动到目标点
+        /// </summary>
         public static bool FlashTo(this MoveComponent self, float3 target)
         {
             Unit unit = self.GetParent<Unit>();
@@ -254,7 +308,10 @@ namespace ET
             return true;
         }
 
-        // ret: 停止的时候，移动协程的返回值
+        /// <summary>
+        /// 停止移动
+        /// </summary>
+        /// <param name="ret">是否正常完成</param>
         public static void Stop(this MoveComponent self, bool ret)
         {
             if (self.Targets.Count > 0)
@@ -265,6 +322,9 @@ namespace ET
             self.MoveFinish(ret);
         }
 
+        /// <summary>
+        /// 移动结束，清理状态
+        /// </summary>
         private static void MoveFinish(this MoveComponent self, bool ret)
         {
             if (self.StartTime == 0)
@@ -272,6 +332,7 @@ namespace ET
                 return;
             }
             
+            // 重置所有状态
             self.StartTime = 0;
             self.StartPos = float3.zero;
             self.BeginTime = 0;
@@ -281,8 +342,11 @@ namespace ET
             self.N = 0;
             self.TurnTime = 0;
             self.IsTurnHorizontal = false;
+            
+            // 移除定时器
             self.Root().GetComponent<TimerComponent>()?.Remove(ref self.MoveTimer);
 
+            // 完成异步任务
             if (self.tcs != null)
             {
                 var tcs = self.tcs;
