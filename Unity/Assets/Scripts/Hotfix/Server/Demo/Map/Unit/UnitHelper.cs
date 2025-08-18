@@ -20,16 +20,7 @@ namespace ET.Server
             MoveComponent moveComponent = unit.GetComponent<MoveComponent>();
             if (moveComponent != null)
             {
-                if (!moveComponent.IsArrived())
-                {
-                    unitInfo.MoveInfo = MoveInfo.Create();
-                    unitInfo.MoveInfo.Points.Add(unit.Position);
-                    for (int i = moveComponent.N; i < moveComponent.Targets.Count; ++i)
-                    {
-                        float3 pos = moveComponent.Targets[i];
-                        unitInfo.MoveInfo.Points.Add(pos);
-                    }
-                }
+                moveComponent.UnitRelinkReset(ref unitInfo);
             }
 
             foreach ((int key, long value) in nc.NumericDic)

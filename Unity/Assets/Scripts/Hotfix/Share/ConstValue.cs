@@ -1,5 +1,8 @@
+
 namespace ET
 {
+    
+ 
     public static partial class ConstValue
     {
         public const string RouterHttpHost = "127.0.0.1";
@@ -11,5 +14,9 @@ namespace ET
         /// </summary>
         public const bool IsUseSelfAOI = true;
 
+        /// <summary>
+        /// 使用自己写的移动组件，来管理移动
+        /// </summary>
+        public const bool IsUseSelfMove = true;
     }
 }
