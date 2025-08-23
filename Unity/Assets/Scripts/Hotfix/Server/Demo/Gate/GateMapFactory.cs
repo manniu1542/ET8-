@@ -8,7 +8,8 @@ namespace ET.Server
             Scene scene = EntitySceneFactory.CreateScene(parent, id, instanceId, SceneType.Map, name);
 
             scene.AddComponent<UnitComponent>();
-            if (ConstValue.IsUseSelfAOI)
+            bool IsUseSelfAOI = ConstValue.IsUseSelfAOI;
+            if (IsUseSelfAOI)
                 scene.AddComponent<AreaCellMgrComponent>();
             else
                 scene.AddComponent<AOIManagerComponent>();

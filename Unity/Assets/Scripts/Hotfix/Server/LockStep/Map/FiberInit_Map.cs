@@ -14,7 +14,8 @@ namespace ET.Server
             root.AddComponent<ProcessInnerSender>();
             root.AddComponent<MessageSender>();
             root.AddComponent<UnitComponent>();
-            if (ConstValue.IsUseSelfAOI)
+            bool IsUseSelfAOI = ConstValue.IsUseSelfAOI;
+            if (IsUseSelfAOI)
                 root.AddComponent<AreaCellMgrComponent>();
             else
                 root.AddComponent<AOIManagerComponent>();

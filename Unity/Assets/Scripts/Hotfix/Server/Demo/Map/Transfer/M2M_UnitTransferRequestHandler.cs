@@ -38,7 +38,8 @@ namespace ET.Server
             MapMessageHelper.SendToClient(unit, m2CCreateUnits);
 
             // 加入aoi
-            if (ConstValue.IsUseSelfAOI)
+            bool IsUseSelfAOI = ConstValue.IsUseSelfAOI;
+            if (IsUseSelfAOI)
                 unit.AddComponent<AreaOfInterestEntity, int, float3>(AreaCellMgrComponent.TmpNoramlPlayerVisableDistance, unit.Position);
             else
                 unit.AddComponent<AOIEntity, int, float3>(9 * 1000, unit.Position);

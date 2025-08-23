@@ -151,7 +151,6 @@ namespace ET
             //记录移动到下个位置所需的时间。
             float3 dirDistance = self.CurMoveTargetPos - self.MoveTargetStartPos;
             float distance = math.length(dirDistance);
-            Log.Error("MESSAGE：" + distance);
             self.moveNextTargetNeedIntervalTime = (long)(distance / self.moveSpeed * 1000);
 
             //旋转

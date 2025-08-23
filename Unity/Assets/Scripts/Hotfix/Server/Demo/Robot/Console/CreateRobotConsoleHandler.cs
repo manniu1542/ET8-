@@ -16,7 +16,7 @@ namespace ET.Server
                     Log.Console("CreateRobot args error!");
                     break;
                 }
-                default:
+                default: //CreateRobot Num 1
                 {
                     CreateRobotArgs options = null;
                     Parser.Default.ParseArguments<CreateRobotArgs>(content.Split(' '))

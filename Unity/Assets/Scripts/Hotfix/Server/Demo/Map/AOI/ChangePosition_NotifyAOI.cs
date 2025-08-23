@@ -10,8 +10,8 @@ namespace ET.Server
             Unit unit = args.Unit;
             float3 oldPos = args.OldPos;
             int oldCellX, oldCellY, newCellX, newCellY;
-
-            if (ConstValue.IsUseSelfAOI)
+            bool IsUseSelfAOI = ConstValue.IsUseSelfAOI;
+            if (IsUseSelfAOI)
             {
                 oldCellX = AreaCellHelper.GridSizeCalculation(oldPos.x);
                 oldCellY = AreaCellHelper.GridSizeCalculation(oldPos.z);

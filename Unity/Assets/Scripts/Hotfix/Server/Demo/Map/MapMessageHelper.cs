@@ -44,7 +44,8 @@ namespace ET.Server
         {
             // 设置消息的来源池标识为false
             (message as MessageObject).IsFromPool = false;
-            if (ConstValue.IsUseSelfAOI)
+            bool IsUseSelfAOI = ConstValue.IsUseSelfAOI;
+            if (IsUseSelfAOI)
             {
                 // 获取所有能看到指定单位的玩家字典
                 Dictionary<long, EntityRef<AreaOfInterestEntity>> dict = unit.GetOtherAOIPlayersVisibleSelf();

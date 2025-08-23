@@ -4,10 +4,12 @@ using Unity.Mathematics;
 
 namespace ET.Server
 {
-    [EntitySystemOf(typeof(AreaOfInterestEntity))]
-    [FriendOf(typeof(AreaOfInterestEntity))]
-    [FriendOfAttribute(typeof(ET.Server.AreaCell))]
-    public static partial class AreaOfInterestEntitySystem
+    /// <summary>
+    /// 避免了代码的环形依赖检查，把代码的EntitySystem回调方法awake和destroy放入另外的system中。
+    /// </summary>
+    [EntitySystemOf(typeof (AreaOfInterestEntity))]
+    [FriendOf(typeof (AreaOfInterestEntity))]
+    public static partial class AreaOfInterestEntitySystem2
     {
         [EntitySystem]
         private static void Awake(this AreaOfInterestEntity self, int distance, float3 pos)
@@ -20,7 +22,7 @@ namespace ET.Server
         private static void Destroy(this AreaOfInterestEntity self)
         {
             //此时的self ，在外部已经销毁了，所以有EntityRef<AreaOfInterestEntity>使用他的。目前统统是null
-            self.Scene().GetComponent<AreaCellMgrComponent>().UnBindAOIFormAreaCell(self);
+            self.Scene().GetComponent<AreaCellMgrComponent>()?.UnBindAOIFormAreaCell(self);
             self.ViewDistance = 0;
             self.dicOtherPlayersVisibleSelf.Clear();
             self.dicOtherAOIUnitsVisibleSelf.Clear();
@@ -36,7 +38,15 @@ namespace ET.Server
             self.hsLeaveNeedCheckAreaCells = null;
             self.hsVisibleAreaCells = null;
         }
+    }
 
+
+  
+    [FriendOf(typeof (AreaOfInterestEntity))]
+    [FriendOf(typeof (AreaCell))]
+    public static partial class AreaOfInterestEntitySystem
+    {
+       
         public static Dictionary<long, EntityRef<AreaOfInterestEntity>> GetOtherPlayersVisibleSelf(this AreaOfInterestEntity self)
         {
             return self.dicOtherPlayersVisibleSelf;
@@ -133,8 +143,9 @@ namespace ET.Server
             cell.dicAOIUnitsVisibleSelf.Add(self.Id, self);
 
             //给当前aoi进行赋值添加
-            foreach (AreaOfInterestEntity acAOI in cell.dicAOIUnits.Values)
+            foreach (EntityRef<AreaOfInterestEntity> eacAOI in cell.dicAOIUnits.Values)
             {
+                AreaOfInterestEntity acAOI = eacAOI;
                 if (acAOI.Id != self.Id)
                     self.AddVisibleOtherAOI(acAOI);
             }
@@ -159,7 +170,7 @@ namespace ET.Server
                 return false;
 
             //tips:可加入两个AOI之间的可视野检测，other可不可以被这个self看到 ，不可被看到的return
-            if(!self.AAoiVisibleBAoiRules(other))return false;
+            if (!self.AAoiVisibleBAoiRules(other)) return false;
             //当前的aoi 可是unit加入这个aoi
             self.dicVisibleAOIUnits.Add(other.Id, other);
             if (other.IsPlayer())
@@ -192,8 +203,9 @@ namespace ET.Server
         public static void UnLinkToLeaveNeedCheckAreaCell(this AreaOfInterestEntity self, AreaCell cell)
         {
             AreaOfInterestEntity otherAoi = null;
+
             //遍历这些自己能够看到的格子，遍历他的aoi，并给客户端的自己下发通知自己能看到的aoi 需要被移除掉了。（因为自己的离开的关系，他们在自己中看不到了）
-            foreach (var kv_aoi in cell.dicAOIUnits)
+            foreach (KeyValuePair<long, EntityRef<AreaOfInterestEntity>> kv_aoi in cell.dicAOIUnits)
             {
                 if (kv_aoi.Key != self.Id)
                 {
@@ -232,8 +244,7 @@ namespace ET.Server
             EventSystem.Instance.PublishAsync(self.Scene(), new UnitAOIAInVisibleBEvent() { A = self, B = other }).Coroutine();
             return true;
         }
-        
-        
+
         /// <summary>
         /// a可视b的规则,true
         /// </summary>
@@ -244,7 +255,6 @@ namespace ET.Server
         {
             //例如 a 是玩家 。b是npc。 a可视b，b不可视 a ，就可以加入规则
             return true;
-
         }
     }
 }
