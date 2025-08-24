@@ -41,7 +41,7 @@ namespace ET.Server
         //停止寻路
         public static void Stop(this Unit unit, int error)
         {
-            unit.GetComponent<MoveComponent>().Stop(error == 0);
+            unit.GetComponent<MoveComponent>().Stop(error == 0||error == 1);
             unit.SendStop(error);
         }
 

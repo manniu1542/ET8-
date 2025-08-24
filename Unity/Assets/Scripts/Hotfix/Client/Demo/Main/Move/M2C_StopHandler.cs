@@ -12,9 +12,10 @@ namespace ET.Client
 			{
 				return;
 			}
-
+			
 			MoveComponent moveComponent = unit.GetComponent<MoveComponent>();
-			moveComponent.Stop(message.Error == 0);
+			//
+			moveComponent.Stop(message.Error == 0||message.Error == 1);
 			unit.Position = message.Position;
 			unit.Rotation = message.Rotation;
 			unit.GetComponent<ObjectWait>()?.Notify(new Wait_UnitStop() { Error = message.Error });

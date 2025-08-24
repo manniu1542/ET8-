@@ -3,7 +3,7 @@ using MongoDB.Bson;
 
 namespace ET.Server
 {
-    [FriendOfAttribute(typeof(ET.Server.AreaCell))]
+
     public static partial class TransferHelper
     {
         public static async ETTask TransferAtFrameFinish(Unit unit, ActorId sceneInstanceId, string sceneName)

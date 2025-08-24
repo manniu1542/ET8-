@@ -147,16 +147,16 @@ namespace ET
             self.dtMoveLastTargetTime += self.moveNextTargetNeedIntervalTime;
 
             //位置
-            self.MoveTargetStartPos = self.GetParent<Unit>().Position;
+            var unit = self.GetParent<Unit>();
+            self.MoveTargetStartPos = unit.Position;
             //记录移动到下个位置所需的时间。
-            float3 dirDistance = self.CurMoveTargetPos - self.MoveTargetStartPos;
+            float3 dirDistance = self.CurMoveTargetPos - self.LastMoveTargetPos;
             float distance = math.length(dirDistance);
             self.moveNextTargetNeedIntervalTime = (long)(distance / self.moveSpeed * 1000);
 
-            //旋转
-            if (distance > 0)
+            //是否需要旋转。如果点位距离过近不需要旋转。
+            if (self.IsRotateInstantly)
             {
-                self.MoveTargetStartRotation = self.GetParent<Unit>().Rotation;
                 float3 dir = math.normalize(dirDistance);
                 //是否需要玩家倾斜。朝向目标方向
                 if (self.isRotationLockY)
@@ -165,14 +165,30 @@ namespace ET
                 if (math.abs(dir.x) > 0.01f || math.abs(dir.z) > 0.01f)
                 {
                     self.MoveTargetDirRotation = quaternion.LookRotation(dir, new float3(0, 1, 0));
-
                     //立即旋转
-                    if (self.rotationNeedAnimTime <= 0)
-                    {
-                        self.GetParent<Unit>().Rotation = self.MoveTargetDirRotation;
-                    }
+                    unit.Rotation = self.MoveTargetDirRotation;
                 }
             }
+            else
+            {
+                //距离过近的话旋转屏蔽
+                if (math.lengthsq(dirDistance) < 0.001f)
+                {
+                    return;
+                }
+                self.MoveTargetStartRotation = unit.Rotation;
+                //是否需要玩家倾斜。朝向目标方向
+                if (self.isRotationLockY)
+                    dirDistance.y = 0;
+                //获取到有旋转。避免0向量的朝向。
+                if (math.abs(dirDistance.x) > 0.01f || math.abs(dirDistance.z) > 0.01f)
+                {
+                    self.MoveTargetDirRotation = quaternion.LookRotation(dirDistance, new float3(0, 1, 0));
+                }
+                
+            }
+
+        
         }
 
         /// <summary>
@@ -197,8 +213,10 @@ namespace ET
                 if (moveIntervalTime >= self.moveNextTargetNeedIntervalTime)
                 {
                     unit.Position = self.CurMoveTargetPos;
-                    if (self.rotationNeedAnimTime <= 0)
+                    if (self.IsRotateInstantly)
+                    {
                         unit.Rotation = self.MoveTargetDirRotation;
+                    }
                 }
                 else //插值
                 {
@@ -209,10 +227,10 @@ namespace ET
                         unit.Position = math.lerp(self.MoveTargetStartPos, self.CurMoveTargetPos, amount);
                     }
 
-                    if (self.rotationNeedAnimTime > 0)
+                    if (!self.IsRotateInstantly)
                     {
                         amount = moveIntervalTime * 1f / self.rotationNeedAnimTime;
-                       //避免 math.slerp 持续的插值运算。math.slerp跟Quaternion.SlerpUnclamped 运算相同。
+                        //避免 math.slerp 持续的插值运算。math.slerp跟Quaternion.SlerpUnclamped 运算相同。
                         amount = amount > 1 ? 1 : amount;
                         unit.Rotation = math.slerp(self.MoveTargetStartRotation, self.MoveTargetDirRotation, amount);
                     }
@@ -224,7 +242,7 @@ namespace ET
                     return;
 
                 //已经到终点了
-                if (self.nextMoveIdx >= self.listPath.Count)
+                if (self.nextMoveIdx >= self.listPath.Count - 1)
                 {
                     //移动结束
                     self.ResetMoveState(true);

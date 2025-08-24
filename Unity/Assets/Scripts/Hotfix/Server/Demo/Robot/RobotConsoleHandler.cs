@@ -14,7 +14,7 @@ namespace ET.Server
                 case ConsoleMode.Robot:
                     break;
 
-                case "Run":
+                case "Run":// Robot Run 1
                 {
                     int caseType = int.Parse(ss[1]);
 

@@ -6,7 +6,7 @@ namespace ET
 {
     [ChildOf(typeof(UnitComponent))]
     [DebuggerDisplay("ViewName,nq")]
-    public partial class Unit: Entity, IAwake<int>
+    public partial class Unit : Entity, IAwake<int>
     {
         public int ConfigId { get; set; } //配置表id
 
@@ -31,10 +31,10 @@ namespace ET
             get => math.mul(this.Rotation, math.forward());
             set => this.Rotation = quaternion.LookRotation(value, math.up());
         }
-        
+
         [BsonElement]
         private quaternion rotation;
-        
+
         [BsonIgnore]
         public quaternion Rotation
         {

@@ -18,12 +18,19 @@ namespace ET.Client
         /// <param name="self"></param>
         private static void InputLogicForStateSynchronization(this OperaComponent self)
         {
+            //指定位置
             if (Input.GetKeyDown(KeyCode.K))
             {
                 //状态同步的输入逻辑
                 C2M_PathfindingResult c2MPathfindingResult = C2M_PathfindingResult.Create();
                 c2MPathfindingResult.Position = new float3(22f, 0, -24f);
                 self.Root().GetComponent<ClientSenderComponent>().Send(c2MPathfindingResult);
+            }
+            //主动停止移动
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+               
+                self.Root().GetComponent<ClientSenderComponent>().Send(C2M_Stop.Create());
             }
         }
 

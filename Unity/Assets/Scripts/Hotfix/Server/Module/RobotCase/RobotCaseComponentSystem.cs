@@ -14,6 +14,7 @@ namespace ET.Server
         public static async ETTask<RobotCase> New(this RobotCaseComponent self)
         {
             await ETTask.CompletedTask;
+            Log.Error("加入机器人？");
             RobotCase robotCase = self.AddChild<RobotCase>();
             return robotCase;
         }

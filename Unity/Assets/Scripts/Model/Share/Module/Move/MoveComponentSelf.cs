@@ -37,13 +37,24 @@ namespace ET
         public int nextMoveIdx;
 
         /// <summary>
+        ///上一个移动的目标点位
+        /// </summary>
+        public float3 LastMoveTargetPos
+        {
+            get
+            {
+                return listPath[nextMoveIdx-1];
+            }
+        }
+
+        /// <summary>
         /// 当前移动的目标点位
         /// </summary>
         public float3 CurMoveTargetPos
         {
             get
             {
-                return listPath[nextMoveIdx - 1];
+                return listPath[nextMoveIdx];
             }
         }
 
@@ -51,25 +62,37 @@ namespace ET
         /// 移动到下个目标点 ，开始的点位。方便插值运算
         /// </summary>
         public float3 MoveTargetStartPos;
+
         /// <summary>
         /// 移动到下个目标点 ，开始的旋转。方便插值运算
         /// </summary>
         public quaternion MoveTargetStartRotation;
+
         /// <summary>
         /// 旋转到移动方向的朝向。
         /// </summary>
         public quaternion MoveTargetDirRotation;
+
         /// <summary>
         /// 是否旋转锁定y轴
         /// </summary>
         public bool isRotationLockY = true;
-        
-    
 
         /// <summary>
         /// 玩家旋转所需要的时间
         /// </summary>
         public int rotationNeedAnimTime;
+
+        /// <summary>
+        /// 是否立即旋转
+        /// </summary>
+        public bool IsRotateInstantly
+        {
+            get
+            {
+                return rotationNeedAnimTime <= 0;
+            }
+        }
 
         /// <summary>
         /// 记录移动到上一个目标点的时间戳
