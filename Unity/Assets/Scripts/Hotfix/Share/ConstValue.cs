@@ -15,8 +15,8 @@ namespace ET
         public const bool IsUseSelfAOI = true;
 
         /// <summary>
-        /// 是状态同步还是帧同步
+        /// 是状态同步还是帧同步  
         /// </summary>
-        public const bool IsAppTypeDemo = true;
+        public const bool IsAppTypeDemo = false;
     }
 }
