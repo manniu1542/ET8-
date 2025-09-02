@@ -9,7 +9,7 @@ namespace ET.Server
 		protected override async ETTask Run(Scene root, Match2Map_GetRoom request, Map2Match_GetRoom response)
 		{
 			//RoomManagerComponent roomManagerComponent = root.GetComponent<RoomManagerComponent>();
-			
+			//申请个房间纤程
 			Fiber fiber = root.Fiber();
 			int fiberId = await FiberManager.Instance.Create(SchedulerType.ThreadPool, fiber.Zone, SceneType.RoomRoot, "RoomRoot");
 			ActorId roomRootActorId = new(fiber.Process, fiberId);

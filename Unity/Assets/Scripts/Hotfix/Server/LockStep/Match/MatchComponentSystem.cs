@@ -15,13 +15,14 @@ namespace ET.Server
             }
             
             self.waitMatchPlayers.Add(playerId);
-
+            
+            //最多的匹配人数限制
             if (self.waitMatchPlayers.Count < LSConstValue.MatchCount)
             {
                 return;
             }
             
-            // 申请一个房间
+            // 申请一个房间 （在随机方间中创建一个room的纤程。并绑定帧同步世界。 玩家都丢入到随即房间中管理）
             StartSceneConfig startSceneConfig = RandomGenerator.RandomArray(StartSceneConfigCategory.Instance.Maps);
             Match2Map_GetRoom match2MapGetRoom = Match2Map_GetRoom.Create();
             foreach (long id in self.waitMatchPlayers)
@@ -35,6 +36,7 @@ namespace ET.Server
             Map2Match_GetRoom map2MatchGetRoom = await root.GetComponent<MessageSender>().Call(
                 startSceneConfig.ActorId, match2MapGetRoom) as Map2Match_GetRoom;
 
+            // 给玩家推送匹配成功的消息
             Match2G_NotifyMatchSuccess match2GNotifyMatchSuccess = Match2G_NotifyMatchSuccess.Create();
             match2GNotifyMatchSuccess.ActorId = map2MatchGetRoom.ActorId;
             MessageLocationSenderComponent messageLocationSenderComponent = root.GetComponent<MessageLocationSenderComponent>();

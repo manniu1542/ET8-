@@ -13,18 +13,19 @@ namespace ET.Client
 
             // 等待表现层订阅的事件完成
             await EventSystem.Instance.PublishAsync(root, new LSSceneChangeStart() {Room = room});
-
+            //发送切换场景完成 （服务端收集到所有玩家都 加载完成发送 Room2C_EnterMap 给客户端）
             root.GetComponent<ClientSenderComponent>().Send(C2Room_ChangeSceneFinish.Create());
             
             // 等待Room2C_EnterMap消息
             WaitType.Wait_Room2C_Start waitRoom2CStart = await root.GetComponent<ObjectWait>().Wait<WaitType.Wait_Room2C_Start>();
-
+           
+            //客户端构建帧同步世界  （初始化服务端 玩家数据 到客户端的 玩家数据。）
             room.LSWorld = new LSWorld(SceneType.LockStepClient);
             room.Init(waitRoom2CStart.Message.UnitInfo, waitRoom2CStart.Message.StartTime);
-            
+            //客户端的帧消息 处理
             room.AddComponent<LSClientUpdater>();
 
-            // 这个事件中可以订阅取消loading
+            // 这个事件中可以订阅取消loading  （把客户端的玩家数据 与 表现 绑定）
             EventSystem.Instance.Publish(root, new LSSceneInitFinish());
         }
         

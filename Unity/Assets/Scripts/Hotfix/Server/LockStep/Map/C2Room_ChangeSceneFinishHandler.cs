@@ -13,14 +13,14 @@ namespace ET.Server
             RoomServerComponent roomServerComponent = room.GetComponent<RoomServerComponent>();
             RoomPlayer roomPlayer = room.GetComponent<RoomServerComponent>().GetChild<RoomPlayer>(message.PlayerId);
             roomPlayer.Progress = 100;
-            
+            //等待所有人都加载完成100%
             if (!roomServerComponent.IsAllPlayerProgress100())
             {
                 return;
             }
             
             await room.Fiber.Root.GetComponent<TimerComponent>().WaitAsync(1000);
-
+           //推送游戏开始的广播消息
             Room2C_Start room2CStart = Room2C_Start.Create();
             room2CStart.StartTime = TimeInfo.Instance.ServerFrameTime();
             foreach (RoomPlayer rp in roomServerComponent.Children.Values)

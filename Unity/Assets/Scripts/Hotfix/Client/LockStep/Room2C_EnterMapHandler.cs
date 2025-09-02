@@ -5,6 +5,7 @@ namespace ET.Client
     {
         protected override async ETTask Run(Scene root, Room2C_Start message)
         {
+            //收到游戏开始的广播消息
             root.GetComponent<ObjectWait>().Notify(new WaitType.Wait_Room2C_Start() {Message = message});
             await ETTask.CompletedTask;
         }

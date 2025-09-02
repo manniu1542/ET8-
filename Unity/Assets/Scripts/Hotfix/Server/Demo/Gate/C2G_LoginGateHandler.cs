@@ -36,10 +36,10 @@ namespace ET.Server
                 session.AddComponent<SessionPlayerComponent>().Player = player;
                 playerSessionComponent.Session = session;
             }
-            else //帧同步,重连回来的示例
+            else 
             {
                 bool IsAppTypeDemo = ConstValue.IsAppTypeDemo;
-                if (IsAppTypeDemo)
+                if (IsAppTypeDemo) //状态同步，重连的示例
                 {
                     //重新绑定下sission跟当前的玩家。
                     PlayerSessionComponent playerSessionComponent = player.GetComponent<PlayerSessionComponent>();
@@ -50,7 +50,7 @@ namespace ET.Server
                     playerSessionComponent.Session = session;
                     Log.Debug("状态同步的重连");
                 }
-                else
+                else//帧同步,重连回来的示例
                 {
                     // 判断是否在战斗
                     PlayerRoomComponent playerRoomComponent = player.GetComponent<PlayerRoomComponent>();
