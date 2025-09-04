@@ -84,9 +84,88 @@ namespace ET
         }
     }
 
+    [MemoryPackable]
+    [Message(ClientMessage.Main2TestScene_Test)]
+    [ResponseType(nameof(TestScene2Main_Test))]
+    public partial class Main2TestScene_Test : MessageObject, IRequest
+    {
+        public static Main2TestScene_Test Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(Main2TestScene_Test), isFromPool) as Main2TestScene_Test;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int OwnerFiberId { get; set; }
+
+        /// <summary>
+        /// 密码
+        /// </summary>
+        [MemoryPackOrder(2)]
+        public string Msg { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.OwnerFiberId = default;
+            this.Msg = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(ClientMessage.TestScene2Main_Test)]
+    public partial class TestScene2Main_Test : MessageObject, IResponse
+    {
+        public static TestScene2Main_Test Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(TestScene2Main_Test), isFromPool) as TestScene2Main_Test;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        /// <summary>
+        /// 密码
+        /// </summary>
+        [MemoryPackOrder(3)]
+        public string ResMsg { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.ResMsg = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     public static class ClientMessage
     {
         public const ushort Main2NetClient_Login = 1001;
         public const ushort NetClient2Main_Login = 1002;
+        public const ushort Main2TestScene_Test = 1003;
+        public const ushort TestScene2Main_Test = 1004;
     }
 }

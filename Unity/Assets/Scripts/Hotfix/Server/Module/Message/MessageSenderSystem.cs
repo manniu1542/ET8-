@@ -51,7 +51,7 @@ namespace ET.Server
                 response = await fiber.Root.GetComponent<ProcessInnerSender>().Call(actorId, request, needException: needException);
             }
             else
-            {
+            { 
                 // 发给NetInner纤程
                 A2NetInner_Request a2NetInner_Request = A2NetInner_Request.Create();
                 a2NetInner_Request.ActorId = actorId;

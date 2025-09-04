@@ -5,17 +5,37 @@ package ET;
 // ResponseType NetClient2Main_Login
 message Main2NetClient_Login // IRequest
 {
-	int32 RpcId = 1;
-	int32 OwnerFiberId = 2;
-	string Account = 3;		// 账号
-	string Password = 4; 	// 密码
+  int32 RpcId = 1;
+  int32 OwnerFiberId = 2;
+  string Account = 3;    // 账号
+  string Password = 4;  // 密码
 }
 
 message NetClient2Main_Login // IResponse
 {
-	int32 RpcId = 1;
-	int32 Error = 2;
-	string Message = 3;
+  int32 RpcId = 1;
+  int32 Error = 2;
+  string Message = 3;
 
-	int64 PlayerId = 4;
+  int64 PlayerId = 4;
 }
+
+// ResponseType TestScene2Main_Test
+message Main2TestScene_Test // IRequest
+{
+  int32 RpcId = 1;
+  int32 OwnerFiberId = 2;
+
+  string Msg = 3;  // 密码
+} 
+
+
+message TestScene2Main_Test // IResponse
+{
+  int32 RpcId = 1;
+  int32 Error = 2;
+  string Message = 3;
+  
+  string ResMsg = 4;  // 密码
+}
+		
