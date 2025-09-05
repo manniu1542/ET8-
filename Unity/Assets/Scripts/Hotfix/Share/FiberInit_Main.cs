@@ -18,17 +18,25 @@
             await EventSystem.Instance.PublishAsync(root, new EntryEvent2());
             await EventSystem.Instance.PublishAsync(root, new EntryEvent3());
 
+           // await UseTestScene(fiberInit);
+        }
+        /// <summary>
+        /// 测试纤程之间的消息的互传
+        /// </summary>
+        /// <param name="fiberInit"></param>
+        public static async ETTask UseTestScene(FiberInit fiberInit)
+        {
+            Scene root = fiberInit.Fiber.Root;
             //请求到 这个前程绑定这个场景
             var fiber = fiberInit.Fiber;
-
             var fiberId = await FiberManager.Instance.Create(SchedulerType.ThreadPool, fiber.Zone, SceneType.TestScene, "TestScene");
             ActorId ActorId = new(fiber.Process, fiberId);
-
+            Log.Error("ActorID:" + ActorId);
             // // 发送消息给房间纤程，初始化
             var request = Main2TestScene_Test.Create();
             request.Msg = "Hello World";
             var response = await root.GetComponent<ProcessInnerSender>().Call(ActorId, request) as TestScene2Main_Test;
-            Log.Error("MESSAGE"+response.ResMsg);
+            Log.Error("MESSAGE" + response.ResMsg);
         }
     }
 }

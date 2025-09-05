@@ -34,6 +34,7 @@ namespace ET.Client
         {
             var viewSingleton = new UnityEngine.GameObject("World.Singletons");
             viewSingleton.transform.SetParent(UnityEngine.GameObject.Find("Global/World").transform);
+            viewSingleton.transform.SetSiblingIndex(0);
             foreach (var singleton in World.Instance.GetSingletons)
             {
                 var go = new UnityEngine.GameObject(singleton.Key.ToString());

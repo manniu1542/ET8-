@@ -1,5 +1,8 @@
 ﻿namespace ET
 {
+    /// <summary>
+    /// rpc消息的UnOrderedMessage 消息类型的 处理
+    /// </summary>
     [Invoke((long)MailBoxType.UnOrderedMessage)]
     public class MailBoxType_UnOrderedMessageHandler: AInvokeHandler<MailBoxInvoker>
     {

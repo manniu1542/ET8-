@@ -9,8 +9,14 @@ namespace ET
         public MessageObject MessageObject;
     }
     
+    /// <summary>
+    /// ⭐⭐⭐ 纤程消息互通的核心 ⭐⭐⭐ 消息队列（处理了线程问题）  
+    /// </summary>
     public class MessageQueue: Singleton<MessageQueue>, ISingletonAwake
     {
+        /// <summary>
+        /// key 是纤程id， value是 消息队列
+        /// </summary>
         private readonly ConcurrentDictionary<int, ConcurrentQueue<MessageInfo>> messages = new();
         
         public void Awake()

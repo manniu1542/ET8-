@@ -22,9 +22,11 @@ namespace ET
         public override async ETTask Handle(FiberInit fiberInit)
         {
             Scene root = fiberInit.Fiber.Root;
-
+            
+            ActorId ActorId = new( fiberInit.Fiber.Process,  fiberInit.Fiber.Id);
+            Log.Error("ActorID TestScene:" +  ActorId);
             //共享代码
-            Log.Error("2222222222222");
+          
 
             root.AddComponent<CoroutineLockComponent>();
             root.AddComponent<ObjectWait>();
@@ -35,7 +37,7 @@ namespace ET
         }
     }
 
-    [MessageHandler(SceneType.NetClient)]
+    [MessageHandler(SceneType.TestScene)]
     public class Main2TestScene_TestHandler : MessageHandler<Scene, Main2TestScene_Test, TestScene2Main_Test>
     {
         protected override async ETTask Run(Scene root, Main2TestScene_Test request, TestScene2Main_Test response)
