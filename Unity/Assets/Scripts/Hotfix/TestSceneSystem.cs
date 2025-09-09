@@ -26,14 +26,14 @@ namespace ET
             ActorId ActorId = new( fiberInit.Fiber.Process,  fiberInit.Fiber.Id);
             Log.Error("ActorID TestScene:" +  ActorId);
             //共享代码
-          
-
+            
             root.AddComponent<CoroutineLockComponent>();
             root.AddComponent<ObjectWait>();
             root.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.UnOrderedMessage);
             root.AddComponent<ProcessInnerSender>();
-            
             root.AddComponent<TestScene>();
+            
+            
         }
     }
 

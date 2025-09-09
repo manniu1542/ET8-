@@ -2,6 +2,9 @@
 
 namespace ET
 {
+    /// <summary>
+    /// 可以被存储的序列化的数据
+    /// </summary>
     [EnableClass]
     public abstract class Object
     {

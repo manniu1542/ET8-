@@ -5,6 +5,9 @@ namespace ET
     [ComponentOf]
     public class Room: Entity, IScene, IAwake, IUpdate
     {
+        /// <summary>
+        /// 继承了IScene接口。在Room被Add的时候因为他是IScene类型，会在Entity上给Fiber赋值的。并且把当前的纤程场景给到Rooom的Fiber属性中。
+        /// </summary>
         public Fiber Fiber { get; set; }
         public SceneType SceneType { get; set; } = SceneType.Room;
         public string Name { get; set; }
