@@ -2,9 +2,13 @@ using System;
 
 namespace ET
 {
+    /// <summary>
+    /// 修改Entity 一些 添加组件得API，使这些组件必带id
+    /// </summary>
     [EnableMethod]
     public abstract partial class LSEntity: Entity
     {
+        
         public new K AddComponent<K>(bool isFromPool = false) where K : LSEntity, IAwake, new()
         {
             return this.AddComponentWithId<K>(this.GetId(), isFromPool);
@@ -48,7 +52,11 @@ namespace ET
         {
             return this.AddChildWithId<T, A, B, C>(this.GetId(), a, b, c, isFromPool);
         }
-
+        /// <summary>
+        /// 这些组件存入字典中。需要hash的key值
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         protected override long GetLongHashCode(Type type)
         {
             return LSEntitySystemSingleton.Instance.GetLongHashCode(type);

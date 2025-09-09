@@ -43,7 +43,9 @@ namespace ET
                 return Options.Instance.Process;
             }
         }
-
+        /// <summary>
+        /// 回调事件管理系统（只执行Update,LateUpdate）
+        /// </summary>
         public EntitySystem EntitySystem { get; }
         public Mailboxes Mailboxes { get; private set; }
         public ThreadSynchronizationContext ThreadSynchronizationContext { get; }

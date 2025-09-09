@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet.ThirdParty", "ThirdP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Share.Tool", "..\Share\Tool\Share.Tool.csproj", "{6119686F-DCD2-45D5-8F68-9FE7242652A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Share.SourceGenerator", "..\Share\Share.SourceGenerator\Share.SourceGenerator.csproj", "{9628A1EF-FE69-4967-A57C-56135779192D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{6119686F-DCD2-45D5-8F68-9FE7242652A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6119686F-DCD2-45D5-8F68-9FE7242652A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6119686F-DCD2-45D5-8F68-9FE7242652A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9628A1EF-FE69-4967-A57C-56135779192D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9628A1EF-FE69-4967-A57C-56135779192D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9628A1EF-FE69-4967-A57C-56135779192D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9628A1EF-FE69-4967-A57C-56135779192D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

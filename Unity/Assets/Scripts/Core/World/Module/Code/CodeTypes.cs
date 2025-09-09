@@ -50,7 +50,9 @@ namespace ET
         {
             return this.allTypes[typeName];
         }
-        
+        /// <summary>
+        /// 添加继承了ISingtonAwake的单例类
+        /// </summary>
         public void CreateCode()
         {
             var hashSet = this.GetTypes(typeof (CodeAttribute));

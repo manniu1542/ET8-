@@ -14,7 +14,7 @@ namespace ET
         
         public long StartTime { get; set; }
 
-        // 帧缓存
+        // 帧缓存(玩家操作输入的网络帧消息,帧快照 网络帧消息的字节流缓存, 字节流缓存的哈希值)  
         public FrameBuffer FrameBuffer { get; set; }
 
         // 计算fixedTime，fixedTime在客户端是动态调整的，会做时间膨胀缩放

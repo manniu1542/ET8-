@@ -11,6 +11,9 @@ namespace ET
         public const int Max = 1;
     }
     
+    /// <summary>
+    /// 处理帧同步的回调方法
+    /// </summary>
     [Code]
     public class LSEntitySystemSingleton: Singleton<LSEntitySystemSingleton>, ISingletonAwake
     {
@@ -38,7 +41,7 @@ namespace ET
                     oneTypeSystems.QueueFlag[index] = true;
                 }
             }
-            
+            //收集所有继承了LSEntity的类。并把他们收集起来。存储成key 这些类型。value是他们的类名string所对应的hash值
             foreach (var kv in CodeTypes.Instance.GetTypes())
             {
                 Type type = kv.Value;

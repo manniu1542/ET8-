@@ -3,8 +3,14 @@ using System.Collections.Generic;
 
 namespace ET
 {
+    /// <summary>
+    /// ET框架的回调方法执行
+    /// </summary>
     public class EntitySystem
     {
+        /// <summary>
+        /// 存储 InstanceQueueIndex 中不是-1的。Update 。LateUpdate 这些事件类
+        /// </summary>
         private readonly Queue<EntityRef<Entity>>[] queues = new Queue<EntityRef<Entity>>[InstanceQueueIndex.Max];
         
         public EntitySystem()

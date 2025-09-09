@@ -3,15 +3,20 @@ using System.Collections.Generic;
 
 namespace ET
 {
+    /// <summary>
+    ///   处理回调Entity的回调事件（Serialize 序列化,Deserialize 反序列化,GetComponent 获取组件,Awake 初始化,Destory 销毁）  ,
+    ///   继承了ISingletonAwake 会被ET框架在加载完代码dll。会被默添加的
+    /// </summary>
     [Code]
     public class EntitySystemSingleton: Singleton<EntitySystemSingleton>, ISingletonAwake
     {
+        //所有类型的回调方法。包含Update,LateUpdate
         public TypeSystems TypeSystems { get; private set; }
         
         public void Awake()
         {
             this.TypeSystems = new TypeSystems(InstanceQueueIndex.Max);
-
+            
             foreach (Type type in CodeTypes.Instance.GetTypes(typeof (EntitySystemAttribute)))
             {
                 SystemObject obj = (SystemObject)Activator.CreateInstance(type);
