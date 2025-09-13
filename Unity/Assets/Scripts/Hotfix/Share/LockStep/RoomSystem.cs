@@ -14,15 +14,21 @@ namespace ET
         
         public static void Init(this Room self, List<LockStepUnitInfo> unitInfos, long startTime, int frame = -1)
         {
+            //初始 开始时间，初始帧数，
             self.StartTime = startTime;
             self.AuthorityFrame = frame;
             self.PredictionFrame = frame;
             self.Replay.UnitInfos = unitInfos;
+            //帧缓存的（运行时缓存，数据快照，比对哈希）
             self.FrameBuffer = new FrameBuffer(frame);
+            //让同步更加平缓的计时器
             self.FixedTimeCounter = new FixedTimeCounter(self.StartTime, 0, LSConstValue.UpdateInterval);
+            //初始化同步世界
             LSWorld lsWorld = self.LSWorld;
             lsWorld.Frame = frame + 1;
+            //同步世界添加同步Unit的组件
             lsWorld.AddComponent<LSUnitComponent>();
+            //玩家网络信息，开始初始化玩家
             for (int i = 0; i < unitInfos.Count; ++i)
             {
                 LockStepUnitInfo unitInfo = unitInfos[i];
@@ -30,7 +36,11 @@ namespace ET
                 self.PlayerIds.Add(unitInfo.PlayerId);
             }
         }
-
+        /// <summary>
+        /// 被帧同步的同步器所调用，获取网络输入的消息来驱动玩家表现。获取帧同步世界。帧同步世界下面的Unit管理组件。获取每个玩家的输入组件。输入网络消息驱动
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="oneFrameInputs"></param>
         public static void Update(this Room self, OneFrameInputs oneFrameInputs)
         {
             LSWorld lsWorld = self.LSWorld;
@@ -52,7 +62,13 @@ namespace ET
 
             lsWorld.Update();
         }
-        
+        /// <summary>
+        /// 获取某一帧的 场景数据
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="sceneType"></param>
+        /// <param name="frame"></param>
+        /// <returns></returns>
         public static LSWorld GetLSWorld(this Room self, SceneType sceneType, int frame)
         {
             MemoryBuffer memoryBuffer = self.FrameBuffer.Snapshot(frame);
@@ -62,7 +78,10 @@ namespace ET
             memoryBuffer.Seek(0, SeekOrigin.Begin);
             return lsWorld;
         }
-
+        /// <summary>
+        /// 保存当前帧的所有输入汇总的哈希值到 帧缓存中
+        /// </summary>
+        /// <param name="self"></param>
         private static void SaveLSWorld(this Room self)
         {
             int frame = self.LSWorld.Frame;
@@ -78,7 +97,7 @@ namespace ET
             self.FrameBuffer.SetHash(frame, hash);
         }
 
-        // 记录需要存档的数据
+        // 记录需要存档的数据 ， 记录某一帧的所有操作数据
         public static void Record(this Room self, int frame)
         {
             if (frame > self.AuthorityFrame)

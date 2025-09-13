@@ -79,7 +79,10 @@ namespace ET
             this.updater.Update();
             ++this.Frame;
         }
-
+        /// <summary>
+        /// LSEntity注册到帧同步系统的回调方法
+        /// </summary>
+        /// <param name="entity"></param>
         public void RegisterSystem(LSEntity entity)
         {
             this.updater.Add(entity);
