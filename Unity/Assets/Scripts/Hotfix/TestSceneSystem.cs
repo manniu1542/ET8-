@@ -6,7 +6,7 @@ namespace ET
     }
 
     [Event(SceneType.TestScene)]
-    public class EntryEvent3_InitClient : AEvent<Scene, TestSceneEvent>
+    public class TestSceneEvent_InitClient : AEvent<Scene, TestSceneEvent>
     {
         protected override async ETTask Run(Scene root, TestSceneEvent args)
         {

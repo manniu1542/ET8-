@@ -32,6 +32,9 @@ namespace ET
         // 存档
         public Replay Replay { get; set; } = new();
 
+        /// <summary>
+        /// 帧同步世界
+        /// </summary>
         private EntityRef<LSWorld> lsWorld;
 
         // LSWorld做成child，可以有多个lsWorld，比如守望先锋有两个
@@ -43,6 +46,7 @@ namespace ET
             }
             set
             {
+                //这一步就确定Room的fiber纤程。跟LSWord的fiber是同一个，以及他们的Scene也是同一个。到时候发消息给Room或着给LSWord的时候，都会走这个fiber的。
                 this.AddChild(value);
                 this.lsWorld = value;
             }

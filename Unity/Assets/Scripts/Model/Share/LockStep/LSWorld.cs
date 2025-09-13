@@ -17,36 +17,41 @@ namespace ET
         {
             return entity.LSWorld().GetId();
         }
-        
+
         public static TSRandom GetRandom(this LSEntity entity)
         {
             return entity.LSWorld().Random;
         }
     }
 
+    /// <summary>
+    /// 帧同步的世界组件可以在他下面添加LSEntity进行驱动  
+    /// </summary>
     [EnableMethod]
     [ChildOf]
     [MemoryPackable]
-    public partial class LSWorld: Entity, IAwake, IScene
+    public partial class LSWorld : Entity, IAwake, IScene
     {
         [MemoryPackConstructor]
         public LSWorld()
         {
         }
-        
+
         public LSWorld(SceneType sceneType)
         {
             this.Id = this.GetId();
 
             this.SceneType = sceneType;
         }
-
+        /// <summary>
+        /// 帧同步世界的驱动器。
+        /// </summary>
         private readonly LSUpdater updater = new();
-        
+
         [BsonIgnore]
         [MemoryPackIgnore]
         public Fiber Fiber { get; set; }
-        
+
         [BsonElement]
         [MemoryPackInclude]
         private long idGenerator;
@@ -56,12 +61,17 @@ namespace ET
             return ++this.idGenerator;
         }
 
+        /// <summary>
+        ///   帧同步世界中的TrueSync 的确定随机数
+        /// </summary>
         public TSRandom Random { get; set; }
-        
+
         [BsonIgnore]
         [MemoryPackIgnore]
         public SceneType SceneType { get; set; }
-        
+        /// <summary>
+        /// 当前世界帧 （逻辑执行完毕后才会帧数+1）
+        /// </summary>
         public int Frame { get; set; }
 
         public void Update()
@@ -74,7 +84,7 @@ namespace ET
         {
             this.updater.Add(entity);
         }
-        
+
         public new K AddComponent<K>(bool isFromPool = false) where K : LSEntity, IAwake, new()
         {
             return this.AddComponentWithId<K>(this.GetId(), isFromPool);
@@ -114,7 +124,7 @@ namespace ET
         {
             return this.AddChildWithId<T, A, B, C>(this.GetId(), a, b, c, isFromPool);
         }
-        
+
         protected override long GetLongHashCode(Type type)
         {
             return LSEntitySystemSingleton.Instance.GetLongHashCode(type);

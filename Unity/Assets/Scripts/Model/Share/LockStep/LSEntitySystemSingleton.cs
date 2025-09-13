@@ -12,7 +12,7 @@ namespace ET
     }
     
     /// <summary>
-    /// 处理帧同步的回调方法
+    /// 处理帧同步的回调方法 (是EntitySystemSingleton 与 EntitySystem 功能柔和一块的)
     /// </summary>
     [Code]
     public class LSEntitySystemSingleton: Singleton<LSEntitySystemSingleton>, ISingletonAwake

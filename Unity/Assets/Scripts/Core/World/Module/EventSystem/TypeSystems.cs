@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ET
 {
+    /// <summary>
+    /// 存储所有Entiy类的回调方法管理系统
+    /// </summary>
     public class TypeSystems
     {
         public class OneTypeSystems

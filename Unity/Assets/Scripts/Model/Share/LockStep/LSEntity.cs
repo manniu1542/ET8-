@@ -3,7 +3,7 @@ using System;
 namespace ET
 {
     /// <summary>
-    /// 修改Entity 一些 添加组件得API，使这些组件必带id
+    /// 修改Entity 一些 添加组件得API，使这些组件必是（id是不同的，一般的Entity组件id是相同的。只有InstanceId才是唯一的）
     /// </summary>
     [EnableMethod]
     public abstract partial class LSEntity: Entity
@@ -70,7 +70,7 @@ namespace ET
             {
                 return;
             }
-
+           
             if (oneTypeSystems.QueueFlag[LSQueneUpdateIndex.LSUpdate])
             {
                 lsWorld.RegisterSystem(this);
