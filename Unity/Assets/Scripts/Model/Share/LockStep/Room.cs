@@ -22,7 +22,10 @@ namespace ET
 
         // 玩家id列表
         public List<long> PlayerIds { get; } = new(LSConstValue.MatchCount);
-        
+        /// <summary>
+        /// 最多预测几帧
+        /// </summary>
+        public int MaxPredictionCount { get; set; } = 5;
         // 预测帧
         public int PredictionFrame { get; set; } = -1;
 

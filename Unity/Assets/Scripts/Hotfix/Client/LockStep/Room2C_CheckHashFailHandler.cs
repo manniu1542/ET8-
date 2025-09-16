@@ -5,6 +5,7 @@ namespace ET.Client
     {
         protected override async ETTask Run(Scene root, Room2C_CheckHashFail message)
         {
+            //比对输入哈希值失败的处理
             LSWorld serverWorld = MemoryPackHelper.Deserialize(typeof(LSWorld), message.LSWorldBytes, 0, message.LSWorldBytes.Length) as LSWorld;
             using (root.AddChild(serverWorld))
             {

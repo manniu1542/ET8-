@@ -1,5 +1,8 @@
 namespace ET.Server
 {
+    /// <summary>
+    /// 校验客户端与服务端之间的 这一帧的输入 哈希值比对
+    /// </summary>
     [MessageHandler(SceneType.RoomRoot)]
     public class C2Room_CheckHashHandler: MessageHandler<Scene, C2Room_CheckHash>
     {
@@ -7,6 +10,7 @@ namespace ET.Server
         {
             Room room = root.GetComponent<Room>();
             long hash = room.FrameBuffer.GetHash(message.Frame);
+            //比对失败。服务端把这一帧的 服务端数据发送给客户端
             if (message.Hash != hash)
             {
                 byte[] bytes = room.FrameBuffer.Snapshot(message.Frame).ToArray();

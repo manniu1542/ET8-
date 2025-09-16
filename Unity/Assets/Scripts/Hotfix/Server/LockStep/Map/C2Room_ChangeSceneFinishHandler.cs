@@ -33,7 +33,7 @@ namespace ET.Server
             }
 
             room.Init(room2CStart.UnitInfo, room2CStart.StartTime);
-
+            //帧同步驱动器,
             room.AddComponent<LSServerUpdater>();
 
             RoomMessageHelper.BroadCast(room, room2CStart);

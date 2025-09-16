@@ -2,6 +2,9 @@ using System;
 
 namespace ET.Client
 {
+    /// <summary>
+    /// 帧同步接收服务器下发的权威帧输入。回滚帧同步的消息
+    /// </summary>
     [MessageHandler(SceneType.LockStep)]
     public class OneFrameInputsHandler: MessageHandler<Scene, OneFrameInputs>
     {
