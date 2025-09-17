@@ -14,6 +14,9 @@ namespace ET
         /// 每秒帧数
         /// </summary>
         public const int FrameCountPerSecond = 1000 / UpdateInterval;
+        /// <summary>
+        /// 间隔几帧保存下帧同步世界的帧快照
+        /// </summary>
         public const int SaveLSWorldFrameCount = 60 * FrameCountPerSecond;
     }
 }

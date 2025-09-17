@@ -4,6 +4,10 @@ namespace ET.Client
 {
     public static partial class LSClientHelper
     {
+        /// <summary>
+        /// 执行回滚 回调方法
+        /// </summary>
+        /// <param name="entity"></param>
         public static void RunLSRollbackSystem(Entity entity)
         {
             if (entity is LSEntity)
@@ -30,13 +34,17 @@ namespace ET.Client
             }
         }
         
-        // 回滚
+        /// <summary>
+        /// 客户端端回滚到指定帧
+        /// </summary>
+        /// <param name="room"></param>
+        /// <param name="frame"></param>
         public static void Rollback(Room room, int frame)
         {
             room.LSWorld.Dispose();
             FrameBuffer frameBuffer = room.FrameBuffer;
             
-            // 回滚
+            // 回滚到指定的帧快照中 
             room.LSWorld = room.GetLSWorld(SceneType.LockStepClient, frame);
             OneFrameInputs authorityFrameInput = frameBuffer.FrameInputs(frame);
             // 执行AuthorityFrame
@@ -48,13 +56,18 @@ namespace ET.Client
             for (int i = room.AuthorityFrame + 1; i <= room.PredictionFrame; ++i)
             {
                 OneFrameInputs oneFrameInputs = frameBuffer.FrameInputs(i);
-                LSClientHelper.CopyOtherInputsTo(room, authorityFrameInput, oneFrameInputs); // 重新预测消息
+                //TODO:重新预测： 基于不同步的时候其他玩家输入。后续预测他继续输入这些不同步的输入，但是要做个处理 回滚的最大次数。超过该次数。就降低客户端的刷新间隔，获取服务器更多的权威帧。
+                LSClientHelper.CopyOtherInputsTo(room, authorityFrameInput, oneFrameInputs); 
                 room.Update(oneFrameInputs);
             }
             
             RunLSRollbackSystem(room);
         }
-        
+        /// <summary>
+        /// 发送某一帧的hash去跟服务端的hash对比。这样就知道那些 输入的不对了。方便做复盘。
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="frame"></param>
         public static void SendHash(this Room self, int frame)
         {
             if (frame > self.AuthorityFrame)

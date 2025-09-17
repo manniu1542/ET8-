@@ -4,7 +4,7 @@ using System.IO;
 namespace ET.Client
 {
     [EntitySystemOf(typeof(LSClientUpdater))]
-    [FriendOf(typeof (LSClientUpdater))]
+    [FriendOf(typeof(LSClientUpdater))]
     public static partial class LSClientUpdaterSystem
     {
         [EntitySystem]
@@ -13,7 +13,7 @@ namespace ET.Client
             Room room = self.GetParent<Room>();
             self.MyId = room.Root().GetComponent<PlayerComponent>().MyId;
         }
-        
+
         [EntitySystem]
         private static void Update(this LSClientUpdater self)
         {
@@ -42,14 +42,15 @@ namespace ET.Client
                 room.Update(oneFrameInputs);
                 //发送这一帧的哈希值比对到服务器（让服务器来校验这一帧 ，客户的输入是否有问题）
                 room.SendHash(room.PredictionFrame);
-                
+
                 room.SpeedMultiply = ++i;
                 //这一帧的玩家输入消息，发给服务器
                 FrameMessage frameMessage = FrameMessage.Create();
                 frameMessage.Frame = room.PredictionFrame;
                 frameMessage.Input = self.Input;
+             
                 root.GetComponent<ClientSenderComponent>().Send(frameMessage);
-                Log.Error("Client第一帧跑起！");
+                Log.Error($"客户端：发送{room.PredictionFrame}输入消息：{self.Input}");
                 // 如果处理超过 5 毫秒，就先跳出，避免一帧内处理太久，避免让客户端根服务端差距太大。导致客户端一直回滚数据，回滚数据过大导致客户端卡死
                 long timeNow2 = TimeInfo.Instance.ServerNow();
                 if (timeNow2 - timeNow > 5)
@@ -58,7 +59,7 @@ namespace ET.Client
                 }
             }
         }
-        
+
         private static OneFrameInputs GetOneFrameMessages(this LSClientUpdater self, int frame)
         {
             Room room = self.GetParent<Room>();
@@ -68,19 +69,20 @@ namespace ET.Client
             {
                 return frameBuffer.FrameInputs(frame);
             }
-            
+
             // predict  获取预测帧的输入数据，只把当前自己输入丢入进去
             OneFrameInputs predictionFrame = frameBuffer.FrameInputs(frame);
             // 推进 FrameBuffer 到当前帧（准备好数据结构）
             frameBuffer.MoveForward(frame);
-            
+
             if (frameBuffer.CheckFrame(room.AuthorityFrame))
             {
                 OneFrameInputs authorityFrame = frameBuffer.FrameInputs(room.AuthorityFrame);
                 authorityFrame.CopyTo(predictionFrame);
             }
+
             predictionFrame.Inputs[self.MyId] = self.Input;
-            
+
             return predictionFrame;
         }
     }

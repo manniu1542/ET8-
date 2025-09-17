@@ -9,12 +9,12 @@ namespace ET
     public class LSUpdater : Object
     {
         /// <summary>
-        /// 当前每帧需要更新的实体 Id 列表
+        /// 当前每帧需要更新的组件实体 Id 列表
         /// </summary>
         private List<long> updateIds = new();
 
         /// <summary>
-        /// 在本帧中新增的实体 Id 列表
+        /// 在本帧中新增的组件实体 Id 列表
         /// </summary>
         private List<long> newUpdateIds = new();
 

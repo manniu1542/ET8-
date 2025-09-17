@@ -25,7 +25,7 @@ namespace ET
     }
 
     /// <summary>
-    /// 帧同步的世界组件可以在他下面添加LSEntity进行驱动  
+    /// 帧同步的世界组件可以在他下面添加LSEntity进行驱动,并且支持 帧快照这个 组件下的所有子级组件以及他们的子级组件
     /// </summary>
     [EnableMethod]
     [ChildOf]
@@ -51,7 +51,7 @@ namespace ET
         [BsonIgnore]
         [MemoryPackIgnore]
         public Fiber Fiber { get; set; }
-
+        //id生成器 这个会被序列化。在这个帧世界中
         [BsonElement]
         [MemoryPackInclude]
         private long idGenerator;

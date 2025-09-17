@@ -10,8 +10,11 @@ namespace ET.Server
         {
             Room room = root.GetComponent<Room>();
             long hash = room.FrameBuffer.GetHash(message.Frame);
+            
+            
+            
             //比对失败。服务端把这一帧的 服务端数据发送给客户端
-            if (message.Hash != hash)
+             if (message.Hash != hash)
             {
                 byte[] bytes = room.FrameBuffer.Snapshot(message.Frame).ToArray();
                 Room2C_CheckHashFail room2CCheckHashFail = Room2C_CheckHashFail.Create();

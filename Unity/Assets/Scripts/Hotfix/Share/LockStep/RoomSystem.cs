@@ -85,13 +85,15 @@ namespace ET
         private static void SaveLSWorld(this Room self)
         {
             int frame = self.LSWorld.Frame;
+            //取得对应帧的内存缓存区
             MemoryBuffer memoryBuffer = self.FrameBuffer.Snapshot(frame);
+            //充值缓存区的位置以及长度
             memoryBuffer.Seek(0, SeekOrigin.Begin);
             memoryBuffer.SetLength(0);
             
             MemoryPackHelper.Serialize(self.LSWorld, memoryBuffer);
             memoryBuffer.Seek(0, SeekOrigin.Begin);
-
+            //计算这个缓存区的哈希值
             long hash = memoryBuffer.GetBuffer().Hash(0, (int) memoryBuffer.Length);
             
             self.FrameBuffer.SetHash(frame, hash);
@@ -104,10 +106,12 @@ namespace ET
             {
                 return;
             }
+            //每一帧的输入都被记录
             OneFrameInputs oneFrameInputs = self.FrameBuffer.FrameInputs(frame);
             OneFrameInputs saveInput = OneFrameInputs.Create();
             oneFrameInputs.CopyTo(saveInput);
             self.Replay.FrameInputs.Add(saveInput);
+            // 间隔一定的帧。记录帧快照的 数据再回放时使用
             if (frame % LSConstValue.SaveLSWorldFrameCount == 0)
             {
                 MemoryBuffer memoryBuffer = self.FrameBuffer.Snapshot(frame);

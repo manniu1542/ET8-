@@ -56,5 +56,9 @@ namespace ET
         {
             return !(a == b);
         }
+        public override string ToString()
+        {
+            return $"V:{this.V} Button:{this.Button}";
+        }
     }
 }

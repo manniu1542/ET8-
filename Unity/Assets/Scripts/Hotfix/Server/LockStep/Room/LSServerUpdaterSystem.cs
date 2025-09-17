@@ -26,7 +26,7 @@ namespace ET.Server
             {
                 return;
             }
-
+          
             OneFrameInputs oneFrameInputs = self.GetOneFrameMessage(frame);
             ++room.AuthorityFrame;
             
@@ -34,6 +34,7 @@ namespace ET.Server
             oneFrameInputs.CopyTo(sendInput);
             //广播该确定帧的所有玩家输入
             RoomMessageHelper.BroadCast(room, sendInput);
+            Log.Error($"服务端：发送{room.AuthorityFrame} 广播消息");
             //驱动服务端，所有玩家的 帧同步世界中的数据，以及 房间的缓存数据
             room.Update(oneFrameInputs);
         }

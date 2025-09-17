@@ -26,10 +26,10 @@ namespace ET
         /// 最多预测几帧
         /// </summary>
         public int MaxPredictionCount { get; set; } = 5;
-        // 预测帧
+        // 预测帧 （客户端执行的帧）
         public int PredictionFrame { get; set; } = -1;
 
-        // 权威帧
+        // 权威帧 (服务器执行的，客户端接收到服务器的)
         public int AuthorityFrame { get; set; } = -1;
 
         // 存档
@@ -49,7 +49,7 @@ namespace ET
             }
             set
             {
-                //这一步就确定Room的fiber纤程。跟LSWord的fiber是同一个，以及他们的Scene也是同一个。到时候发消息给Room或着给LSWord的时候，都会走这个fiber的。
+                //这一步就确定Room的fiber纤程。跟LSWord的fiber是同一个，以及他们的Scene也是不同的。到时候发消息给Room或着给LSWord的时候，都会走这个fiber的。
                 this.AddChild(value);
                 this.lsWorld = value;
             }

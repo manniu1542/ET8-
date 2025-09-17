@@ -18,7 +18,7 @@ namespace ET.Client
             FrameBuffer frameBuffer = room.FrameBuffer;
 
             ++room.AuthorityFrame;
-            // 服务端返回的消息比预测的还早
+            // 服务端返回的消息比预测的还早，直接采纳服务端这一帧的输入消息 无需对比这个已经是既定的事实了。 后需 需要调整客户端的刷新率 ，
             if (room.AuthorityFrame > room.PredictionFrame)
             {
                 OneFrameInputs authorityFrame = frameBuffer.FrameInputs(room.AuthorityFrame);
@@ -34,6 +34,7 @@ namespace ET.Client
                 // 回滚重新预测的时候，自己的输入不用变化
                 if (input != predictionInput)
                 {
+                    Log.Error("比对有输入不一致需要回滚！");
                     Log.Debug($"frame diff: {predictionInput} {input}");
                     input.CopyTo(predictionInput);
                     // 回滚到frameBuffer.AuthorityFrame
