@@ -864,10 +864,11 @@ PlayerSettings:
   scriptingDefineSymbols:
     Android: UNITY;ENABLE_VIEW
     Server: UNITY;ENABLE_VIEW
-    Standalone: UNITY;ENABLE_VIEW
+    Standalone: UNITY;ENABLE_VIEW;ALLOWUNSAFE;WINDOWS
     WebGL: UNITY;ENABLE_VIEW
     iPhone: UNITY;ENABLE_VIEW
-  additionalCompilerArguments: {}
+  additionalCompilerArguments:
+    Standalone: []
   platformArchitecture:
     iPhone: 1
   scriptingBackend:

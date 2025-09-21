@@ -1,13 +1,7 @@
 {
-    "name": "Unity.Model",
-    "rootNamespace": "ET",
-    "references": [
-        "Unity.ThirdParty",
-        "Unity.Core",
-        "Unity.Mathematics",
-        "MemoryPack",
-        "BEPUPhysics"
-    ],
+    "name": "BEPUPhysics",
+    "rootNamespace": "",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
@@ -15,7 +9,8 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "UNITY_COMPILE || UNITY_EDITOR"
+        "WINDOWS",
+        "ALLOWUNSAFE"
     ],
     "versionDefines": [],
     "noEngineReferences": true

@@ -3,7 +3,7 @@
 namespace ET.Server
 {
     [MessageSessionHandler(SceneType.Gate)]
-    public class C2G_LoginGateHandler: MessageSessionHandler<C2G_LoginGate, G2C_LoginGate>
+    public class C2G_LoginGateHandler : MessageSessionHandler<C2G_LoginGate, G2C_LoginGate>
     {
         protected override async ETTask Run(Session session, C2G_LoginGate request, G2C_LoginGate response)
         {
@@ -36,33 +36,18 @@ namespace ET.Server
                 session.AddComponent<SessionPlayerComponent>().Player = player;
                 playerSessionComponent.Session = session;
             }
-            else 
+            else
             {
-                bool IsAppTypeDemo = ConstValue.IsAppTypeDemo;
-                if (IsAppTypeDemo) //状态同步，重连的示例
+                // 判断是否在战斗
+                PlayerRoomComponent playerRoomComponent = player.GetComponent<PlayerRoomComponent>();
+                if (playerRoomComponent.RoomActorId != default)
                 {
-                    //重新绑定下sission跟当前的玩家。
-                    PlayerSessionComponent playerSessionComponent = player.GetComponent<PlayerSessionComponent>();
-                    var spc = session.GetComponent<SessionPlayerComponent>();
-                    if (spc == null)
-                        spc = session.AddComponent<SessionPlayerComponent>();
-                    spc.Player = player;
-                    playerSessionComponent.Session = session;
-                    Log.Debug("状态同步的重连");
+                    CheckRoom(player, session).Coroutine();
                 }
-                else//帧同步,重连回来的示例
+                else
                 {
-                    // 判断是否在战斗
-                    PlayerRoomComponent playerRoomComponent = player.GetComponent<PlayerRoomComponent>();
-                    if (playerRoomComponent.RoomActorId != default)
-                    {
-                        CheckRoom(player, session).Coroutine();
-                    }
-                    else
-                    {
-                        PlayerSessionComponent playerSessionComponent = player.GetComponent<PlayerSessionComponent>();
-                        playerSessionComponent.Session = session;
-                    }
+                    PlayerSessionComponent playerSessionComponent = player.GetComponent<PlayerSessionComponent>();
+                    playerSessionComponent.Session = session;
                 }
             }
 

@@ -7,7 +7,8 @@
         "HybridCLR.Runtime",
         "MemoryPack",
         "YooAsset",
-        "YooAsset.Editor"
+        "YooAsset.Editor",
+        "BEPUPhysics"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using BEPUphysics;
 using TrueSync;
 
 namespace ET.Client
@@ -24,7 +25,8 @@ namespace ET.Client
             await EventSystem.Instance.PublishAsync(root, new AppStartInitFinish());
             ShowViewSingleton();
 
-     
+            Space space = new Space();
+            Log.Error("MESSAGE"+space.ToString());
         }
 
         /// <summary>

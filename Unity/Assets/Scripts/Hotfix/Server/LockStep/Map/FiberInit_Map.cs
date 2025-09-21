@@ -3,7 +3,7 @@
 namespace ET.Server
 {
     [Invoke((long)SceneType.Map)]
-    public class FiberInit_Map: AInvokeHandler<FiberInit, ETTask>
+    public class FiberInit_Map : AInvokeHandler<FiberInit, ETTask>
     {
         public override async ETTask Handle(FiberInit fiberInit)
         {
@@ -14,11 +14,7 @@ namespace ET.Server
             root.AddComponent<ProcessInnerSender>();
             root.AddComponent<MessageSender>();
             root.AddComponent<UnitComponent>();
-            bool IsUseSelfAOI = ConstValue.IsUseSelfAOI;
-            if (IsUseSelfAOI)
-                root.AddComponent<AreaCellMgrComponent>();
-            else
-                root.AddComponent<AOIManagerComponent>();
+            root.AddComponent<AreaCellMgrComponent>();
             root.AddComponent<RoomManagerComponent>();
             root.AddComponent<LocationProxyComponent>();
             root.AddComponent<MessageLocationSenderComponent>();
