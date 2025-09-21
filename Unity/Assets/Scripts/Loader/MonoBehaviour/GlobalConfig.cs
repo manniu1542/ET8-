@@ -25,7 +25,6 @@ namespace ET
 
         public BuildType BuildType;
 
-        public AppType AppType;
 
         public EPlayMode EPlayMode;
     }
