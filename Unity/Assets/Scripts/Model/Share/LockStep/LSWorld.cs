@@ -76,7 +76,13 @@ namespace ET
 
         public void Update()
         {
+            
             this.updater.Update();
+            //TODO:1.注册物理驱动  2.物理世界更新。 3.将物理世界的更新应用于逻辑世界 4.注销物理驱动
+            
+            
+            
+            
             ++this.Frame;
         }
         /// <summary>

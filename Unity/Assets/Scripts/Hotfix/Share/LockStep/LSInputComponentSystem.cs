@@ -18,7 +18,9 @@ namespace ET
         private static void LSUpdate(this LSInputComponent self)
         {
             LSUnit unit = self.GetParent<LSUnit>();
-
+            
+            
+            //TODO:物理世界的执行输入逻辑
             TSVector2 v2 = self.LSInput.V * 6 * 50 / 1000;
             if (v2.LengthSquared() < 0.0001f)
             {
@@ -27,6 +29,10 @@ namespace ET
             TSVector oldPos = unit.Position;
             unit.Position += new TSVector(v2.x, 0, v2.y);
             unit.Forward = unit.Position - oldPos;
+            
+
+            
+            
         }
     }
 }
