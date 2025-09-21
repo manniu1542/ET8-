@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+
 namespace ET.Client
 {
     [EntitySystemOf(typeof(LSClientUpdater))]
@@ -11,6 +12,15 @@ namespace ET.Client
         {
             Room room = self.GetParent<Room>();
             self.MyId = room.Root().GetComponent<PlayerComponent>().MyId;
+        }
+
+        public static async ETTask tt(this LSClientUpdater self)
+        {
+            Room room = self.GetParent<Room>();
+            C2Room_Ping test = C2Room_Ping.Create(true);
+            Scene root = room.Root();
+            Room2C_Ping tt = await root.GetComponent<ClientSenderComponent>().Call(test) as Room2C_Ping;
+            Log.Error($"服务器时间：{tt.Time}");
         }
 
         [EntitySystem]
@@ -47,7 +57,7 @@ namespace ET.Client
                 FrameMessage frameMessage = FrameMessage.Create();
                 frameMessage.Frame = room.PredictionFrame;
                 frameMessage.Input = self.Input;
-             
+
                 root.GetComponent<ClientSenderComponent>().Send(frameMessage);
                 Log.Error($"客户端：发送{room.PredictionFrame}输入消息：{self.Input}");
                 // 如果处理超过 5 毫秒，就先跳出，避免一帧内处理太久，避免让客户端根服务端差距太大。导致客户端一直回滚数据，回滚数据过大导致客户端卡死

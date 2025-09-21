@@ -5,7 +5,7 @@ namespace ET
         /// <summary>
         /// 匹配的人数
         /// </summary>
-        public const int MatchCount = 2;
+        public const int MatchCount = 1;
         /// <summary>
         /// 更新间隔 毫秒
         /// </summary>

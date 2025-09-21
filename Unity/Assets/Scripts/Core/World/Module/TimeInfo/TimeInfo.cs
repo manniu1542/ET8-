@@ -22,7 +22,7 @@ namespace ET
         private DateTime dt1970;
         private DateTime dt;
         
-        // ping消息会设置该值，原子操作
+        // ping消息会设置该值，原子操作   服务端与客户端的时间差
         public long ServerMinusClientTime { private get; set; }
 
         public long FrameTime { get; private set; }
