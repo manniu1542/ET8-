@@ -18,5 +18,14 @@ namespace ET
         /// 间隔几帧保存下帧同步世界的帧快照
         /// </summary>
         public const int SaveLSWorldFrameCount = 60 * FrameCountPerSecond;
+        /// <summary>
+        /// 动态的更新间隔
+        /// </summary>
+        public static int DynamicUpdateInterval = UpdateInterval;
+
+        /// <summary>
+        /// 是否开启了帧同步
+        /// </summary>
+        public static bool IsStartFrameSync = false;
     }
 }

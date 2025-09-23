@@ -12,16 +12,17 @@ namespace ET.Client
         {
             Room room = self.GetParent<Room>();
             self.MyId = room.Root().GetComponent<PlayerComponent>().MyId;
-            
+            LSConstValue.IsStartFrameSync = true;
+
         }
 
         public static async ETTask tt(this LSClientUpdater self)
         {
-            Room room = self.GetParent<Room>();
-            C2Room_Ping test = C2Room_Ping.Create(true);
-            Scene root = room.Root();
-            Room2C_Ping tt = await root.GetComponent<ClientSenderComponent>().Call(test) as Room2C_Ping;
-            Log.Error($"服务器,当前帧{tt.Frame} 时间：{tt.Time}");
+            // Room room = self.GetParent<Room>();
+            // C2Room_Ping test = C2Room_Ping.Create(true);
+            // Scene root = room.Root();
+            // Room2C_Ping tt = await root.GetComponent<ClientSenderComponent>().Call(test) as Room2C_Ping;
+            // Log.Error($"服务器,当前帧{tt.Frame} 时间：{tt.Time}");
         }
 
         [EntitySystem]
