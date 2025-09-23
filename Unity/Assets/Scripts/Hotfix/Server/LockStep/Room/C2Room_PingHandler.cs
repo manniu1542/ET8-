@@ -1,18 +1,18 @@
 using System;
+using ET.Server;
 
 namespace ET
 {
     [MessageHandler(SceneType.RoomRoot)]
     public class C2Room_PingHandler : MessageHandler<Scene, C2Room_Ping, Room2C_Ping>
     {
-        protected override async ETTask Run(Scene scene, C2Room_Ping request, Room2C_Ping response)
+        protected override async ETTask Run(Scene root, C2Room_Ping request, Room2C_Ping response)
         {
-            using C2Room_Ping _ = request;
-
-          
-            Log.Error("Scene+" + scene.Name);
+           
+            Room room = root.GetComponent<Room>();
             response.Time = TimeInfo.Instance.ClientNow();
-            response.Frame = 100;
+            response.Frame =  room.AuthorityFrame;
+            
             await ETTask.CompletedTask;
         }
     }

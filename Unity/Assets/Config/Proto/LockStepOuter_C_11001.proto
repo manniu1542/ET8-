@@ -78,3 +78,19 @@ message G2C_Reconnect // IMessage
 	repeated LockStepUnitInfo UnitInfos = 2;
 	int32 Frame = 3;
 }
+
+// ResponseType Room2C_Ping
+message C2Room_Ping // IRoomRequest
+{
+	int32 RpcId = 1;
+	int64 PlayerId = 2;
+}
+
+message Room2C_Ping // IRoomResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	int64 Time = 4;
+	int32 Frame = 5;
+}

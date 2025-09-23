@@ -1082,73 +1082,6 @@ namespace ET
         }
     }
 
-    [MemoryPackable]
-    [Message(OuterMessage.C2Room_Ping)]
-    [ResponseType(nameof(Room2C_Ping))]
-    public partial class C2Room_Ping : MessageObject, ILocationRequest
-    {
-        public static C2Room_Ping Create(bool isFromPool = false)
-        {
-            return ObjectPool.Instance.Fetch(typeof(C2Room_Ping), isFromPool) as C2Room_Ping;
-        }
-
-        [MemoryPackOrder(0)]
-        public int RpcId { get; set; }
-
-        public override void Dispose()
-        {
-            if (!this.IsFromPool)
-            {
-                return;
-            }
-
-            this.RpcId = default;
-
-            ObjectPool.Instance.Recycle(this);
-        }
-    }
-
-    [MemoryPackable]
-    [Message(OuterMessage.Room2C_Ping)]
-    public partial class Room2C_Ping : MessageObject, ILocationResponse
-    {
-        public static Room2C_Ping Create(bool isFromPool = false)
-        {
-            return ObjectPool.Instance.Fetch(typeof(Room2C_Ping), isFromPool) as Room2C_Ping;
-        }
-
-        [MemoryPackOrder(0)]
-        public int RpcId { get; set; }
-
-        [MemoryPackOrder(1)]
-        public int Error { get; set; }
-
-        [MemoryPackOrder(2)]
-        public string Message { get; set; }
-
-        [MemoryPackOrder(3)]
-        public long Time { get; set; }
-
-        [MemoryPackOrder(4)]
-        public int Frame { get; set; }
-
-        public override void Dispose()
-        {
-            if (!this.IsFromPool)
-            {
-                return;
-            }
-
-            this.RpcId = default;
-            this.Error = default;
-            this.Message = default;
-            this.Time = default;
-            this.Frame = default;
-
-            ObjectPool.Instance.Recycle(this);
-        }
-    }
-
     public static class OuterMessage
     {
         public const ushort HttpGetRouterResponse = 10002;
@@ -1185,7 +1118,5 @@ namespace ET
         public const ushort M2C_TransferMap = 10033;
         public const ushort C2G_Benchmark = 10034;
         public const ushort G2C_Benchmark = 10035;
-        public const ushort C2Room_Ping = 10036;
-        public const ushort Room2C_Ping = 10037;
     }
 }

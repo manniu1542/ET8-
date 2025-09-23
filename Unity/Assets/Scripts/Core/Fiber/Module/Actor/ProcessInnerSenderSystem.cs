@@ -50,7 +50,7 @@ namespace ET
             //消息的请求
             ActorId actorId = messageInfo.ActorId;
             MessageObject message = messageInfo.MessageObject;
-
+            //根据Actorid获取到指定 的Ator邮箱组件
             MailBoxComponent mailBoxComponent = self.Fiber().Mailboxes.Get(actorId.InstanceId);
             //发消息到的纤程 ，没有邮箱组件，报的提示
             if (mailBoxComponent == null)

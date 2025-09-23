@@ -12,6 +12,7 @@ namespace ET.Client
         {
             Room room = self.GetParent<Room>();
             self.MyId = room.Root().GetComponent<PlayerComponent>().MyId;
+            
         }
 
         public static async ETTask tt(this LSClientUpdater self)
@@ -20,7 +21,7 @@ namespace ET.Client
             C2Room_Ping test = C2Room_Ping.Create(true);
             Scene root = room.Root();
             Room2C_Ping tt = await root.GetComponent<ClientSenderComponent>().Call(test) as Room2C_Ping;
-            Log.Error($"服务器时间：{tt.Time}");
+            Log.Error($"服务器,当前帧{tt.Frame} 时间：{tt.Time}");
         }
 
         [EntitySystem]
@@ -44,7 +45,7 @@ namespace ET.Client
                 {
                     return;
                 }
-
+                self.tt().Coroutine();
                 ++room.PredictionFrame;
                 OneFrameInputs oneFrameInputs = self.GetOneFrameMessages(room.PredictionFrame);
                 //根据这一帧的输入数据。来驱动 帧同步逻辑（房间的 数据缓存，以及帧同步世界的玩家 逻辑表现）

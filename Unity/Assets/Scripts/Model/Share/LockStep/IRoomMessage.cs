@@ -4,4 +4,13 @@ namespace ET
     {
         long PlayerId { get; set; }
     }
+
+    public interface IRoomRequest: IRequest
+    {
+        long PlayerId { get; set; }
+    }
+
+    public interface IRoomResponse: IResponse
+    {
+    }
 }

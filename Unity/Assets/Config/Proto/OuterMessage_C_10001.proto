@@ -234,17 +234,3 @@ message G2C_Benchmark // ISessionResponse
 	string Message = 3;
 }
 
-// ResponseType Room2C_Ping
-message C2Room_Ping // ILocationRequest
-{
-	int32 RpcId = 1;
-}
-
-message Room2C_Ping // ILocationResponse
-{
-	int32 RpcId = 1;
-	int32 Error = 2;
-	string Message = 3;
-	int64 Time = 4;
-	int32 Frame = 5;
-}

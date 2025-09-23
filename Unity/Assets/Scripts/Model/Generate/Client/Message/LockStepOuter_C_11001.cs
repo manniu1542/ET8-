@@ -368,6 +368,77 @@ namespace ET
         }
     }
 
+    [MemoryPackable]
+    [Message(LockStepOuter.C2Room_Ping)]
+    [ResponseType(nameof(Room2C_Ping))]
+    public partial class C2Room_Ping : MessageObject, IRoomRequest
+    {
+        public static C2Room_Ping Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2Room_Ping), isFromPool) as C2Room_Ping;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public long PlayerId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.PlayerId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(LockStepOuter.Room2C_Ping)]
+    public partial class Room2C_Ping : MessageObject, IRoomResponse
+    {
+        public static Room2C_Ping Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(Room2C_Ping), isFromPool) as Room2C_Ping;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public long Time { get; set; }
+
+        [MemoryPackOrder(4)]
+        public int Frame { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.Time = default;
+            this.Frame = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     public static class LockStepOuter
     {
         public const ushort C2G_Match = 11002;
@@ -382,5 +453,7 @@ namespace ET
         public const ushort C2Room_CheckHash = 11011;
         public const ushort Room2C_CheckHashFail = 11012;
         public const ushort G2C_Reconnect = 11013;
+        public const ushort C2Room_Ping = 11014;
+        public const ushort Room2C_Ping = 11015;
     }
 }

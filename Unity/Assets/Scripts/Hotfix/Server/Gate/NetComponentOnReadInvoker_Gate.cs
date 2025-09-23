@@ -2,6 +2,9 @@
 
 namespace ET.Server
 {
+    /// <summary>
+    /// 服务端网关收到消息 ，根据消息类型。分发到其他纤程服务器的处理。
+    /// </summary>
     [Invoke((long)SceneType.Gate)]
     public class NetComponentOnReadInvoker_Gate: AInvokeHandler<NetComponentOnRead>
     {
@@ -37,6 +40,22 @@ namespace ET.Server
                     ActorId roomActorId = player.GetComponent<PlayerRoomComponent>().RoomActorId;
                     actorRoom.PlayerId = player.Id;
                     root.GetComponent<MessageSender>().Send(roomActorId, actorRoom);
+                    break;
+                }
+                case IRoomRequest actorRoomRequest:
+                {
+                    Player player = session.GetComponent<SessionPlayerComponent>().Player;
+                    ActorId roomActorId = player.GetComponent<PlayerRoomComponent>().RoomActorId;
+                    int rpcId = actorRoomRequest.RpcId; // 这里要保存客户端的rpcId
+                    actorRoomRequest.PlayerId = player.Id;
+                    long instanceId = session.InstanceId;
+                    IResponse iResponse =  await root.GetComponent<MessageSender>().Call(roomActorId, actorRoomRequest);
+                    iResponse.RpcId = rpcId;
+                    // session可能已经断开了，所以这里需要判断
+                    if (session.InstanceId == instanceId)
+                    {
+                        session.Send(iResponse);
+                    }
                     break;
                 }
                 case ILocationMessage actorLocationMessage:
