@@ -6,15 +6,15 @@ namespace ET.Client
     /// 帧同步接收服务器下发的权威帧输入。回滚帧同步的消息
     /// </summary>
     [MessageHandler(SceneType.LockStep)]
-    public class OneFrameInputsHandler: MessageHandler<Scene, OneFrameInputs>
+    public class OneFrameInputsHandler : MessageHandler<Scene, OneFrameInputs>
     {
         protected override async ETTask Run(Scene root, OneFrameInputs input)
         {
-            using var _ = input ; // 方法结束时回收消息
+            using var _ = input; // 方法结束时回收消息
             Room room = root.GetComponent<Room>();
-            
+
             Log.Debug($"OneFrameInputs: {room.AuthorityFrame + 1} {input.ToJson()}");
-                        
+
             FrameBuffer frameBuffer = room.FrameBuffer;
 
             ++room.AuthorityFrame;
@@ -34,7 +34,7 @@ namespace ET.Client
                 // 回滚重新预测的时候，自己的输入不用变化
                 if (input != predictionInput)
                 {
-                    Log.Error("比对有输入不一致需要回滚！");
+                    Log.LockStepWarning($"对比{room.AuthorityFrame}帧失败,客户端输入{predictionInput},服务端输入{input},客户端回滚");
                     Log.Debug($"frame diff: {predictionInput} {input}");
                     input.CopyTo(predictionInput);
                     // 回滚到frameBuffer.AuthorityFrame
@@ -48,6 +48,7 @@ namespace ET.Client
                     room.SendHash(room.AuthorityFrame);
                 }
             }
+
             await ETTask.CompletedTask;
         }
     }

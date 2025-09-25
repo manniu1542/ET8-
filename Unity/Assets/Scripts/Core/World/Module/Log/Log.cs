@@ -55,7 +55,7 @@ namespace ET
             StackTrace st = new(1, true);
             GetLog().Trace($"{msg}\n{st}");
         }
-
+        
         public static void Warning(string msg)
         {
             if (Options.Instance.LogLevel > WarningLevel)
@@ -63,6 +63,14 @@ namespace ET
                 return;
             }
             GetLog().Warning(msg);
+        }
+        public static void LockStepWarning(string msg)
+        {
+            if (Options.Instance.LogLevel > WarningLevel)
+            {
+                return;
+            }
+            GetLog().Warning("-.-"+msg);
         }
 
         public static void Error(string msg)

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace ET
 {
-    public class UnityLogger: ILog
+    public class UnityLogger : ILog
     {
         public void Trace(string msg)
         {
@@ -23,6 +25,7 @@ namespace ET
         public void Warning(string msg)
         {
             UnityEngine.Debug.LogWarning(msg);
+            Write("Warning", msg);
         }
 
         public void Error(string msg)
@@ -32,10 +35,10 @@ namespace ET
 #endif
             UnityEngine.Debug.LogError(msg);
         }
-        
+
         private static string Msg2LinkStackMsg(string msg)
         {
-            msg = Regex.Replace(msg,@"at (.*?) in (.*?\.cs):(\w+)", match =>
+            msg = Regex.Replace(msg, @"at (.*?) in (.*?\.cs):(\w+)", match =>
             {
                 string path = match.Groups[2].Value;
                 string line = match.Groups[3].Value;
@@ -73,5 +76,23 @@ namespace ET
         {
             UnityEngine.Debug.LogErrorFormat(message, args);
         }
+
+        ///<summary>日志写入</summary>
+        private static void Write(string type, string message)
+        {
+            if (!Logger.Instance.GetIsWriteLockStep()) return;
+            if (!message.StartsWith("-.-")) return;
+
+     
+
+            FileStream fs = new FileStream(Logger.Instance.GetLockStepLogPath(), FileMode.Append);
+            StreamWriter streamWriter = new StreamWriter(fs);
+            string value = $"{DateTime.Now} [{type}] \n{message}\n\n";
+            streamWriter.Write(value);
+            streamWriter.Close();
+            fs.Close();
+        }
+
+      
     }
 }

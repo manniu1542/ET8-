@@ -21,6 +21,9 @@ namespace ET.Server
                 room2CCheckHashFail.Frame = message.Frame;
                 room2CCheckHashFail.LSWorldBytes = bytes;
                 room.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession).Send(message.PlayerId, room2CCheckHashFail);
+                
+                
+                
             }
             await ETTask.CompletedTask;
         }

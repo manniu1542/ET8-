@@ -17,14 +17,6 @@ namespace ET.Client
 
         }
 
-        public static async ETTask tt(this LSClientUpdater self)
-        {
-            // Room room = self.GetParent<Room>();
-            // C2Room_Ping test = C2Room_Ping.Create(true);
-            // Scene root = room.Root();
-            // Room2C_Ping tt = await root.GetComponent<ClientSenderComponent>().Call(test) as Room2C_Ping;
-            // Log.Error($"服务器,当前帧{tt.Frame} 时间：{tt.Time}");
-        }
 
         [EntitySystem]
         private static void Update(this LSClientUpdater self)
@@ -47,7 +39,6 @@ namespace ET.Client
                 {
                     return;
                 }
-                self.tt().Coroutine();
                 ++room.PredictionFrame;
                 OneFrameInputs oneFrameInputs = self.GetOneFrameMessages(room.PredictionFrame);
                 //根据这一帧的输入数据。来驱动 帧同步逻辑（房间的 数据缓存，以及帧同步世界的玩家 逻辑表现）
@@ -62,7 +53,8 @@ namespace ET.Client
                 frameMessage.Input = self.Input;
 
                 root.GetComponent<ClientSenderComponent>().Send(frameMessage);
-                Log.Error($"客户端：发送{room.PredictionFrame}输入消息：{self.Input}");
+                Log.LockStepWarning($"客户端 第{room.PredictionFrame}帧,操作：{self.Input}");
+                
                 // 如果处理超过 5 毫秒，就先跳出，避免一帧内处理太久，避免让客户端根服务端差距太大。导致客户端一直回滚数据，回滚数据过大导致客户端卡死
                 long timeNow2 = TimeInfo.Instance.ServerNow();
                 if (timeNow2 - timeNow > 5)

@@ -8,7 +8,6 @@ namespace ET
     {
         private void Start()
         {
-      
             this.StartAsync().Coroutine();
         }
 
@@ -24,8 +23,8 @@ namespace ET
                     .WithNotParsed(error => throw new Exception($"命令行格式错误! {error}"))
                     .WithParsed((o) => World.Instance.AddSingleton(o));
             Options.Instance.StartConfig = $"StartConfig/Localhost";
-
             World.Instance.AddSingleton<Logger>().Log = new UnityLogger();
+            Logger.Instance.SetIsWriteLockStep(true);
             ETTask.ExceptionHandler += Log.Error;
 
             World.Instance.AddSingleton<TimeInfo>();

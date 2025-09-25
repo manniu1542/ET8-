@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Share.Tool", "..\Share\Tool
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Share.SourceGenerator", "..\Share\Share.SourceGenerator\Share.SourceGenerator.csproj", "{9628A1EF-FE69-4967-A57C-56135779192D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet.Loader", "Loader\DotNet.Loader.csproj", "{C57FE3EE-1635-4F83-B4E2-87F5FAC47F1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{9628A1EF-FE69-4967-A57C-56135779192D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9628A1EF-FE69-4967-A57C-56135779192D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9628A1EF-FE69-4967-A57C-56135779192D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C57FE3EE-1635-4F83-B4E2-87F5FAC47F1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C57FE3EE-1635-4F83-B4E2-87F5FAC47F1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C57FE3EE-1635-4F83-B4E2-87F5FAC47F1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C57FE3EE-1635-4F83-B4E2-87F5FAC47F1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
