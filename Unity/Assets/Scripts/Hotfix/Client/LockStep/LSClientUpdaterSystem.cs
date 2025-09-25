@@ -3,6 +3,8 @@ using System.IO;
 
 namespace ET.Client
 {
+    
+    
     [EntitySystemOf(typeof(LSClientUpdater))]
     [FriendOf(typeof(LSClientUpdater))]
     public static partial class LSClientUpdaterSystem
@@ -12,7 +14,6 @@ namespace ET.Client
         {
             Room room = self.GetParent<Room>();
             self.MyId = room.Root().GetComponent<PlayerComponent>().MyId;
-            LSConstValue.IsStartFrameSync = true;
 
         }
 

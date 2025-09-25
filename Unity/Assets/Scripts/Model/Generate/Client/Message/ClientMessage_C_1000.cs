@@ -161,11 +161,41 @@ namespace ET
         }
     }
 
+    [MemoryPackable]
+    [Message(ClientMessage.LockStep2NetClient_SetPing)]
+    public partial class LockStep2NetClient_SetPing : MessageObject, IMessage
+    {
+        public static LockStep2NetClient_SetPing Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(LockStep2NetClient_SetPing), isFromPool) as LockStep2NetClient_SetPing;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public bool IsNormalPing { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.IsNormalPing = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     public static class ClientMessage
     {
         public const ushort Main2NetClient_Login = 1001;
         public const ushort NetClient2Main_Login = 1002;
         public const ushort Main2TestScene_Test = 1003;
         public const ushort TestScene2Main_Test = 1004;
+        public const ushort LockStep2NetClient_SetPing = 1005;
     }
 }

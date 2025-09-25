@@ -25,8 +25,7 @@ namespace ET.Client
             await EventSystem.Instance.PublishAsync(root, new AppStartInitFinish());
             ShowViewSingleton();
 
-            Space space = new Space();
-            Log.Error("MESSAGE"+space.ToString());
+       
         }
 
         /// <summary>

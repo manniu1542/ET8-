@@ -23,9 +23,9 @@ namespace ET
         // 玩家id列表
         public List<long> PlayerIds { get; } = new(LSConstValue.MatchCount);
         /// <summary>
-        /// 最多预测几帧
+        /// 最多预测几帧  拳击类2帧， 多人在线的话就 5-8帧
         /// </summary>
-        public int MaxPredictionCount { get; set; } = 5;
+        public int MaxPredictionCount { get; set; } = 2;
         // 预测帧 （客户端执行的帧）
         public int PredictionFrame { get; set; } = -1;
 

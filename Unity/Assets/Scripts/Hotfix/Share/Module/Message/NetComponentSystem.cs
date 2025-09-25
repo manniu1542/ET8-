@@ -65,6 +65,7 @@ namespace ET
         
         private static void OnRead(this NetComponent self, long channelId, MemoryBuffer memoryBuffer)
         {
+            //接收到网络消息的处理
             Session session = self.GetChild<Session>(channelId);
             if (session == null)
             {
@@ -76,7 +77,7 @@ namespace ET
             self.AService.Recycle(memoryBuffer);
             
             LogMsg.Instance.Debug(self.Fiber(), message);
-            
+            //发送到指定服务器场景的消息处理事件  NetComponentOnRead 。
             EventSystem.Instance.Invoke((long)self.IScene.SceneType, new NetComponentOnRead() {Session = session, Message = message});
         }
         

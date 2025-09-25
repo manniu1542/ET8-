@@ -39,3 +39,10 @@ message TestScene2Main_Test // IResponse
   string ResMsg = 4;  // 密码
 }
 		
+message LockStep2NetClient_SetPing // IMessage
+{
+  int32 RpcId = 1;
+  bool IsNormalPing = 2;
+
+}
+

@@ -35,7 +35,7 @@
     }
     
     /// <summary>
-    /// 挂上这个组件表示该Entity是一个Actor,接收的消息将会队列处理
+    /// 挂上这个组件表示该Entity是一个Actor,接收的消息将会队列处理，消息接收器
     /// </summary>
     [ComponentOf]
     public class MailBoxComponent: Entity, IAwake<MailBoxType>, IDestroy

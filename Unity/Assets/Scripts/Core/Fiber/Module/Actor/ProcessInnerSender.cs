@@ -3,7 +3,7 @@
 namespace ET
 {
     /// <summary>
-    /// 进程内部消息。 纤程之间的 消息传递
+    /// 进程内部消息。 纤程之间的 消息传递 发送到指定Handlr执行
     /// </summary>
     [ComponentOf(typeof(Scene))]
     public class ProcessInnerSender: Entity, IAwake, IDestroy, IUpdate
