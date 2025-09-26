@@ -1,7 +1,8 @@
 using System;
+using Lockstep.Math;
 using MemoryPack;
 using MongoDB.Bson.Serialization.Attributes;
-using TrueSync;
+
 
 namespace ET
 {
@@ -9,7 +10,8 @@ namespace ET
     [MemoryPackable]
     public partial class LSUnit: LSEntity, IAwake, ISerializeToEntity
     {
-        public TSVector Position
+        
+        public LVector3 Position
         {
             get;
             set;
@@ -17,13 +19,13 @@ namespace ET
 
         [MemoryPackIgnore]
         [BsonIgnore]
-        public TSVector Forward
+        public LVector3 Forward
         {
-            get => this.Rotation * TSVector.forward;
-            set => this.Rotation = TSQuaternion.LookRotation(value, TSVector.up);
+            get => this.Rotation * LVector3.forward;
+            set => this.Rotation = LQuaternion.LookRotation(value, LVector3.up);
         }
         
-        public TSQuaternion Rotation
+        public LQuaternion Rotation
         {
             get;
             set;

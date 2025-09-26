@@ -2,7 +2,6 @@ using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using MemoryPack;
-using TrueSync;
 
 namespace ET
 {
@@ -18,7 +17,7 @@ namespace ET
             return entity.LSWorld().GetId();
         }
 
-        public static TSRandom GetRandom(this LSEntity entity)
+        public static Lockstep.Math.Random GetRandom(this LSEntity entity)
         {
             return entity.LSWorld().Random;
         }
@@ -64,7 +63,7 @@ namespace ET
         /// <summary>
         ///   帧同步世界中的TrueSync 的确定随机数
         /// </summary>
-        public TSRandom Random { get; set; }
+        public Lockstep.Math.Random Random { get; set; }
 
         [BsonIgnore]
         [MemoryPackIgnore]

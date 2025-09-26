@@ -32,6 +32,82 @@
 
     <ItemGroup>
 
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LAxis2D.cs">
+          <Link>Math\BaseType\LAxis2D.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LAxis3D.cs">
+          <Link>Math\BaseType\LAxis3D.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LFloat.cs">
+          <Link>Math\BaseType\LFloat.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LMatrix33.cs">
+          <Link>Math\BaseType\LMatrix33.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LRect.cs">
+          <Link>Math\BaseType\LRect.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LVector2.cs">
+          <Link>Math\BaseType\LVector2.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LVector2Int.cs">
+          <Link>Math\BaseType\LVector2Int.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LVector3.cs">
+          <Link>Math\BaseType\LVector3.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LVector3Int.cs">
+          <Link>Math\BaseType\LVector3Int.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMath.cs">
+          <Link>Math\LMath.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMathExtension.cs">
+          <Link>Math\LMathExtension.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMathExtension2.cs">
+          <Link>Math\LMathExtension2.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMath_Vector.cs">
+          <Link>Math\LMath_Vector.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LQuaternion.cs">
+          <Link>Math\LQuaternion.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LRandom.cs">
+          <Link>Math\LRandom.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT\LUTAcos.cs">
+          <Link>Math\LUT\LUTAcos.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT\LUTAsin.cs">
+          <Link>Math\LUT\LUTAsin.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT\LUTAtan2.cs">
+          <Link>Math\LUT\LUTAtan2.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT\LUTSinCos.cs">
+          <Link>Math\LUT\LUTSinCos.cs</Link>
+        </Compile>
+
         <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\TrueSync\**\*.cs">
             <Link>TrueSync/%(RecursiveDir)%(FileName)%(Extension)</Link>
         </Compile>
@@ -67,5 +143,71 @@
         <PackageReference Include="SharpZipLib" Version="1.3.3" />
         <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.0.1" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType.meta">
+        <Link>Math\BaseType.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LAxis2D.cs.meta">
+        <Link>Math\BaseType\LAxis2D.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LAxis3D.cs.meta">
+        <Link>Math\BaseType\LAxis3D.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LFloat.cs.meta">
+        <Link>Math\BaseType\LFloat.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LMatrix33.cs.meta">
+        <Link>Math\BaseType\LMatrix33.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LRect.cs.meta">
+        <Link>Math\BaseType\LRect.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LVector2.cs.meta">
+        <Link>Math\BaseType\LVector2.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LVector2Int.cs.meta">
+        <Link>Math\BaseType\LVector2Int.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LVector3.cs.meta">
+        <Link>Math\BaseType\LVector3.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LVector3Int.cs.meta">
+        <Link>Math\BaseType\LVector3Int.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMath.cs.meta">
+        <Link>Math\LMath.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMathExtension.cs.meta">
+        <Link>Math\LMathExtension.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMathExtension2.cs.meta">
+        <Link>Math\LMathExtension2.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMath_Vector.cs.meta">
+        <Link>Math\LMath_Vector.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LQuaternion.cs.meta">
+        <Link>Math\LQuaternion.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LRandom.cs.meta">
+        <Link>Math\LRandom.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT.meta">
+        <Link>Math\LUT.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT\LUTAcos.cs.meta">
+        <Link>Math\LUT\LUTAcos.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT\LUTAsin.cs.meta">
+        <Link>Math\LUT\LUTAsin.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT\LUTAtan2.cs.meta">
+        <Link>Math\LUT\LUTAtan2.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT\LUTSinCos.cs.meta">
+        <Link>Math\LUT\LUTSinCos.cs.meta</Link>
+      </Content>
     </ItemGroup>
 </Project>

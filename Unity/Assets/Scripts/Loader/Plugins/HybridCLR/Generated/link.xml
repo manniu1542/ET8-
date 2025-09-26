@@ -262,11 +262,11 @@
     <type fullname="ET.ETTask`1" preserve="all" />
     <type fullname="TrueSync.FP" preserve="all" />
     <type fullname="TrueSync.TSMatrix" preserve="all" />
-    <type fullname="TrueSync.TSQuaternion" preserve="all" />
+    <type fullname="LQuaternion" preserve="all" />
     <type fullname="TrueSync.TSRandom" preserve="all" />
-    <type fullname="TrueSync.TSVector" preserve="all" />
-    <type fullname="TrueSync.TSVector2" preserve="all" />
-    <type fullname="TrueSync.TSVector4" preserve="all" />
+    <type fullname="LVector3" preserve="all" />
+    <type fullname="LVector32" preserve="all" />
+    <type fullname="LVector34" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.AnimationModule">
     <type fullname="UnityEngine.AnimationClip" preserve="all" />

@@ -138,10 +138,10 @@ namespace ET
         public long PlayerId { get; set; }
 
         [MemoryPackOrder(1)]
-        public TrueSync.TSVector Position { get; set; }
+        public Lockstep.Math.LVector3 Position { get; set; }
 
         [MemoryPackOrder(2)]
-        public TrueSync.TSQuaternion Rotation { get; set; }
+        public Lockstep.Math.LQuaternion Rotation { get; set; }
 
         public override void Dispose()
         {
@@ -233,7 +233,7 @@ namespace ET
         }
 
         [MongoDB.Bson.Serialization.Attributes.BsonDictionaryOptions(MongoDB.Bson.Serialization.Options.DictionaryRepresentation.ArrayOfArrays)]
-        [MemoryPackOrder(1)]
+        [MemoryPackOrder(0)]
         public Dictionary<long, LSInput> Inputs { get; set; } = new();
         public override void Dispose()
         {

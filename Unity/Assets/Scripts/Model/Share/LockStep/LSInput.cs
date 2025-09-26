@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
+using Lockstep.Math;
 using MemoryPack;
-
 namespace ET
 {
+
+
+
     /// <summary>
     ///  一帧的输入      标记为 MemoryPack 可序列化结构体（方便网络传输/存档）
     /// </summary>
@@ -11,11 +15,13 @@ namespace ET
     {
         // 玩家输入的方向（二维向量，例如摇杆方向）
         [MemoryPackOrder(0)]
-        public TrueSync.TSVector2 V;
+        public LVector2 V;
 
         // 玩家输入的按键（整数表示，例如 1=跳跃，2=攻击）
         [MemoryPackOrder(1)]
         public int Button;
+
+
 
         // 判断是否等于另一个 LSInput（同时比较向量和按键）
         public bool Equals(LSInput other)
@@ -56,6 +62,7 @@ namespace ET
         {
             return !(a == b);
         }
+
         public override string ToString()
         {
             return $"V:{this.V} Button:{this.Button}";

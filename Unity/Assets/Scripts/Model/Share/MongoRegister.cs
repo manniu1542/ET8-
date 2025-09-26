@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Lockstep.Math;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
-using TrueSync;
 using Unity.Mathematics;
 
 namespace ET
@@ -33,11 +33,15 @@ namespace ET
             RegisterStruct<float3>();
             RegisterStruct<float4>();
             RegisterStruct<quaternion>();
-            RegisterStruct<FP>();
-            RegisterStruct<TSVector>();
-            RegisterStruct<TSVector2>();
-            RegisterStruct<TSVector4>();
-            RegisterStruct<TSQuaternion>();
+            RegisterStruct<LFloat>();
+            RegisterStruct<LVector2>();
+            RegisterStruct<LVector2Int>();
+            
+            RegisterStruct<LVector3>();
+            RegisterStruct<LVector3Int>();
+            RegisterStruct<LAxis2D>();
+            RegisterStruct<LAxis3D>();
+            RegisterStruct<LQuaternion>();
             RegisterStruct<LSInput>();
 
             Dictionary<string, Type> types = CodeTypes.Instance.GetTypes();
