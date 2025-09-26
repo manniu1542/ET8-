@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Lockstep.Math;
-using TrueSync;
-
 namespace ET.Server
 {
     /// <summary>
@@ -13,7 +11,7 @@ namespace ET.Server
     {
         protected override async ETTask Run(Scene root, FrameMessage message)
         {
-            message.Input.CheckFix();
+            
             using FrameMessage _ = message; // 让消息回到池中
 
             Room room = root.GetComponent<Room>();
@@ -43,17 +41,7 @@ namespace ET.Server
 
             oneFrameInputs.Inputs[message.PlayerId] = message.Input;
 
-            // OneFrameInputs oneFrameInputs2 = room.GetComponent<LSServerUpdater>().GetOneFrameMessage(message.Frame);
-            OneFrameInputs sendInput = OneFrameInputs.Create();
-            sendInput.Inputs.Add(message.PlayerId, new LSInput() { V = new TSVector2(1, -1), Button = 0, });
-            sendInput.Input = new LSInput() { V = new TSVector2(1, -1), Button = 0, };
-            sendInput.ListInput.Add(new LSInput() { V = new TSVector2(1, -1), Button = 0, });
-            // oneFrameInputs2.CopyTo(sendInput);
-
-            OneFrameInputs2 sendInputMessage = OneFrameInputs2.Create();
-            sendInputMessage.Input = new LSInput2() { V = new LVector3(1, -1, 0), list = new NativeCollection.List<LVector3>() { new LVector3(1, -1, 0), } };
-
-            RoomMessageHelper.BroadCast(room, sendInputMessage);
+       
 
             await ETTask.CompletedTask;
         }

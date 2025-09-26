@@ -1,11 +1,11 @@
-﻿using System;
-// using UnityEngine;
+﻿//https://github.com/JiepengTan/LockstepMath
+
+using System;
+using Lockstep.Math;
 using static Lockstep.Math.LVector3;
 
-namespace Lockstep.Math
-{
-    public struct LQuaternion
-    {
+namespace Lockstep.Math {
+    public struct LQuaternion {
         #region public members
 
         public LFloat x;
@@ -17,16 +17,14 @@ namespace Lockstep.Math
 
         #region constructor
 
-        public LQuaternion(LFloat p_x, LFloat p_y, LFloat p_z, LFloat p_w)
-        {
+        public LQuaternion(LFloat p_x, LFloat p_y, LFloat p_z, LFloat p_w){
             x = p_x;
             y = p_y;
             z = p_z;
             w = p_w;
         }
 
-        public LQuaternion(int p_x, int p_y, int p_z, int p_w)
-        {
+        public LQuaternion(int p_x, int p_y, int p_z, int p_w){
             x._val = p_x;
             y._val = p_y;
             z._val = p_z;
@@ -37,12 +35,9 @@ namespace Lockstep.Math
 
         #region public properties
 
-        public LFloat this[int index]
-        {
-            get
-            {
-                switch (index)
-                {
+        public LFloat this[int index] {
+            get {
+                switch (index) {
                     case 0:
                         return x;
                     case 1:
@@ -55,10 +50,8 @@ namespace Lockstep.Math
                         throw new IndexOutOfRangeException("Invalid LQuaternion index!");
                 }
             }
-            set
-            {
-                switch (index)
-                {
+            set {
+                switch (index) {
                     case 0:
                         x = value;
                         break;
@@ -77,15 +70,12 @@ namespace Lockstep.Math
             }
         }
 
-        public static LQuaternion identity
-        {
+        public static LQuaternion identity {
             get { return new LQuaternion(0, 0, 0, 1); }
         }
 
-        public LVector3 eulerAngles
-        {
-            get
-            {
+        public LVector3 eulerAngles {
+            get {
                 LMatrix33 m = QuaternionToMatrix(this);
                 return (180 / LMath.PI * MatrixToEuler(m));
             }
@@ -102,8 +92,7 @@ namespace Lockstep.Math
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static LFloat Angle(LQuaternion a, LQuaternion b)
-        {
+        public static LFloat Angle(LQuaternion a, LQuaternion b){
             LFloat single = Dot(a, b);
             return LMath.Acos(LMath.Min(LMath.Abs(single), LFloat.one)) * 2 * (180 / LMath.PI);
         }
@@ -114,8 +103,7 @@ namespace Lockstep.Math
         /// <param name="angle"></param>
         /// <param name="axis"></param>
         /// <returns></returns>
-        public static LQuaternion AngleAxis(LFloat angle, LVector3 axis)
-        {
+        public static LQuaternion AngleAxis(LFloat angle, LVector3 axis){
             axis = axis.normalized;
             angle = angle * LMath.Deg2Rad;
 
@@ -138,8 +126,7 @@ namespace Lockstep.Math
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static LFloat Dot(LQuaternion a, LQuaternion b)
-        {
+        public static LFloat Dot(LQuaternion a, LQuaternion b){
             return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
         }
 
@@ -148,8 +135,7 @@ namespace Lockstep.Math
         /// </summary>
         /// <param name="euler"></param>
         /// <returns></returns>
-        public static LQuaternion Euler(LVector3 euler)
-        {
+        public static LQuaternion Euler(LVector3 euler){
             return Euler(euler.x, euler.y, euler.z);
         }
 
@@ -160,8 +146,7 @@ namespace Lockstep.Math
         /// <param name="y"></param>
         /// <param name="z"></param>
         /// <returns></returns>
-        public static LQuaternion Euler(LFloat x, LFloat y, LFloat z)
-        {
+        public static LQuaternion Euler(LFloat x, LFloat y, LFloat z){
             LFloat cX = LMath.Cos(x * LMath.PI / 360);
             LFloat sX = LMath.Sin(x * LMath.PI / 360);
 
@@ -186,8 +171,7 @@ namespace Lockstep.Math
         /// <param name="fromDirection"></param>
         /// <param name="toDirection"></param>
         /// <returns></returns>
-        public static LQuaternion FromToRotation(LVector3 fromDirection, LVector3 toDirection)
-        {
+        public static LQuaternion FromToRotation(LVector3 fromDirection, LVector3 toDirection){
             throw new IndexOutOfRangeException("Not Available!");
         }
 
@@ -196,8 +180,7 @@ namespace Lockstep.Math
         /// </summary>
         /// <param name="rotation"></param>
         /// <returns></returns>
-        public static LQuaternion Inverse(LQuaternion rotation)
-        {
+        public static LQuaternion Inverse(LQuaternion rotation){
             return new LQuaternion(-rotation.x, -rotation.y, -rotation.z, rotation.w);
         }
 
@@ -208,15 +191,12 @@ namespace Lockstep.Math
         /// <param name="b"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        public static LQuaternion Lerp(LQuaternion a, LQuaternion b, LFloat t)
-        {
-            if (t > 1)
-            {
+        public static LQuaternion Lerp(LQuaternion a, LQuaternion b, LFloat t){
+            if (t > 1) {
                 t = LFloat.one;
             }
 
-            if (t < 0)
-            {
+            if (t < 0) {
                 t = LFloat.zero;
             }
 
@@ -230,18 +210,15 @@ namespace Lockstep.Math
         /// <param name="b"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        public static LQuaternion LerpUnclamped(LQuaternion a, LQuaternion b, LFloat t)
-        {
+        public static LQuaternion LerpUnclamped(LQuaternion a, LQuaternion b, LFloat t){
             LQuaternion tmpQuat = new LQuaternion();
-            if (Dot(a, b) < 0)
-            {
+            if (Dot(a, b) < 0) {
                 tmpQuat.Set(a.x + t * (-b.x - a.x),
                     a.y + t * (-b.y - a.y),
                     a.z + t * (-b.z - a.z),
                     a.w + t * (-b.w - a.w));
             }
-            else
-            {
+            else {
                 tmpQuat.Set(a.x + t * (b.x - a.x),
                     a.y + t * (b.y - a.y),
                     a.z + t * (b.z - a.z),
@@ -257,8 +234,7 @@ namespace Lockstep.Math
         /// </summary>
         /// <param name="forward"></param>
         /// <returns></returns>
-        public static LQuaternion LookRotation(LVector3 forward)
-        {
+        public static LQuaternion LookRotation(LVector3 forward){
             LVector3 up = LVector3.up;
             return LookRotation(forward, up);
         }
@@ -269,8 +245,7 @@ namespace Lockstep.Math
         /// <param name="forward"></param>
         /// <param name="upwards"></param>
         /// <returns></returns>
-        public static LQuaternion LookRotation(LVector3 forward, LVector3 upwards)
-        {
+        public static LQuaternion LookRotation(LVector3 forward, LVector3 upwards){
             LMatrix33 m = LookRotationToMatrix(forward, upwards);
             return MatrixToQuaternion(m);
         }
@@ -282,16 +257,13 @@ namespace Lockstep.Math
         /// <param name="to"></param>
         /// <param name="maxDegreesDelta"></param>
         /// <returns></returns>
-        public static LQuaternion RotateTowards(LQuaternion from, LQuaternion to, LFloat maxDegreesDelta)
-        {
+        public static LQuaternion RotateTowards(LQuaternion from, LQuaternion to, LFloat maxDegreesDelta){
             LFloat num = LQuaternion.Angle(from, to);
             LQuaternion result = new LQuaternion();
-            if (num == 0)
-            {
+            if (num == 0) {
                 result = to;
             }
-            else
-            {
+            else {
                 LFloat t = LMath.Min(LFloat.one, maxDegreesDelta / num);
                 result = LQuaternion.SlerpUnclamped(from, to, t);
             }
@@ -306,15 +278,12 @@ namespace Lockstep.Math
         /// <param name="b"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        public static LQuaternion Slerp(LQuaternion a, LQuaternion b, LFloat t)
-        {
-            if (t > 1)
-            {
+        public static LQuaternion Slerp(LQuaternion a, LQuaternion b, LFloat t){
+            if (t > 1) {
                 t = LFloat.one;
             }
 
-            if (t < 0)
-            {
+            if (t < 0) {
                 t = LFloat.zero;
             }
 
@@ -328,13 +297,11 @@ namespace Lockstep.Math
         /// <param name="b"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        public static LQuaternion SlerpUnclamped(LQuaternion q1, LQuaternion q2, LFloat t)
-        {
+        public static LQuaternion SlerpUnclamped(LQuaternion q1, LQuaternion q2, LFloat t){
             LFloat dot = Dot(q1, q2);
 
             LQuaternion tmpQuat = new LQuaternion();
-            if (dot < 0)
-            {
+            if (dot < 0) {
                 dot = -dot;
                 tmpQuat.Set(-q2.x, -q2.y, -q2.z, -q2.w);
             }
@@ -342,8 +309,7 @@ namespace Lockstep.Math
                 tmpQuat = q2;
 
 
-            if (dot < 1)
-            {
+            if (dot < 1) {
                 LFloat angle = LMath.Acos(dot);
                 LFloat sinadiv, sinat, sinaomt;
                 sinadiv = 1 / LMath.Sin(angle);
@@ -355,8 +321,7 @@ namespace Lockstep.Math
                     (q1.w * sinaomt + tmpQuat.w * sinat) * sinadiv);
                 return tmpQuat;
             }
-            else
-            {
+            else {
                 return Lerp(q1, tmpQuat, t);
             }
         }
@@ -368,8 +333,7 @@ namespace Lockstep.Math
         /// <param name="new_y"></param>
         /// <param name="new_z"></param>
         /// <param name="new_w"></param>
-        public void Set(LFloat new_x, LFloat new_y, LFloat new_z, LFloat new_w)
-        {
+        public void Set(LFloat new_x, LFloat new_y, LFloat new_z, LFloat new_w){
             x = new_x;
             y = new_y;
             z = new_z;
@@ -381,8 +345,7 @@ namespace Lockstep.Math
         /// </summary>
         /// <param name="fromDirection"></param>
         /// <param name="toDirection"></param>
-        public void SetFromToRotation(LVector3 fromDirection, LVector3 toDirection)
-        {
+        public void SetFromToRotation(LVector3 fromDirection, LVector3 toDirection){
             this = FromToRotation(fromDirection, toDirection);
         }
 
@@ -390,8 +353,7 @@ namespace Lockstep.Math
         /// 设置注视旋转
         /// </summary>
         /// <param name="view"></param>
-        public void SetLookRotation(LVector3 view)
-        {
+        public void SetLookRotation(LVector3 view){
             this = LookRotation(view);
         }
 
@@ -400,8 +362,7 @@ namespace Lockstep.Math
         /// </summary>
         /// <param name="view"></param>
         /// <param name="up"></param>
-        public void SetLookRotation(LVector3 view, LVector3 up)
-        {
+        public void SetLookRotation(LVector3 view,  LVector3 up){
             this = LookRotation(view, up);
         }
 
@@ -410,11 +371,9 @@ namespace Lockstep.Math
         /// </summary>
         /// <param name="angle"></param>
         /// <param name="axis"></param>
-        public void ToAngleAxis(out LFloat angle, out LVector3 axis)
-        {
+        public void ToAngleAxis(out LFloat angle, out LVector3 axis){
             angle = 2 * LMath.Acos(w);
-            if (angle == 0)
-            {
+            if (angle == 0) {
                 axis = LVector3.right;
                 return;
             }
@@ -424,63 +383,48 @@ namespace Lockstep.Math
             angle = angle * 180 / LMath.PI;
         }
 
-        public override string ToString()
-        {
+        public override string ToString(){
             return String.Format("({0}, {1}, {2}, {3})", x, y, z, w);
         }
 
-        public override int GetHashCode()
-        {
+        public override int GetHashCode(){
             return this.x.GetHashCode() ^ this.y.GetHashCode() << 2 ^ this.z.GetHashCode() >> 2 ^
                    this.w.GetHashCode() >> 1;
         }
 
-        public override bool Equals(object other)
-        {
-            return this == (LQuaternion)other;
+        public override bool Equals(object other){
+            return this == (LQuaternion) other;
         }
 
-        // public Quaternion ToQuaternion()
-        // {
-        //     return new Quaternion(this.x._val / 1000f, this.y._val / 1000f, this.z._val / 1000f, this.w._val / 1000f);
-        // }
         #endregion
 
         #region private functions
 
-        private LVector3 MatrixToEuler(LMatrix33 m)
-        {
+        private LVector3 MatrixToEuler(LMatrix33 m){
             LVector3 v = new LVector3();
-            if (m[1, 2] < 1)
-            {
-                if (m[1, 2] > -1)
-                {
+            if (m[1, 2] < 1) {
+                if (m[1, 2] > -1) {
                     v.x = LMath.Asin(-m[1, 2]);
                     v.y = LMath.Atan2(m[0, 2], m[2, 2]);
                     v.z = LMath.Atan2(m[1, 0], m[1, 1]);
                 }
-                else
-                {
+                else {
                     v.x = LMath.PI * LFloat.half;
                     v.y = LMath.Atan2(m[0, 1], m[0, 0]);
-                    v.z = (LFloat)0;
+                    v.z = (LFloat) 0;
                 }
             }
-            else
-            {
+            else {
                 v.x = -LMath.PI * LFloat.half;
                 v.y = LMath.Atan2(-m[0, 1], m[0, 0]);
-                v.z = (LFloat)0;
+                v.z = (LFloat) 0;
             }
 
-            for (int i = 0; i < 3; i++)
-            {
-                if (v[i] < 0)
-                {
+            for (int i = 0; i < 3; i++) {
+                if (v[i] < 0) {
                     v[i] += LMath.PI2;
                 }
-                else if (v[i] > LMath.PI2)
-                {
+                else if (v[i] > LMath.PI2) {
                     v[i] -= LMath.PI2;
                 }
             }
@@ -488,8 +432,7 @@ namespace Lockstep.Math
             return v;
         }
 
-        public static LMatrix33 QuaternionToMatrix(LQuaternion quat)
-        {
+        public static LMatrix33 QuaternionToMatrix(LQuaternion quat){
             LMatrix33 m = new LMatrix33();
 
             LFloat x = quat.x * 2;
@@ -520,15 +463,13 @@ namespace Lockstep.Math
             return m;
         }
 
-        private static LQuaternion MatrixToQuaternion(LMatrix33 m)
-        {
+        private static LQuaternion MatrixToQuaternion(LMatrix33 m){
             LQuaternion quat = new LQuaternion();
 
             LFloat fTrace = m[0, 0] + m[1, 1] + m[2, 2];
             LFloat root;
 
-            if (fTrace > 0)
-            {
+            if (fTrace > 0) {
                 root = LMath.Sqrt(fTrace + 1);
                 quat.w = LFloat.half * root;
                 root = LFloat.half / root;
@@ -536,17 +477,14 @@ namespace Lockstep.Math
                 quat.y = (m[0, 2] - m[2, 0]) * root;
                 quat.z = (m[1, 0] - m[0, 1]) * root;
             }
-            else
-            {
-                int[] s_iNext = new int[] { 1, 2, 0 };
+            else {
+                int[] s_iNext = new int[] {1, 2, 0};
                 int i = 0;
-                if (m[1, 1] > m[0, 0])
-                {
+                if (m[1, 1] > m[0, 0]) {
                     i = 1;
                 }
 
-                if (m[2, 2] > m[i, i])
-                {
+                if (m[2, 2] > m[i, i]) {
                     i = 2;
                 }
 
@@ -554,8 +492,7 @@ namespace Lockstep.Math
                 int k = s_iNext[j];
 
                 root = LMath.Sqrt(m[i, i] - m[j, j] - m[k, k] + 1);
-                if (root < 0)
-                {
+                if (root < 0) {
                     throw new IndexOutOfRangeException("error!");
                 }
 
@@ -572,14 +509,12 @@ namespace Lockstep.Math
             return quat;
         }
 
-        private static LMatrix33 LookRotationToMatrix(LVector3 viewVec, LVector3 upVec)
-        {
+        private static LMatrix33 LookRotationToMatrix(LVector3 viewVec, LVector3 upVec){
             LVector3 z = viewVec;
             LMatrix33 m = new LMatrix33();
 
             LFloat mag = z.magnitude;
-            if (mag <= 0)
-            {
+            if (mag <= 0) {
                 m = LMatrix33.identity;
             }
 
@@ -587,8 +522,7 @@ namespace Lockstep.Math
 
             LVector3 x = Cross(upVec, z);
             mag = x.magnitude;
-            if (mag <= 0)
-            {
+            if (mag <= 0) {
                 m = LMatrix33.identity;
             }
 
@@ -613,16 +547,14 @@ namespace Lockstep.Math
 
         #region operator
 
-        public static LQuaternion operator *(LQuaternion lhs, LQuaternion rhs)
-        {
+        public static LQuaternion operator *(LQuaternion lhs, LQuaternion rhs){
             return new LQuaternion(lhs.w * rhs.x + lhs.x * rhs.w + lhs.y * rhs.z - lhs.z * rhs.y,
                 lhs.w * rhs.y + lhs.y * rhs.w + lhs.z * rhs.x - lhs.x * rhs.z,
                 lhs.w * rhs.z + lhs.z * rhs.w + lhs.x * rhs.y - lhs.y * rhs.x,
                 lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z);
         }
 
-        public static LVector3 operator *(LQuaternion rotation, LVector3 point)
-        {
+        public static LVector3 operator *(LQuaternion rotation, LVector3 point){
             LFloat _2x = rotation.x * 2;
             LFloat _2y = rotation.y * 2;
             LFloat _2z = rotation.z * 2;
@@ -641,18 +573,18 @@ namespace Lockstep.Math
             return new LVector3(x, y, z);
         }
 
-        public static bool operator ==(LQuaternion lhs, LQuaternion rhs)
-        {
+        public static bool operator ==(LQuaternion lhs, LQuaternion rhs){
             var isEqu = lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z && lhs.w == rhs.w;
 
             return isEqu;
         }
 
-        public static bool operator !=(LQuaternion lhs, LQuaternion rhs)
-        {
+        public static bool operator !=(LQuaternion lhs, LQuaternion rhs){
             return !(lhs == rhs);
         }
 
         #endregion
     }
 }
+/*
+*/

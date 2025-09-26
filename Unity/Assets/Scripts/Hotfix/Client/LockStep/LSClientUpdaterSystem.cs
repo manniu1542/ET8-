@@ -4,35 +4,20 @@ using System.IO;
 using System.Net.Http;
 using Lockstep.Math;
 using MemoryPack;
-using TrueSync;
-
 namespace ET.Client
 {
     [EntitySystemOf(typeof(LSClientUpdater))]
     [FriendOf(typeof(LSClientUpdater))]
     public static partial class LSClientUpdaterSystem
     {
-        [EntitySystem]
-        private static void Awake(this LSClientUpdater self)
+        /// <summary>
+        /// 测试序列化
+        /// </summary>
+        /// <param name="self"></param>
+        public static void TestSerialize(this LSClientUpdater self)
         {
-            Room room = self.GetParent<Room>();
-            self.MyId = room.Root().GetComponent<PlayerComponent>().MyId;
-
-            OneFrameInputs2 sendInputMessage = OneFrameInputs2.Create();
-            sendInputMessage.Input =new LSInput2();
-            sendInputMessage.Input.V = new List<TSVector2>();
-            sendInputMessage.Input.V.Add(new TSVector2(1, -1));
-            byte[] bytes = MemoryPackHelper.Serialize(sendInputMessage);
-            Log.Error("MESSAGE：" + bytes);
-
-            OneFrameInputs2 lsWorld = MemoryPackHelper.Deserialize(typeof(OneFrameInputs2), bytes, 0, bytes.Length) as OneFrameInputs2;
-
-            Log.Error($"原始{sendInputMessage}，反序列化后{lsWorld}：" );
-
-            
             OneFrameInputs sendInputMessage2 = OneFrameInputs.Create();
-            sendInputMessage2.Inputs.Add(self.MyId, new LSInput() { V = new TSVector2(1, -1), Button = 0, });
-            sendInputMessage2.ListInput.Add(new LSInput() { V = new TSVector2(1, -1), Button = 0, });
+            sendInputMessage2.Inputs.Add(self.MyId, new LSInput() { V = new LVector2(1, -1), Button = 0, });
             byte[] bytes2 = MemoryPackHelper.Serialize(sendInputMessage2);
             
             Log.Error("MESSAGE：" + BitConverter.ToString(bytes2));
@@ -40,77 +25,63 @@ namespace ET.Client
             OneFrameInputs lsWorld2 = MemoryPackHelper.Deserialize(typeof(OneFrameInputs), bytes2, 0, bytes2.Length) as OneFrameInputs;
 
             Log.Error($"原始{sendInputMessage2}，反序列化后{lsWorld2}：" );
-            // for (int i = 0; i < 100; i++)
-            // {
-            //
-            //     FrameMessage frameMessage = FrameMessage.Create();
-            //     frameMessage.Frame = 0;
-            //     frameMessage.Input = new LSInput()
-            //     {
-            //         Button = 1,
-            //         V = new TSVector2(0, 0),
-            //     };
-            //
-            //     room.Root().GetComponent<ClientSenderComponent>().Send(frameMessage);
-            //
-            //     frameMessage = FrameMessage.Create();
-            //     frameMessage.Frame = 0;
-            //     frameMessage.Input = new LSInput()
-            //     {
-            //         Button = 0,
-            //         V = new TSVector2(1, -1),
-            //     };
-            //
-            //     room.Root().GetComponent<ClientSenderComponent>().Send(frameMessage);
-            // }   
+        }
+        
+        [EntitySystem]
+        private static void Awake(this LSClientUpdater self)
+        {
+            Room room = self.GetParent<Room>();
+            self.MyId = room.Root().GetComponent<PlayerComponent>().MyId;
+
+        
         }
 
         [EntitySystem]
         private static void Update(this LSClientUpdater self)
         {
-            //
-            // Room room = self.GetParent<Room>();
-            // long timeNow = TimeInfo.Instance.ServerNow();
-            // Scene root = room.Root();
-            //
-            // int i = 0;
-            // while (true)
-            // {
-            //     // 如果当前时间小于预测帧的帧时间，就跳出
-            //     if (timeNow < room.FixedTimeCounter.FrameTime(room.PredictionFrame + 1))
-            //     {
-            //         return;
-            //     }
-            //
-            //     // 预测帧 如果 比实际 小的时候。就继续运行。
-            //     if (room.PredictionFrame - room.AuthorityFrame > room.MaxPredictionCount)
-            //     {
-            //         return;
-            //     }
-            //
-            //     ++room.PredictionFrame;
-            //     OneFrameInputs oneFrameInputs = self.GetOneFrameMessages(room.PredictionFrame);
-            //     //根据这一帧的输入数据。来驱动 帧同步逻辑（房间的 数据缓存，以及帧同步世界的玩家 逻辑表现）
-            //     room.Update(oneFrameInputs);
-            //     //发送这一帧的哈希值比对到服务器（让服务器来校验这一帧 ，客户的输入是否有问题）
-            //     room.SendHash(room.PredictionFrame);
-            //
-            //     room.SpeedMultiply = ++i;
-            //     //这一帧的玩家输入消息，发给服务器
-            //     FrameMessage frameMessage = FrameMessage.Create();
-            //     frameMessage.Frame = room.PredictionFrame;
-            //     frameMessage.Input = self.Input;
-            //
-            //     root.GetComponent<ClientSenderComponent>().Send(frameMessage);
-            //     Log.LockStepWarning($"客户端{self.MyId}: 第{room.PredictionFrame}帧,操作：{self.Input}");
-            //
-            //     // 如果处理超过 5 毫秒，就先跳出，避免一帧内处理太久，避免让客户端根服务端差距太大。导致客户端一直回滚数据，回滚数据过大导致客户端卡死
-            //     long timeNow2 = TimeInfo.Instance.ServerNow();
-            //     if (timeNow2 - timeNow > 5)
-            //     {
-            //         break;
-            //     }
-            // }
+            
+            Room room = self.GetParent<Room>();
+            long timeNow = TimeInfo.Instance.ServerNow();
+            Scene root = room.Root();
+            
+            int i = 0;
+            while (true)
+            {
+                // 如果当前时间小于预测帧的帧时间，就跳出
+                if (timeNow < room.FixedTimeCounter.FrameTime(room.PredictionFrame + 1))
+                {
+                    return;
+                }
+            
+                // 预测帧 如果 比实际 小的时候。就继续运行。
+                if (room.PredictionFrame - room.AuthorityFrame > room.MaxPredictionCount)
+                {
+                    return;
+                }
+            
+                ++room.PredictionFrame;
+                OneFrameInputs oneFrameInputs = self.GetOneFrameMessages(room.PredictionFrame);
+                //根据这一帧的输入数据。来驱动 帧同步逻辑（房间的 数据缓存，以及帧同步世界的玩家 逻辑表现）
+                room.Update(oneFrameInputs);
+                //发送这一帧的哈希值比对到服务器（让服务器来校验这一帧 ，客户的输入是否有问题）
+                room.SendHash(room.PredictionFrame);
+            
+                room.SpeedMultiply = ++i;
+                //这一帧的玩家输入消息，发给服务器
+                FrameMessage frameMessage = FrameMessage.Create();
+                frameMessage.Frame = room.PredictionFrame;
+                frameMessage.Input = self.Input;
+            
+                root.GetComponent<ClientSenderComponent>().Send(frameMessage);
+                Log.LockStepWarning($"客户端{self.MyId}: 第{room.PredictionFrame}帧,操作：{self.Input}");
+            
+                // 如果处理超过 5 毫秒，就先跳出，避免一帧内处理太久，避免让客户端根服务端差距太大。导致客户端一直回滚数据，回滚数据过大导致客户端卡死
+                long timeNow2 = TimeInfo.Instance.ServerNow();
+                if (timeNow2 - timeNow > 5)
+                {
+                    break;
+                }
+            }
         }
 
         private static OneFrameInputs GetOneFrameMessages(this LSClientUpdater self, int frame)

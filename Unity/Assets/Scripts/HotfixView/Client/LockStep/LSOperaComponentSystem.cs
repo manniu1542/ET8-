@@ -1,4 +1,5 @@
-using TrueSync;
+
+using Lockstep.Math;
 using UnityEngine;
 
 namespace ET.Client
@@ -16,7 +17,7 @@ namespace ET.Client
         [EntitySystem]
         private static void Update(this LSOperaComponent self)
         {
-            TSVector2 v = new();
+            LVector2 v = new();
             if (Input.GetKey(KeyCode.W))
             {
                 v.y += 1;

@@ -16,26 +16,26 @@ namespace ET.Server
         private static void Update(this LSServerUpdater self)
         {
          
-            // Room room = self.GetParent<Room>();
-            // long timeNow = TimeInfo.Instance.ServerFrameTime();
-            //
-            // int frame = room.AuthorityFrame + 1;
-            // //到下一帧的时间再继续
-            // if (timeNow < room.FixedTimeCounter.FrameTime(frame))
-            // {
-            //     return;
-            // }
-            //
-            // OneFrameInputs oneFrameInputs = self.GetOneFrameMessage(frame);
-            // ++room.AuthorityFrame;
-            //
-            // OneFrameInputs sendInput = OneFrameInputs.Create();
-            // oneFrameInputs.CopyTo(sendInput);
-            // //广播该确定帧的所有玩家输入
-            // RoomMessageHelper.BroadCast(room, sendInput);
-            // Log.Error($"服务端：发送{room.AuthorityFrame} 广播消息");
-            // //驱动服务端，所有玩家的 帧同步世界中的数据，以及 房间的缓存数据
-            // room.Update(oneFrameInputs);
+            Room room = self.GetParent<Room>();
+            long timeNow = TimeInfo.Instance.ServerFrameTime();
+            
+            int frame = room.AuthorityFrame + 1;
+            //到下一帧的时间再继续
+            if (timeNow < room.FixedTimeCounter.FrameTime(frame))
+            {
+                return;
+            }
+            
+            OneFrameInputs oneFrameInputs = self.GetOneFrameMessage(frame);
+            ++room.AuthorityFrame;
+            
+            OneFrameInputs sendInput = OneFrameInputs.Create();
+            oneFrameInputs.CopyTo(sendInput);
+            //广播该确定帧的所有玩家输入
+            RoomMessageHelper.BroadCast(room, sendInput);
+            Log.Error($"服务端：发送{room.AuthorityFrame} 广播消息");
+            //驱动服务端，所有玩家的 帧同步世界中的数据，以及 房间的缓存数据
+            room.Update(oneFrameInputs);
         }
 
         /// <summary>
@@ -78,7 +78,6 @@ namespace ET.Server
                 else
                 {
                     oneFrameInputs.Inputs[playerId] = new LSInput();
-                    oneFrameInputs.Inputs[playerId].CheckFix();
                 }
 
          

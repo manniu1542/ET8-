@@ -1,5 +1,8 @@
-namespace Lockstep.Math
-{
+//https://github.com/JiepengTan/LockstepMath
+
+using Lockstep.Math;
+
+namespace Lockstep.Math {
     public static partial class LMathExtension {
         public static LVector2 ToLVector2(this LVector2Int vec){
             return new LVector2(true, vec.x * LFloat.Precision, vec.y * LFloat.Precision);
@@ -19,7 +22,7 @@ namespace Lockstep.Math
     }
 
     public static partial class LMathExtension {
-        public static LFloat ToLFloat(this double v){
+        public static LFloat ToLFloat(this float v){
             return LMath.ToLFloat(v);
         }
 
@@ -43,6 +46,24 @@ namespace Lockstep.Math
                 LMath.FloorToInt(vec.y),
                 LMath.FloorToInt(vec.z)
             );
+        }
+    }
+
+    public static partial class LMathExtension {
+        public static LVector2 RightVec(this LVector2 vec){
+            return new LVector2(true, vec._y, -vec._x);
+        }
+
+        public static LVector2 LeftVec(this LVector2 vec){
+            return new LVector2(true, -vec._y, vec._x);
+        }
+
+        public static LVector2 BackVec(this LVector2 vec){
+            return new LVector2(true, -vec._x, -vec._y);
+        }
+        
+        public static LFloat Abs(this LFloat val){
+            return LMath.Abs(val);
         }
     }
 }

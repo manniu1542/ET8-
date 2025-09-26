@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using TrueSync;
+using Lockstep.Math;
 
 namespace ET.Server
 {
@@ -27,8 +27,8 @@ namespace ET.Server
             {
                 LockStepUnitInfo lockStepUnitInfo = LockStepUnitInfo.Create();
                 lockStepUnitInfo.PlayerId = rp.Id;
-                lockStepUnitInfo.Position = new TSVector(-6, 0, -10);
-                lockStepUnitInfo.Rotation = TSQuaternion.identity;
+                lockStepUnitInfo.Position = new LVector3(-6, 0, -10);
+                lockStepUnitInfo.Rotation = LQuaternion.identity;
                 room2CStart.UnitInfo.Add(lockStepUnitInfo);
             }
 

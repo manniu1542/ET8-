@@ -1,5 +1,5 @@
 using System;
-using TrueSync;
+using Lockstep.Math;
 using UnityEngine;
 
 namespace ET.Client
@@ -32,7 +32,7 @@ namespace ET.Client
         {
             LSUnit unit = self.GetUnit();
 
-            Vector3 unitPos = unit.Position.ToVector();
+            Vector3 unitPos = unit.Position.ToVector3();
             const float speed = 6f;
             float speed2 = speed;// * self.Room().SpeedMultiply;
 
@@ -41,13 +41,13 @@ namespace ET.Client
                 float distance = (unitPos - self.Position).magnitude;
                 self.totalTime = distance / speed2;
                 self.t = 0;
-                self.Position = unit.Position.ToVector();
+                self.Position = unit.Position.ToVector3();
                 self.Rotation = unit.Rotation.ToQuaternion();
             }
 
 
             LSInput input = unit.GetComponent<LSInputComponent>().LSInput;
-            if (input.V != TSVector2.zero)
+            if (input.V != LVector2.zero)
             {
                 self.GetComponent<LSAnimatorComponent>().SetFloatValue("Speed", speed2);
             }

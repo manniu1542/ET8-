@@ -4,16 +4,6 @@ namespace ET.Client
 {
     
 
-    [MessageHandler(SceneType.LockStep)]
-    public class OneFrameInputs2Handler : MessageHandler<Scene, OneFrameInputs2>
-    {
-        
-        protected override async ETTask Run(Scene scene, OneFrameInputs2 message)
-        { 
-            Log.Debug($"Test:测试数据： {message}");
-            await ETTask.CompletedTask;
-        }
-    }
 
     /// <summary>
     /// 帧同步接收服务器下发的权威帧输入。回滚帧同步的消息
@@ -23,11 +13,7 @@ namespace ET.Client
     {
         protected override async ETTask Run(Scene root, OneFrameInputs input)
         {
-            foreach (var inputTmp in input.Inputs)
-            {
-                inputTmp.Value.CheckFix();
-            }
-            
+ 
             using var _ = input; // 方法结束时回收消息
             Room room = root.GetComponent<Room>();
 

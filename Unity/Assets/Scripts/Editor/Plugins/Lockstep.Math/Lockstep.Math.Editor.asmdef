@@ -1,0 +1,19 @@
+{
+    "name": "Lockstep.Math.Editor",
+    "rootNamespace": "",
+    "references": [
+        "Unity.ThirdParty",
+        "Unity.Loader"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

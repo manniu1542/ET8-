@@ -1,6 +1,7 @@
+//https://github.com/JiepengTan/LockstepMath
 
-using Lockstep.Collision2D;
-//using Lockstep.UnsafeCollision2D;
+
+using Lockstep.UnsafeCollision2D;
 #if UNITY_5_3_OR_NEWER
 using UnityEngine;
 #endif
@@ -9,6 +10,9 @@ using Lockstep.Math;
 namespace Lockstep.Math {
 #if UNITY_5_3_OR_NEWER
     public static partial class LMathExtension {
+        
+        
+      
         public static LVector2 ToLVector2(this Vector2Int vec){
             return new LVector2(true,vec.x * LFloat.Precision, vec.y * LFloat.Precision);
         }       
@@ -57,21 +61,19 @@ namespace Lockstep.Math {
         public static Vector3 ToVector3XZ(this LVector2 vec,LFloat y){
             return new Vector3(vec.x.ToFloat(), y.ToFloat(),vec.y.ToFloat());
         }
+        public static Vector3 ToVector3XZ(this LVector2 vec){
+            return new Vector3(vec.x.ToFloat(), 0,vec.y.ToFloat());
+        }
         public static Vector3 ToVector3(this LVector3 vec){
             return new Vector3(vec.x.ToFloat(), vec.y.ToFloat(), vec.z.ToFloat());
         }
         public static Rect ToRect(this LRect vec){
             return new Rect(vec.position.ToVector2(),vec.size.ToVector2());
         }
-        public static LQuaternion ToLQuaternion(this Quaternion qua)
-        {
-            return new LQuaternion(
-                LMath.ToLFloat(qua.x),
-                LMath.ToLFloat(qua.y),
-                LMath.ToLFloat(qua.z),
-                LMath.ToLFloat(qua.w)
-                );
-        }
+        
+        public static Quaternion  ToQuaternion(this LQuaternion vec){
+            return new Quaternion(vec.x.ToFloat(), vec.y.ToFloat(), vec.z.ToFloat(), vec.w.ToFloat());
+        }    
     }
 #endif
 }

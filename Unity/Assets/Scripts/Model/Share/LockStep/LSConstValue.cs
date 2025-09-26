@@ -7,7 +7,7 @@ namespace ET
         /// <summary>
         /// 匹配的人数
         /// </summary>
-        public const int MatchCount = 1;
+        public const int MatchCount = 2;
         
         /// <summary>
         /// 最大领先帧数

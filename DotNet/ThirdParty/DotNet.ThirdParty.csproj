@@ -48,6 +48,10 @@
           <Link>Math\BaseType\LMatrix33.cs</Link>
         </Compile>
 
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LQuaternion.cs">
+          <Link>Math\BaseType\LQuaternion.cs</Link>
+        </Compile>
+
         <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LRect.cs">
           <Link>Math\BaseType\LRect.cs</Link>
         </Compile>
@@ -68,12 +72,12 @@
           <Link>Math\BaseType\LVector3Int.cs</Link>
         </Compile>
 
-        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMath.cs">
-          <Link>Math\LMath.cs</Link>
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\HashCodeExtension.cs">
+          <Link>Math\HashCodeExtension.cs</Link>
         </Compile>
 
-        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMathExtension.cs">
-          <Link>Math\LMathExtension.cs</Link>
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMath.cs">
+          <Link>Math\LMath.cs</Link>
         </Compile>
 
         <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMathExtension2.cs">
@@ -82,10 +86,6 @@
 
         <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMath_Vector.cs">
           <Link>Math\LMath_Vector.cs</Link>
-        </Compile>
-
-        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LQuaternion.cs">
-          <Link>Math\LQuaternion.cs</Link>
         </Compile>
 
         <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LRandom.cs">
@@ -104,8 +104,16 @@
           <Link>Math\LUT\LUTAtan2.cs</Link>
         </Compile>
 
-        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT\LUTSinCos.cs">
-          <Link>Math\LUT\LUTSinCos.cs</Link>
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT\LUTCos.cs">
+          <Link>Math\LUT\LUTCos.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT\LUTSin.cs">
+          <Link>Math\LUT\LUTSin.cs</Link>
+        </Compile>
+
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\PrimerLUT.cs">
+          <Link>Math\PrimerLUT.cs</Link>
         </Compile>
 
         <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\TrueSync\**\*.cs">
@@ -161,6 +169,9 @@
       <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LMatrix33.cs.meta">
         <Link>Math\BaseType\LMatrix33.cs.meta</Link>
       </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LQuaternion.cs.meta">
+        <Link>Math\BaseType\LQuaternion.cs.meta</Link>
+      </Content>
       <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LRect.cs.meta">
         <Link>Math\BaseType\LRect.cs.meta</Link>
       </Content>
@@ -176,20 +187,17 @@
       <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\BaseType\LVector3Int.cs.meta">
         <Link>Math\BaseType\LVector3Int.cs.meta</Link>
       </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\HashCodeExtension.cs.meta">
+        <Link>Math\HashCodeExtension.cs.meta</Link>
+      </Content>
       <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMath.cs.meta">
         <Link>Math\LMath.cs.meta</Link>
-      </Content>
-      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMathExtension.cs.meta">
-        <Link>Math\LMathExtension.cs.meta</Link>
       </Content>
       <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMathExtension2.cs.meta">
         <Link>Math\LMathExtension2.cs.meta</Link>
       </Content>
       <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LMath_Vector.cs.meta">
         <Link>Math\LMath_Vector.cs.meta</Link>
-      </Content>
-      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LQuaternion.cs.meta">
-        <Link>Math\LQuaternion.cs.meta</Link>
       </Content>
       <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LRandom.cs.meta">
         <Link>Math\LRandom.cs.meta</Link>
@@ -206,8 +214,14 @@
       <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT\LUTAtan2.cs.meta">
         <Link>Math\LUT\LUTAtan2.cs.meta</Link>
       </Content>
-      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT\LUTSinCos.cs.meta">
-        <Link>Math\LUT\LUTSinCos.cs.meta</Link>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT\LUTCos.cs.meta">
+        <Link>Math\LUT\LUTCos.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\LUT\LUTSin.cs.meta">
+        <Link>Math\LUT\LUTSin.cs.meta</Link>
+      </Content>
+      <Content Include="..\..\Unity\Assets\Scripts\ThirdParty\Math\PrimerLUT.cs.meta">
+        <Link>Math\PrimerLUT.cs.meta</Link>
       </Content>
     </ItemGroup>
 </Project>

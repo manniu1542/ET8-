@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Lockstep.Math;
+using UnityEngine;
 
 namespace ET.Client
 {
@@ -31,7 +32,7 @@ namespace ET.Client
 
                 GlobalComponent globalComponent = root.GetComponent<GlobalComponent>();
                 GameObject unitGo = UnityEngine.Object.Instantiate(prefab, globalComponent.Unit, true);
-                unitGo.transform.position = lsUnit.Position.ToVector();
+                unitGo.transform.position = lsUnit.Position.ToVector3();
 
                 LSUnitView lsUnitView = self.AddChildWithId<LSUnitView, GameObject>(lsUnit.Id, unitGo);
                 lsUnitView.AddComponent<LSAnimatorComponent>();
