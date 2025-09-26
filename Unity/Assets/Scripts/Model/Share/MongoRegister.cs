@@ -36,7 +36,6 @@ namespace ET
             RegisterStruct<LFloat>();
             RegisterStruct<LVector2>();
             RegisterStruct<LVector2Int>();
-            
             RegisterStruct<LVector3>();
             RegisterStruct<LVector3Int>();
             RegisterStruct<LAxis2D>();
