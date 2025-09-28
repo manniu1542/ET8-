@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ET
 {
@@ -17,6 +18,7 @@ namespace ET
             //初始 开始时间，初始帧数，
             self.StartTime = startTime;
             self.AuthorityFrame = frame;
+            self.MaxPredictionCount = LSConstValue.DefaultMaxPredictionCount;
             self.PredictionFrame = frame;
             self.Replay.UnitInfos = unitInfos;
             //帧缓存的（运行时缓存，数据快照，比对哈希）
@@ -63,7 +65,7 @@ namespace ET
 
             lsWorld.Update();
 
-            foreach (var kv in oneFrameInputs.Inputs)
+            foreach (var kv in oneFrameInputs.Inputs.OrderBy(x => x.Key))
             {
                 LSUnit lsUnit = unitComponent.GetChild<LSUnit>(kv.Key);
                 Log.LockStepWarning($"帧:{lsWorld.Frame},玩家{lsUnit.Id},位置{lsUnit.Position},旋转{lsUnit.Rotation}");
@@ -127,6 +129,32 @@ namespace ET
                 MemoryBuffer memoryBuffer = self.FrameBuffer.Snapshot(frame);
                 byte[] bytes = memoryBuffer.ToArray();
                 self.Replay.Snapshots.Add(bytes);
+            }
+        }
+
+        /// <summary>
+        /// 动态计算最大预测帧数,根据网络往返延迟时间
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="frame"></param>
+        public static void DynamicCalculateMaxPredictionCount(this Room self, int RTT)
+        {
+            //较高延迟
+            if (RTT > 200)
+            {
+                self.MaxPredictionCount = 0;
+            } //高延迟
+            else if (RTT > 100)
+            {
+                self.MaxPredictionCount = 1;
+            } //低延迟
+            else if (RTT > 50)
+            {
+                self.MaxPredictionCount = (int)(LSConstValue.DefaultMaxPredictionCount * 0.5f);
+            } //极低延迟
+            else
+            {
+                self.MaxPredictionCount = LSConstValue.DefaultMaxPredictionCount;
             }
         }
     }

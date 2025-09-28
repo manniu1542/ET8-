@@ -105,7 +105,6 @@ namespace ET.Client
 
             //浮动fps = 默认1秒需要执行的帧数 + 预期 - 实际
             long floatingFps = LSConstValue.FrameCountPerSecond + TargetAheadOfFrame - CurrentAheadOfFrame;
-            
             //时间的更新频率
             int newInterval = Math.Clamp((int)(1000 / floatingFps), LSConstValue.MinUpdateInterval, LSConstValue.MaxUpdateInterval);
             Log.Info($"floatingFps {floatingFps} newInterval:{newInterval}");
