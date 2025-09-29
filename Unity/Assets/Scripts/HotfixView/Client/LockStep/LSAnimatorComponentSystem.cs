@@ -16,10 +16,11 @@ namespace ET.Client
 		}
 		
 		[EntitySystem]
-		private static void Awake(this LSAnimatorComponent self)
+		private static void Awake(this LSAnimatorComponent self,RuntimeAnimatorController rac)
 		{
 			Animator animator = self.GetParent<LSUnitView>().GameObject.GetComponent<Animator>();
-
+			 
+        
 			if (animator == null)
 			{
 				return;
@@ -34,6 +35,15 @@ namespace ET.Client
 			{
 				return;
 			}
+
+			//给动画覆盖机器赋值
+			AnimatorOverrideController aoc = animator.runtimeAnimatorController as AnimatorOverrideController;
+			aoc.runtimeAnimatorController = rac;
+			foreach (AnimationClip animationClip in rac.animationClips)
+			{
+				aoc[animationClip.name] = animationClip;
+			}
+					
 			self.Animator = animator;
 			foreach (AnimationClip animationClip in animator.runtimeAnimatorController.animationClips)
 			{

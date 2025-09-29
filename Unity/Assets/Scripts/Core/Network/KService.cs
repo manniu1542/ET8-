@@ -240,7 +240,7 @@ namespace ET
                             long id = (long)(((ulong)localConn << 32) | remoteConn);
                             this.localConnChannels.TryGetValue(localConn, out kChannel);
 
-                            Log.Error("RouterACK:" + id + "从哪个连接地址返回的路由消息：" + this.ipEndPoint);
+                            Log.Info("RouterACK:" + id + "从哪个连接地址返回的路由消息：" + this.ipEndPoint);
                             if (this.routerAckCallback.TryGetValue(id, out var action))
                             {
                                 action.Invoke(flag);

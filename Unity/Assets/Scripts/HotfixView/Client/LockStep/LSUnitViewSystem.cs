@@ -14,7 +14,6 @@ namespace ET.Client
         {
             self.GameObject = go;
             self.Transform = go.transform;
-
         }
 
         [LSEntitySystem]
@@ -34,27 +33,28 @@ namespace ET.Client
 
             Vector3 unitPos = unit.Position.ToVector3();
             const float speed = 6f;
-            float speed2 = speed;// * self.Room().SpeedMultiply;
+            float speed2 = speed; // * self.Room().SpeedMultiply;
 
             if (unitPos != self.Position)
             {
                 float distance = (unitPos - self.Position).magnitude;
                 self.totalTime = distance / speed2;
-                self.t = 0;
+                self.t = 0; 
                 self.Position = unit.Position.ToVector3();
                 self.Rotation = unit.Rotation.ToQuaternion();
             }
 
-
             LSInput input = unit.GetComponent<LSInputComponent>().LSInput;
+            //动画移动表现
             if (input.V != LVector2.zero)
             {
-                self.GetComponent<LSAnimatorComponent>().SetFloatValue("Speed", speed2);
+                // self.GetComponent<LSAnimatorComponent>().SetFloatValue("Speed", speed2);
             }
             else
             {
-                self.GetComponent<LSAnimatorComponent>().SetFloatValue("Speed", 0);
+                // self.GetComponent<LSAnimatorComponent>().SetFloatValue("Speed", 0);
             }
+
             self.t += Time.deltaTime;
             self.Transform.rotation = Quaternion.Lerp(self.Transform.rotation, self.Rotation, self.t / 1f);
             self.Transform.position = Vector3.Lerp(self.Transform.position, self.Position, self.t / self.totalTime);

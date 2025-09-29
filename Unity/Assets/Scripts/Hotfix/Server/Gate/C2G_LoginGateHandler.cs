@@ -38,7 +38,7 @@ namespace ET.Server
             }
             else
             {
-                // 判断是否在战斗
+                // 判断是否在战斗 ,通过获取玩家的房间组件。
                 PlayerRoomComponent playerRoomComponent = player.GetComponent<PlayerRoomComponent>();
                 if (playerRoomComponent.RoomActorId != default)
                 {
@@ -57,14 +57,17 @@ namespace ET.Server
 
         private static async ETTask CheckRoom(Player player, Session session)
         {
+            //等待房间的那一帧结束。不在房间逻辑还在执行中进入。怕出现有些消息 在还没有初始化完成就进入了房间。客户端收到该消息也乱掉。
             Fiber fiber = player.Fiber();
             await fiber.WaitFrameFinish();
 
+            //网关=>玩家房间服务器。发送 重连消息
             G2Room_Reconnect g2RoomReconnect = G2Room_Reconnect.Create();
             g2RoomReconnect.PlayerId = player.Id;
             using Room2G_Reconnect room2GateReconnect = await fiber.Root.GetComponent<MessageSender>().Call(
                 player.GetComponent<PlayerRoomComponent>().RoomActorId,
                 g2RoomReconnect) as Room2G_Reconnect;
+            //把房间服务器获取的消息转发给 客户端
             G2C_Reconnect g2CReconnect = G2C_Reconnect.Create();
             g2CReconnect.StartTime = room2GateReconnect.StartTime;
             g2CReconnect.Frame = room2GateReconnect.Frame;

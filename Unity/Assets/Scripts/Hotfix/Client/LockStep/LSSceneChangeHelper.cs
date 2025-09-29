@@ -24,7 +24,6 @@ namespace ET.Client
             room.Init(waitRoom2CStart.Message.UnitInfo, waitRoom2CStart.Message.StartTime);
             //客户端的帧消息 处理
             room.AddComponent<LSClientUpdater>();
-
             // 这个事件中可以订阅取消loading  （把客户端的玩家数据 与 表现 绑定）
             EventSystem.Instance.Publish(root, new LSSceneInitFinish());
         }

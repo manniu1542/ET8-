@@ -10,7 +10,7 @@ namespace ET.Client
 		Run,
 	}
 	[ComponentOf]
-	public class LSAnimatorComponent : Entity, IAwake, IUpdate, IDestroy
+	public class LSAnimatorComponent : Entity, IAwake<RuntimeAnimatorController>, IUpdate, IDestroy
 	{
 		public Dictionary<string, AnimationClip> animationClips = new();
 		public HashSet<string> Parameter = new();

@@ -2,11 +2,15 @@ using System.Collections.Generic;
 
 namespace ET.Server
 {
+    /// <summary>
+    /// 玩家登录重连房间的处理。
+    /// </summary>
     [MessageHandler(SceneType.RoomRoot)]
     public class G2Room_ReconnectHandler: MessageHandler<Scene, G2Room_Reconnect, Room2G_Reconnect>
     {
         protected override async ETTask Run(Scene root, G2Room_Reconnect request, Room2G_Reconnect response)
         {
+            //把房间 信息的 开始时间。 玩家们信息，当前确定帧。 发送给玩家
             Room room = root.GetComponent<Room>();
             response.StartTime = room.StartTime;
             LSUnitComponent lsUnitComponent = room.LSWorld.GetComponent<LSUnitComponent>();

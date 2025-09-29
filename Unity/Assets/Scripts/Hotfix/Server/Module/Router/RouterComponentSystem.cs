@@ -302,7 +302,7 @@ namespace ET.Server
                     self.Cache.WriteTo(0, KcpProtocalType.RouterACK);
                     self.Cache.WriteTo(1, routerNode.InnerConn);
                     self.Cache.WriteTo(5, routerNode.OuterConn);
-                    Log.Error("给客户端发送 路由确认连接上的回复,本次连接id:" + routerNode.ConnectId + "--发送消息给客户端地址：" + routerNode.SyncIpEndPoint);
+                    Log.Info("给客户端发送 路由确认连接上的回复,本次连接id:" + routerNode.ConnectId + "--发送消息给客户端地址：" + routerNode.SyncIpEndPoint);
                     routerNode.KcpTransport.Send(self.Cache, 0, 9, routerNode.SyncIpEndPoint, ChannelType.Accept);
 
                     if (!routerNode.CheckOuterCount(timeNow))

@@ -26,9 +26,14 @@ namespace ET
                 return;
             }
 
-            LVector2 oldPos = unit.Position;
+            // LVector2 oldPos = unit.Position;
             unit.Position += new LVector3(v2.x, 0, v2.y);
-            unit.Forward = unit.Position - new LVector3(oldPos.x, 0, oldPos.y);
+            if (v2 != LVector2.zero)
+            {
+                unit.Forward = new LVector3(v2.x, 0, v2.y).normalized;
+            }
+            // unit.Forward = unit.Position - new LVector3(oldPos.x, 0, oldPos.y);
+       
         }
     }
 }

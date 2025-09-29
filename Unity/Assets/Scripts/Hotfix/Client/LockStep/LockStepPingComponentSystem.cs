@@ -110,6 +110,8 @@ namespace ET.Client
             Log.Info($"floatingFps {floatingFps} newInterval:{newInterval}");
             // 参数：新的间隔 + 当前预测帧（保证调整后时间对齐）
             room.FixedTimeCounter.ChangeInterval(newInterval, room.PredictionFrame);
+            //调整客户端预测输入数量
+            room.DynamicCalculateMaxPredictionCount((int)RTT);
         }
     }
 }

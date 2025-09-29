@@ -53,7 +53,7 @@ namespace ET.Client
 
             // 注意，session也以localConn作为id，所以这里不能用localConn作为id  ，连接标识
             long id = (long)(((ulong)localConn << 32) | remoteConn);
-            Log.Error("本次路由id:" + id);
+            Log.Info("本次路由id:" + id);
             using RouterConnector routerConnector = netComponent.AddChildWithId<RouterConnector>(id);
 
             int count = 20;
@@ -89,7 +89,7 @@ namespace ET.Client
 
                     lastSendTimer = timeNow;
                     // 确保只发送 参与传输的字节数  addressBytes.Length + 13 。 
-                    Log.Error($"连接路由标识{synFlag},连接的id{connectId}");
+                    Log.Info($"连接路由标识{synFlag},连接的id{connectId}");
                     routerConnector.Connect(sendCache, 0, addressBytes.Length + 13, routerAddress);
                 }
 

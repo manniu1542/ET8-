@@ -26,7 +26,7 @@ namespace ET
             NetworkHelper.SetSioUdpConnReset(this.socket);
             this.socket.Bind(new IPEndPoint(IPAddress.Any, 0));
             IPEndPoint localEP = this.socket.LocalEndPoint as IPEndPoint;
-            Log.Error($"本地IP: {localEP.Address}, 端口: {localEP.Port}");
+            Log.Info($"本地IP: {localEP.Address}, 端口: {localEP.Port}");
         }
 
         public UdpTransport(IPEndPoint ipEndPoint)
@@ -45,7 +45,7 @@ namespace ET
                 this.socket.Bind(ipEndPoint);
                 if (port == 0)
                 {
-                    Log.Error($"路由 内部， 本机地址：{this.socket.LocalEndPoint}  监听地址：{this.socket.RemoteEndPoint}");
+                    Log.Info($"路由 内部， 本机地址：{this.socket.LocalEndPoint}  监听地址：{this.socket.RemoteEndPoint}");
                 }
             }
             catch (Exception e)

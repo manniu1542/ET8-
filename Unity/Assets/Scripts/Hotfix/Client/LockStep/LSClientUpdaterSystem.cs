@@ -12,7 +12,6 @@ namespace ET.Client
     [FriendOf(typeof(LSClientUpdater))]
     public static partial class LSClientUpdaterSystem
     {
-        
         [EntitySystem]
         private static void Awake(this LSClientUpdater self)
         {
@@ -35,11 +34,13 @@ namespace ET.Client
                 {
                     return;
                 }
+
                 // 预测帧 如果 比实际 小的时候。就继续运行。
                 if (room.PredictionFrame - room.AuthorityFrame > room.MaxPredictionCount)
                 {
                     return;
                 }
+
                 ++room.PredictionFrame;
                 OneFrameInputs oneFrameInputs = self.GetOneFrameMessages(room.PredictionFrame);
                 //根据这一帧的输入数据。来驱动 帧同步逻辑（房间的 数据缓存，以及帧同步世界的玩家 逻辑表现）
@@ -51,6 +52,11 @@ namespace ET.Client
                 //这一帧的玩家输入消息，发给服务器
                 FrameMessage frameMessage = FrameMessage.Create();
                 frameMessage.Frame = room.PredictionFrame;
+                //对齐输入
+                if (room.PredictionFrame <= LSConstValue.RunAlignmentFrames)
+                {
+                    self.RunAlignmentFramesInput(ref self.Input);
+                }
                 // self.TestSimulateInput(ref self.Input);
                 frameMessage.Input = self.Input;
 
@@ -65,7 +71,6 @@ namespace ET.Client
                 }
             }
         }
-       
 
         private static OneFrameInputs GetOneFrameMessages(this LSClientUpdater self, int frame)
         {
@@ -92,29 +97,34 @@ namespace ET.Client
 
             return predictionFrame;
         }
-        
-        
-        
-        
+
+        private static void RunAlignmentFramesInput(this LSClientUpdater self, ref LSInput input)
+        {
+            input.V.x = 0;
+            input.V.y = 0;
+            input.Button = 0;
+        }
+
         /// <summary>
         /// 模拟测试输入
         /// </summary>
         /// <param name="self"></param>
         /// <param name="input"></param>
-        private static void TestSimulateInput(this LSClientUpdater self,ref LSInput input)
+        private static void TestSimulateInput(this LSClientUpdater self, ref LSInput input)
         {
             long timeNow2 = TimeInfo.Instance.ServerNow();
-            Random r =  new Random((uint)DateTime.Now.Ticks);
+            Random r = new Random((uint)DateTime.Now.Ticks);
             int tt = r.Range(200, 350);
             if (timeNow2 - self.TestTime >= tt)
             {
                 self.TestTime = timeNow2;
                 r.Next();
-                input.V.x =  r.Range(0, 5) >3 ? 1 : -1;
+                input.V.x = r.Range(0, 5) > 3 ? 1 : -1;
                 r.Next();
-                input.V.y =  r.Range(0, 5) >2 ? 1 : -1;
+                input.V.y = r.Range(0, 5) > 2 ? 1 : -1;
             }
         }
+
         /// <summary>
         /// 测试序列化
         /// </summary>

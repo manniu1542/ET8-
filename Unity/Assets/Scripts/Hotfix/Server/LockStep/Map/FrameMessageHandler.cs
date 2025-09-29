@@ -37,7 +37,7 @@ namespace ET.Server
                 return;
             }
 
-            Log.Error($"服务端收到的值打印： {message.Input}");
+            Log.Info($"服务端收到的值打印： {message.Input}");
 
             oneFrameInputs.Inputs[message.PlayerId] = message.Input;
 
