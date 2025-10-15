@@ -14,6 +14,7 @@ namespace ET.Client
         [EntitySystem]
         private static void Destroy(this LSUnitViewComponent self)
         {
+            
         }
 
         public static async ETTask InitAsync(this LSUnitViewComponent self)
