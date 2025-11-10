@@ -9,7 +9,7 @@ namespace ET.Client
 
             Room room = root.AddComponentWithId<Room>(sceneInstanceId);
             room.Name = sceneName;
-
+     
             // 等待表现层订阅的事件完成
             await EventSystem.Instance.PublishAsync(root, new LSSceneChangeStart() { Room = room });
             //发送切换场景完成 （服务端收集到所有玩家都 加载完成发送 Room2C_EnterMap 给客户端）

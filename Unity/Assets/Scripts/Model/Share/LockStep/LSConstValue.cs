@@ -5,7 +5,7 @@ namespace ET
         /// <summary>
         /// 匹配的人数
         /// </summary>
-        public const int MatchCount = 2;
+        public const int MatchCount = 1;
    
         /// <summary>
         /// 最大领先帧数 调整更新间隔使用

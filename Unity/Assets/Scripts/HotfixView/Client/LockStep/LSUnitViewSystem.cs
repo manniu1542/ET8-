@@ -60,7 +60,7 @@ namespace ET.Client
             self.Transform.position = Vector3.Lerp(self.Transform.position, self.Position, self.t / self.totalTime);
         }
 
-        private static LSUnit GetUnit(this LSUnitView self)
+        public static LSUnit GetUnit(this LSUnitView self)
         {
             LSUnit unit = self.Unit;
             if (unit != null)

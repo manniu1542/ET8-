@@ -33,7 +33,7 @@ namespace ET
                 unit.Forward = new LVector3(v2.x, 0, v2.y).normalized;
             }
             // unit.Forward = unit.Position - new LVector3(oldPos.x, 0, oldPos.y);
-       
+          
         }
     }
 }

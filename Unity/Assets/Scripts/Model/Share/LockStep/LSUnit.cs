@@ -36,7 +36,35 @@ namespace ET
             set;
         }
         
+        public HFSMDataSnapshot dataSnapshot;
         
-        
+    }
+    /// <summary>
+    /// 层次状态机的快照数据
+    /// </summary>
+    [EnableClass]
+    [Serializable]
+    [MemoryPackable]
+    public partial class HFSMDataSnapshot
+    {
+        /// <summary>
+        /// 这一帧状态机执行的时间
+        /// </summary>
+        public long elapsed;
+
+        /// <summary>
+        /// 状态机的名称id,从最终执行的状态=>Root  (TODO:可以从配置里面获取到)
+        /// </summary>
+        public string[] arrStateMachineName;
+
+        /// <summary>
+        /// 当前执行的状态名
+        /// </summary>
+        public string curStateName;
+
+        /// <summary>
+        /// 状态机的参数
+        /// </summary>
+        public float[] arrParameters;
     }
 }

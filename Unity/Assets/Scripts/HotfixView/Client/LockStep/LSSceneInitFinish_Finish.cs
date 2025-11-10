@@ -16,6 +16,7 @@ namespace ET.Client
                 // 添加帧同步操作组件
                 room.AddComponent<LSOperaComponent>();
             }
+        
 
             await UIHelper.Remove(clientScene, UIType.UILSLobby);
             await ETTask.CompletedTask;

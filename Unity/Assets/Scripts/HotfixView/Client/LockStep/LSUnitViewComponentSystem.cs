@@ -1,5 +1,7 @@
 ﻿using Lockstep.Math;
+using MemoryPack;
 using UnityEngine;
+using ZHFSM;
 
 namespace ET.Client
 {
@@ -14,7 +16,6 @@ namespace ET.Client
         [EntitySystem]
         private static void Destroy(this LSUnitViewComponent self)
         {
-            
         }
 
         public static async ETTask InitAsync(this LSUnitViewComponent self)
@@ -38,8 +39,12 @@ namespace ET.Client
 
                 LSUnitView lsUnitView = self.AddChildWithId<LSUnitView, GameObject>(lsUnit.Id, unitGo);
                 string racResName = isPlayer1 ? "Frank_Fighting_Part1" : "Frank_Fighting_Set2";
-                RuntimeAnimatorController rac = await room.GetComponent<ResourcesLoaderComponent>().LoadAssetAsync<RuntimeAnimatorController>(racResName);
-                lsUnitView.AddComponent<LSAnimatorComponent,RuntimeAnimatorController>(rac);
+                RuntimeAnimatorController rac = await room.GetComponent<ResourcesLoaderComponent>()
+                        .LoadAssetAsync<RuntimeAnimatorController>(racResName);
+                lsUnitView.AddComponent<LSAnimatorComponent, RuntimeAnimatorController>(rac);
+                //给unit添加 状态组件
+
+                lsUnitView.AddComponent<LSUnitState, StateMachineExecutor>(unitGo.GetComponent<StateMachineExecutor>());
             }
         }
     }
