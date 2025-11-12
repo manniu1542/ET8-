@@ -19,6 +19,7 @@ public class ReceiveAnimationEventHandler : MonoBehaviour
     {
         int[] data = { 1, 2, 3, 4, 5 };
         Span<int> slice = data.AsSpan(1, 3); // 不复制，不分配
+        
         foreach (var x in slice)
         {
             Debug.Log(x);

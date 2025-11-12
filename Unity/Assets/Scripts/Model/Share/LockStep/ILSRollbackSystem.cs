@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ET
 {
+    /// <summary>
+    /// 只回滚非LS的组件，LS的组件数据是被LSWorld序列化的不需要回滚
+    /// </summary>
     public interface ILSRollback
     {
     }

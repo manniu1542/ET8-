@@ -8,4 +8,10 @@
     public struct LSSceneInitFinish
     {
     }
+    
+    public struct LSUpdateEvent
+    {
+        
+    }
+    
 }

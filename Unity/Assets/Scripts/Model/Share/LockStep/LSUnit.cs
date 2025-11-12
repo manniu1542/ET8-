@@ -36,7 +36,7 @@ namespace ET
             set;
         }
         
-        public HFSMDataSnapshot dataSnapshot;
+        // public HFSMDataSnapshot dataSnapshot;
         
     }
     /// <summary>

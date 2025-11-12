@@ -26,7 +26,8 @@ namespace ET
                     .WithParsed((o) => World.Instance.AddSingleton(o));
             Options.Instance.StartConfig = $"StartConfig/Localhost";
             World.Instance.AddSingleton<Logger>().Log = new UnityLogger();
-            Logger.Instance.SetIsWriteLockStep(true);
+            //TODO: 同步 日志 是否打印
+            Logger.Instance.SetIsWriteLockStep(false);
             ETTask.ExceptionHandler += Log.Error;
 
             World.Instance.AddSingleton<TimeInfo>();

@@ -12,5 +12,6 @@ namespace ET
         public Quaternion Rotation;
         public float totalTime;
         public float t;
+        
     }
 }

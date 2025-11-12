@@ -16,8 +16,10 @@ namespace ET
         [LSEntitySystem]
         private static void LSUpdate(this LSInputComponent self)
         {
+           
             LSUnit unit = self.GetParent<LSUnit>();
-
+            
+            EventSystem.Instance.Publish(unit.LSWorld().Parent.Room(), new LSUpdateEvent());
             //TODO:物理世界的执行输入逻辑
             LVector2 v2 = self.LSInput.V * 6 * 50 / 1000;
 
@@ -32,8 +34,10 @@ namespace ET
             {
                 unit.Forward = new LVector3(v2.x, 0, v2.y).normalized;
             }
+
             // unit.Forward = unit.Position - new LVector3(oldPos.x, 0, oldPos.y);
           
+           
         }
     }
 }
