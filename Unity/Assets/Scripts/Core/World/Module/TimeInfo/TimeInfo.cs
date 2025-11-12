@@ -5,7 +5,6 @@ namespace ET
     public class TimeInfo: Singleton<TimeInfo>, ISingletonAwake
     {
         private int timeZone;
-        
         public int TimeZone
         {
             get

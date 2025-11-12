@@ -13,6 +13,9 @@ namespace ZHFSM
         NotEqual
     }
 
+    /// <summary>
+    /// 状态机过度的条件
+    /// </summary>
     public class ParameterCondition
     {
         public Parameter parameter;
@@ -20,7 +23,7 @@ namespace ZHFSM
         public float compareValue;
 
         private static Dictionary<CompareType, Func<float, float, bool>> m_compareExecutor
-            = new Dictionary<CompareType, Func<float, float, bool>>();
+                = new Dictionary<CompareType, Func<float, float, bool>>();
 
         static ParameterCondition()
         {

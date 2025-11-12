@@ -59,7 +59,7 @@ namespace ET.Client
                 }
                 // self.TestSimulateInput(ref self.Input);
                 frameMessage.Input = self.Input;
-
+              
                 root.GetComponent<ClientSenderComponent>().Send(frameMessage);
                 Log.LockStepWarning($"客户端{self.MyId}: 第{room.PredictionFrame}帧,操作：{self.Input}");
 

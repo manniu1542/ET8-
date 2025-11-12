@@ -1,8 +1,10 @@
 using System;
-using UnityEngine;
 
 namespace ZHFSM
 {
+    /// <summary>
+    /// 状态机里面的更新逻辑的服务类型(Update, FixedUpdate, 间隔一定时间更新)
+    /// </summary>
     public class Service
     {
         public string id => m_id;
@@ -100,6 +102,10 @@ namespace ZHFSM
         /// </summary>
         public long customInterval = 0;
 
-        [Multiline] public string description;
+        
+#if UNITY_5_3_OR_NEWER
+        [UnityEngine.Multiline] 
+#endif
+        public string description;
     }
 }

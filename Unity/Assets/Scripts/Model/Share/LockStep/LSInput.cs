@@ -2,10 +2,18 @@ using System;
 using System.Collections.Generic;
 using Lockstep.Math;
 using MemoryPack;
+
 namespace ET
 {
-
-
+    [Flags] //技能输入接受，1.Flags 方便打印枚举值。可以让枚举有位与运算。   2.最多有31个按键输入，如果不够的话。可以改成long接受 之多就63个按键输入了
+    public enum LSInputButton : int
+    {
+        None = 0,
+        Jump = 1,
+        AttackJ = 1 << 2,
+        AttackK = 1 << 3,
+        AttackL = 1 << 4,
+    }
 
     /// <summary>
     ///  一帧的输入      标记为 MemoryPack 可序列化结构体（方便网络传输/存档）
@@ -20,8 +28,6 @@ namespace ET
         // 玩家输入的按键（整数表示，例如 1=跳跃，2=攻击）
         [MemoryPackOrder(1)]
         public int Button;
-
-
 
         // 判断是否等于另一个 LSInput（同时比较向量和按键）
         public bool Equals(LSInput other)

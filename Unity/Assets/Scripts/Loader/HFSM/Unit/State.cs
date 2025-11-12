@@ -1,6 +1,4 @@
 using System;
-using UnityEngine;
-
 namespace ZHFSM
 {
 	public enum StateExecuteType
@@ -9,7 +7,9 @@ namespace ZHFSM
 		OnLogic,
 		OnExit,
 	}
-
+    /// <summary>
+    /// 状态机的状态
+    /// </summary>
 	public class State : StateBase
 	{
 		private Action<State> m_onEnter;

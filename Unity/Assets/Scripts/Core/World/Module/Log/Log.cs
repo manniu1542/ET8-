@@ -66,6 +66,7 @@ namespace ET
         }
         public static void LockStepWarning(string msg)
         {
+          
             if (Options.Instance.LogLevel > WarningLevel)
             {
                 return;

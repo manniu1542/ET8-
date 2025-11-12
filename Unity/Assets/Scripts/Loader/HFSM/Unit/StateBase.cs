@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#if UNITY_5_3_OR_NEWER
 using UnityEngine;
+#endif
+
 
 namespace ZHFSM
 {
@@ -10,7 +13,9 @@ namespace ZHFSM
 		State,
 		StateMachine
 	}
-
+	/// <summary>
+	/// 状态机的基类,状态和子状态机都继承自此类
+	/// </summary>
 	public class StateBase
 	{
 #if UNITY_EDITOR
@@ -89,7 +94,9 @@ namespace ZHFSM
 		public StateType stateType;
 		public bool isDefault;
 
+#if UNITY_5_3_OR_NEWER
 		[Multiline]
+#endif
 		public string description;
 	}
 }
